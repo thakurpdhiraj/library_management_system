@@ -10,13 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.dhitha.lms.user.dto.RoleDTO;
 import com.dhitha.lms.user.dto.UserDTO;
 import com.dhitha.lms.user.service.UserService;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -96,7 +94,7 @@ public class UserControllerTest {
             .username("user")
             .password("password")
             .email("email")
-            .userRoles(Collections.singletonList(RoleDTO.builder().id(1L).name("USER").build()))
+            .userRoles(Collections.singletonList("USER"))
             .build();
     mockMvc
         .perform(

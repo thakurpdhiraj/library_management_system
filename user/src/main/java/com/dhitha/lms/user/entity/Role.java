@@ -13,15 +13,7 @@ import lombok.Data;
  *
  * @author Dhiraj
  */
-@Entity(name = "role")
-@Data
-public class Role implements Serializable {
-
-  private static final long serialVersionUID = 1L;
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @Column private String name;
+public enum  Role {
+  USER,
+  ADMIN
 }

@@ -3,8 +3,12 @@ package com.dhitha.lms.user.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -74,10 +78,9 @@ public class User implements Serializable {
 
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
-      name = "user_role",
-      joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+  @ElementCollection(targetClass = Role.class)
+  @Enumerated(EnumType.STRING)
+  @CollectionTable(name = "user_roles")
+  @Column(name = "user_role")
   private List<Role> userRoles;
 }
