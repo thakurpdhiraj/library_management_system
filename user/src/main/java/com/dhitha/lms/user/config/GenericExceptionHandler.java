@@ -1,22 +1,21 @@
 package com.dhitha.lms.user.config;
 
-
 import com.dhitha.lms.user.dto.ErrorDTO;
 import com.dhitha.lms.user.error.GenericException;
 import com.dhitha.lms.user.error.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingPathVariableException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  * Common Exception Handler
@@ -25,11 +24,15 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  */
 @ControllerAdvice
 @Log4j2
-public class GenericExceptionHandler {
+public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  private ResponseEntity<ErrorDTO> handleMethodArgumentNotValid(
-      MethodArgumentNotValidException ex) {
+  @NonNull
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatus status,
+      @NonNull WebRequest request) {
     log.error("handleMethodArgumentNotValid():{} -> {}", ex.getCause(), ex.getBindingResult());
     BindingResult bindingResult = ex.getBindingResult();
     String description =
@@ -48,29 +51,27 @@ public class GenericExceptionHandler {
     return ResponseEntity.badRequest().body(err);
   }
 
-  @ExceptionHandler({
-    HttpRequestMethodNotSupportedException.class,
-    MissingServletRequestParameterException.class,
-    MissingPathVariableException.class,
-    IllegalArgumentException.class,
-  })
-  private ResponseEntity<ErrorDTO> handleInvalidRequest(Exception ex) {
+  @NonNull
+  @Override
+  protected ResponseEntity<Object> handleExceptionInternal(
+      Exception ex,
+      Object body,
+      @NonNull HttpHeaders headers,
+      HttpStatus status,
+      @NonNull WebRequest request) {
     log.error("handleInvalidRequest():{} -> {}", ex.getCause(), ex.getMessage());
     ErrorDTO err =
         ErrorDTO.builder()
             .error("invalid_request")
             .error_description(ex.getLocalizedMessage())
-            .status(HttpStatus.BAD_REQUEST.value())
+            .status(status.value())
             .timestamp(LocalDateTime.now())
             .build();
     return ResponseEntity.badRequest().body(err);
   }
 
-  @ExceptionHandler({
-    UserNotFoundException.class,
-    NoHandlerFoundException.class
-  })
-  private ResponseEntity<ErrorDTO> handleNotFound(Exception ex) {
+  @ExceptionHandler({UserNotFoundException.class})
+  private ResponseEntity<ErrorDTO> handleUserNotFound(Exception ex) {
     log.error("handleNotFound():{} -> {}", ex.getCause(), ex.getMessage());
     ErrorDTO err =
         ErrorDTO.builder()
@@ -94,6 +95,18 @@ public class GenericExceptionHandler {
             .timestamp(LocalDateTime.now())
             .build();
     return ResponseEntity.status(ex.getStatus()).body(err);
+  }
+
+  @ExceptionHandler({IllegalArgumentException.class})
+  private ResponseEntity<ErrorDTO> handleIllegalArgumentException(IllegalArgumentException ex) {
+    ErrorDTO err =
+        ErrorDTO.builder()
+            .error("invalid_request")
+            .error_description(ex.getLocalizedMessage())
+            .status(HttpStatus.BAD_REQUEST.value())
+            .timestamp(LocalDateTime.now())
+            .build();
+    return ResponseEntity.badRequest().body(err);
   }
 
   @ExceptionHandler({Exception.class})
