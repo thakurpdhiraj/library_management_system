@@ -50,5 +50,5 @@ public class UserDTO implements Serializable {
   @JsonProperty(access = Access.READ_ONLY)
   private LocalDateTime updatedAt;
 
-  @NotNull private List<RoleDTO> userRoles;
+  @NotNull private List<String> userRoles;
 }
