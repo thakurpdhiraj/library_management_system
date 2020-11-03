@@ -7,6 +7,9 @@ server:
   servlet:
     context-path: /api/orders
 
+lms:
+  client:
+    key: 352019a6-1c73-11eb-adc1-0242ac120002
 ---
 spring:
   profiles:

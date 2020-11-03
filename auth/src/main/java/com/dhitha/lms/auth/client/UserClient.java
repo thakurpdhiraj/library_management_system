@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
  *
  * @author Dhiraj
  */
-@FeignClient("lms-user-service")
+@FeignClient(name = "lms-user-service", path = "/api/users/v1")
 public interface UserClient {
   @PostMapping(
-      value = "/api/users/v1/validate",
+      value = "/validate",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   UserDTO getByCredentials(@RequestBody AuthRequestDTO user) throws FeignClientException;

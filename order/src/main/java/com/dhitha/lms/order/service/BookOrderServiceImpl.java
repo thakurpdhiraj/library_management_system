@@ -1,6 +1,5 @@
 package com.dhitha.lms.order.service;
 
-import com.dhitha.lms.order.client.InventoryClient;
 import com.dhitha.lms.order.dto.BookOrderDTO;
 import com.dhitha.lms.order.dto.InventoryDTO;
 import com.dhitha.lms.order.entity.BookOrder;
@@ -10,7 +9,6 @@ import com.dhitha.lms.order.repository.BookOrderRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -110,7 +108,11 @@ public class BookOrderServiceImpl implements BookOrderService {
     BookOrder order =
         orderRepository
             .findById(id)
-            .orElseThrow(() -> new OrderNotFoundException("Order Not found with id " + id));
+            .filter(bookOrder -> bookOrder.getCollectedAt() == null)
+            .orElseThrow(
+                () ->
+                    new OrderNotFoundException(
+                        "Order Already Collected or Not found with id " + id));
     order.setCollectedAt(LocalDateTime.now());
     return mapToDTO(orderRepository.saveAndFlush(order));
   }
@@ -122,7 +124,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         orderRepository
             .findById(id)
             .orElseThrow(() -> new OrderNotFoundException("Order Not found with id " + id));
-    inventoryService.returnBook(order.getBookId(),order.getBookReferenceId());
+    inventoryService.returnBook(order.getBookId(), order.getBookReferenceId());
     order.setReturnedAt(LocalDateTime.now());
     bookOrderHistoryService.save(order);
     this.delete(id);
