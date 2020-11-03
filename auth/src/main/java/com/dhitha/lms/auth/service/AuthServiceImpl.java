@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public void verifyToken(String token) throws GenericException {
-     tokenService.verifyToken(token);
+  public UserDTO verifyToken(String token) throws GenericException {
+     return tokenService.verifyToken(token);
   }
 }

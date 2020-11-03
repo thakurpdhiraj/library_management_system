@@ -12,5 +12,5 @@ public interface TokenService {
 
   String generateIdToken(UserDTO userDTO) throws GenericException;
 
-  void verifyToken(String token) throws GenericException;
+  UserDTO verifyToken(String token) throws GenericException;
 }

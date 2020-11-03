@@ -3,9 +3,9 @@ spring:
     active: prod
 
 server:
-  port: 8081
+  port: 8086
   servlet:
-    context-path: /api/auth
+    context-path: /lms
 
 lms:
   client:
@@ -13,24 +13,11 @@ lms:
 ---
 spring:
   profiles:
+    - prod
     - dev
   application:
-    name: lms-auth-service
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+    name: lms-client-service
 
----
-spring:
-  profiles:
-    - prod
-  application:
-    name: lms-auth-service
 eureka:
   instance:
     hostname: localhost

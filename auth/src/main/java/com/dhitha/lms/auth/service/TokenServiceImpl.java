@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -47,6 +48,7 @@ public class TokenServiceImpl implements TokenService {
   private static final String ISSUER = "http://localhost:8081";
   private static final int TOKEN_EXPIRY_MIN = 30;
   private static final JWSAlgorithm SIGN_ALGORITHM = JWSAlgorithm.RS256;
+  private static final String DELIMITER = ",";
 
   private final ResourceLoader resourceLoader;
 
@@ -63,19 +65,20 @@ public class TokenServiceImpl implements TokenService {
             .notBeforeTime(Date.from(issueTime))
             .subject(String.valueOf(userDTO.getId()))
             .claim("name", userDTO.getName())
+            .claim("username", userDTO.getUsername())
             .claim("createdAt", userDTO.getCreatedAt())
             .claim("updatedAt", userDTO.getUpdatedAt())
             .claim("accountNonExpired", userDTO.getAccountNonExpired())
             .claim("accountNonLocked", userDTO.getAccountNonLocked())
             .claim("credentialsNonExpired", userDTO.getCredentialsNonExpired())
             .claim("enabled", userDTO.getEnabled())
-            .claim("roles", String.join(",", userDTO.getUserRoles()))
+            .claim("roles", String.join(DELIMITER, userDTO.getUserRoles()))
             .build();
     return this.signAndSerializeToken(idToken);
   }
 
   @Override
-  public void verifyToken(String token) throws GenericException {
+  public UserDTO verifyToken(String token) throws GenericException {
     try {
       DefaultJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
       JWKSet jwkSet = new JWKSet(getPublicKey());
@@ -87,11 +90,17 @@ public class TokenServiceImpl implements TokenService {
           new DefaultJWTClaimsVerifier<>(
               new JWTClaimsSet.Builder().issuer(ISSUER).build(),
               new HashSet<>(Collections.singletonList("exp"))));
-      jwtProcessor.process(token, null);
-    } catch (IllegalStateException | ParseException | JOSEException | BadJOSEException e) {
+      JWTClaimsSet process = jwtProcessor.process(token, null);
+      System.out.println(process.toJSONObject(true));
+      UserDTO userDTO = new UserDTO();
+      userDTO.setId(Long.valueOf(process.getSubject()));
+      userDTO.setUserRoles(Arrays.asList(process.getStringClaim("roles").split(DELIMITER)));
+      userDTO.setName(process.getStringClaim("name"));
+      userDTO.setUsername(process.getStringClaim("username"));
+      return userDTO;
+    } catch (NumberFormatException | IllegalStateException | ParseException | JOSEException | BadJOSEException e) {
       log.error("Error verifying jwt using public key ", e);
-      // should the error be bad request ???
-      throw new GenericException("invalid token", HttpStatus.BAD_REQUEST.value());
+      throw new GenericException("invalid token", HttpStatus.FORBIDDEN.value());
     }
   }
 

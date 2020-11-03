@@ -1,7 +1,8 @@
-package com.dhitha.lms.auth.dto;
+package com.dhitha.lms.clientbackend.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,11 +20,13 @@ public class UserDTO implements Serializable {
 
   private Long id;
 
-  private String name;
+  @NotEmpty private String name;
 
-  private String email;
+  @NotEmpty private String email;
 
-  private String username;
+  @NotEmpty private String username;
+
+  @NotEmpty private String password;
 
   private Boolean accountNonExpired;
 

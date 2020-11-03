@@ -68,7 +68,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
             .status(status.value())
             .timestamp(LocalDateTime.now())
             .build();
-    return ResponseEntity.badRequest().body(err);
+    return ResponseEntity.status(status).body(err);
   }
 
   @ExceptionHandler({BookNotFoundException.class, CategoryNotFoundException.class})

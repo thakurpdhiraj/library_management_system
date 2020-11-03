@@ -1,16 +1,17 @@
-package com.dhitha.lms.auth.config;
+package com.dhitha.lms.clientbackend.config;
 
-import com.dhitha.lms.auth.dto.ErrorDTO;
-import com.dhitha.lms.auth.error.GenericException;
+import com.dhitha.lms.clientbackend.dto.ErrorDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,40 +24,37 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 @Log4j2
+@RequiredArgsConstructor
 public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @NonNull
-  @Override
-  protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      MethodArgumentNotValidException ex,
-      @NonNull HttpHeaders headers,
-      @NonNull HttpStatus status,
-      @NonNull WebRequest request) {
-    log.error("handleMethodArgumentNotValid():{} -> {}", ex.getCause(), ex.getBindingResult());
-    BindingResult bindingResult = ex.getBindingResult();
-    String description =
-        bindingResult.getFieldErrors().stream()
-            .map(
-                objectError ->
-                    String.join(" : ", objectError.getField(), objectError.getDefaultMessage()))
-            .collect(Collectors.joining(", "));
-    ErrorDTO err =
-        ErrorDTO.builder()
-            .error("invalid_input")
-            .error_description(description)
-            .status(HttpStatus.BAD_REQUEST.value())
-            .timestamp(LocalDateTime.now())
-            .build();
-    return ResponseEntity.badRequest().body(err);
+  private final ObjectMapper objectMapper;
+
+  @ExceptionHandler({FeignException.class})
+  private ResponseEntity<ErrorDTO> handleFeignException(FeignException e) {
+    log.error("FeignError: {}, {}", e.contentUTF8(), e);
+    ErrorDTO errorDTO;
+    try {
+      errorDTO = objectMapper.readValue(e.contentUTF8(), ErrorDTO.class);
+      log.debug("Mapped Error DTO {}", errorDTO);
+    } catch (JsonProcessingException jsonProcessingException) {
+      errorDTO =
+          ErrorDTO.builder()
+              .error("invalid_request")
+              .error_description(e.contentUTF8())
+              .status(e.status())
+              .timestamp(LocalDateTime.now())
+              .build();
+    }
+    return ResponseEntity.status(e.status()).body(errorDTO);
   }
 
   @NonNull
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(
-      Exception ex,
+      @NonNull Exception ex,
       Object body,
       @NonNull HttpHeaders headers,
-      HttpStatus status,
+      @NonNull HttpStatus status,
       @NonNull WebRequest request) {
     log.error("handleInvalidRequest():{} -> {}", ex.getCause(), ex.getMessage());
     ErrorDTO err =
@@ -67,20 +65,6 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
             .timestamp(LocalDateTime.now())
             .build();
     return ResponseEntity.status(status).body(err);
-  }
-
-  @ExceptionHandler({GenericException.class})
-  private ResponseEntity<ErrorDTO> handleGeneric(GenericException ex) {
-    log.error(
-        "handleGeneric():{} -> {} : status: {}", ex.getCause(), ex.getMessage(), ex.getStatus());
-    ErrorDTO err =
-        ErrorDTO.builder()
-            .error("invalid_request")
-            .error_description(ex.getLocalizedMessage())
-            .status(ex.getStatus())
-            .timestamp(LocalDateTime.now())
-            .build();
-    return ResponseEntity.status(ex.getStatus()).body(err);
   }
 
   @ExceptionHandler({IllegalArgumentException.class})
@@ -106,5 +90,17 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
             .timestamp(LocalDateTime.now())
             .build();
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  private ResponseEntity<ErrorDTO> handleAccessDeniedException(AccessDeniedException ex) {
+    ErrorDTO err =
+        ErrorDTO.builder()
+            .error("access_denied")
+            .error_description(ex.getMessage())
+            .status(HttpStatus.FORBIDDEN.value())
+            .timestamp(LocalDateTime.now())
+            .build();
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
   }
 }
