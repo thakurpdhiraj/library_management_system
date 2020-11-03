@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author Dhiraj
  */
-@FeignClient("lms-inventory-service")
+@FeignClient(name = "lms-inventory-service", path = "/api/inventory/v1")
 public interface InventoryClient {
 
   /**
@@ -25,7 +25,7 @@ public interface InventoryClient {
    * @throws FeignClientException in case of an exception status returned from the service
    */
   @PostMapping(
-      value = "/api/inventory/v1/books/{bookId}/order",
+      value = "/books/{bookId}/order",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   InventoryDTO orderIfAvailable(@PathVariable Long bookId) throws FeignClientException;
@@ -39,7 +39,7 @@ public interface InventoryClient {
    * @throws FeignClientException in case of an exception status returned from the service
    */
   @PostMapping(
-      value = "/api/inventory/v1/books/{bookId}/return",
+      value = "/books/{bookId}/return",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   Boolean returnBook(@PathVariable Long bookId, @RequestParam String bookReferenceId)

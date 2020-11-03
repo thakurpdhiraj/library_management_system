@@ -1,8 +1,7 @@
-package com.dhitha.lms.inventory.config;
+package com.dhitha.lms.auth.config;
 
-import com.dhitha.lms.inventory.dto.ErrorDTO;
-import com.dhitha.lms.inventory.error.GenericException;
-import com.dhitha.lms.inventory.error.InventoryNotFoundException;
+import com.dhitha.lms.auth.dto.ErrorDTO;
+import com.dhitha.lms.auth.error.GenericException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -70,19 +69,6 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
     return ResponseEntity.badRequest().body(err);
   }
 
-  @ExceptionHandler({InventoryNotFoundException.class})
-  private ResponseEntity<ErrorDTO> handleInventoryNotFound(Exception ex) {
-    log.error("handleNotFound():{} -> {}", ex.getCause(), ex.getMessage());
-    ErrorDTO err =
-        ErrorDTO.builder()
-            .error("invalid_request")
-            .error_description(ex.getLocalizedMessage())
-            .status(HttpStatus.NOT_FOUND.value())
-            .timestamp(LocalDateTime.now())
-            .build();
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
-  }
-
   @ExceptionHandler({GenericException.class})
   private ResponseEntity<ErrorDTO> handleGeneric(GenericException ex) {
     log.error(
@@ -111,7 +97,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({Exception.class})
   private ResponseEntity<ErrorDTO> handleException(Exception ex) {
-    log.error("handleException()", ex);
+    log.error("handleException():", ex);
     ErrorDTO err =
         ErrorDTO.builder()
             .error("server_error")
