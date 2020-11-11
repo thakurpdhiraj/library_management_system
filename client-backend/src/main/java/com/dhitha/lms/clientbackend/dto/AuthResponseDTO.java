@@ -19,4 +19,6 @@ public class AuthResponseDTO implements Serializable {
   private String payload;
 
   private String signature;
+
+  private UserDTO userDTO;
 }

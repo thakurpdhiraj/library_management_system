@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @EnableFeignClients
 @EnableDiscoveryClient
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @SpringBootApplication
 public class ClientBackendApplication {
 

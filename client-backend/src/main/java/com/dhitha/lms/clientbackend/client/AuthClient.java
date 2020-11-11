@@ -2,15 +2,14 @@ package com.dhitha.lms.clientbackend.client;
 
 import com.dhitha.lms.clientbackend.dto.AuthRequestDTO;
 import com.dhitha.lms.clientbackend.dto.AuthResponseDTO;
-import com.dhitha.lms.clientbackend.dto.UserDTO;
 import feign.FeignException.FeignClientException;
-import java.util.Map;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * Client to connect to auth service
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "lms-auth-service", path = "/api/auth/v1")
 public interface AuthClient {
   @PostMapping(
-      value = "/authenticate",
+      value = "/token/authenticate",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   AuthResponseDTO authenticateUser(@RequestBody @Valid AuthRequestDTO authDTO)
@@ -30,5 +29,6 @@ public interface AuthClient {
       value = "/token/verify",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  UserDTO verifyToken(@NotEmpty @RequestBody Map<String, String> tokenMap) throws FeignClientException;
+  AuthResponseDTO verifyToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String token)
+      throws FeignClientException;
 }

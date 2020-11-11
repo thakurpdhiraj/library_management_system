@@ -1,10 +1,10 @@
 package com.dhitha.lms.clientbackend.config;
 
 import com.dhitha.lms.clientbackend.client.AuthClient;
+import com.dhitha.lms.clientbackend.dto.AuthResponseDTO;
 import com.dhitha.lms.clientbackend.dto.UserDTO;
 import feign.FeignException.FeignClientException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -39,15 +39,22 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     log.info("Authentication filter called for : {}", request.getServletPath());
     Cookie sid = WebUtils.getCookie(request, "sid");
     Cookie sig = WebUtils.getCookie(request, "sig");
-
     if (sid == null || sig == null) {
+      log.info("Cookie not present");
       filterChain.doFilter(request, response);
       return;
     }
+
     String token = sid.getValue() + "." + sig.getValue();
     try {
       log.info("Cookies token: {}", token);
-      UserDTO user = authClient.verifyToken(Collections.singletonMap("token", token));
+      AuthResponseDTO authResponseDTO = authClient.verifyToken(token);
+      String idToken = authResponseDTO.getHeader() + "." +authResponseDTO.getPayload();
+      response.addCookie(new Cookie("sid", idToken));
+      Cookie signatureCooke = new Cookie("sig", authResponseDTO.getSignature());
+      signatureCooke.setHttpOnly(true);
+      response.addCookie(signatureCooke);
+      UserDTO user = authResponseDTO.getUserDTO();
       log.info("Filter user: {} ", user);
       UsernamePasswordAuthenticationToken authToken =
           new UsernamePasswordAuthenticationToken(

@@ -13,5 +13,5 @@ public interface AuthService {
 
   AuthResponseDTO authenticate(AuthRequestDTO userDTO) throws GenericException;
 
-  UserDTO verifyToken(String token) throws GenericException;
+  AuthResponseDTO verifyToken(String token) throws GenericException;
 }

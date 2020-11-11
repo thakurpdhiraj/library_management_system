@@ -54,15 +54,21 @@ public class TokenServiceImpl implements TokenService {
 
   @Override
   public String generateIdToken(UserDTO userDTO) throws GenericException {
-    Instant issueTime = Instant.now();
-    Instant expiryTime = Instant.now().plus(TOKEN_EXPIRY_MIN, ChronoUnit.MINUTES);
+   return generateIdToken(userDTO,null);
+  }
 
+  @Override
+  public String generateIdToken(UserDTO userDTO, Date issueTime) throws GenericException {
+    if(issueTime == null){
+      issueTime = Date.from(Instant.now());
+    }
+    Instant expiryTime = Instant.now().plus(TOKEN_EXPIRY_MIN, ChronoUnit.MINUTES);
     JWTClaimsSet idToken =
         new Builder()
             .issuer(ISSUER)
             .expirationTime(Date.from(expiryTime))
-            .issueTime(Date.from(issueTime))
-            .notBeforeTime(Date.from(issueTime))
+            .issueTime(issueTime)
+            .notBeforeTime(issueTime)
             .subject(String.valueOf(userDTO.getId()))
             .claim("name", userDTO.getName())
             .claim("username", userDTO.getUsername())
@@ -78,7 +84,7 @@ public class TokenServiceImpl implements TokenService {
   }
 
   @Override
-  public UserDTO verifyToken(String token) throws GenericException {
+  public JWTClaimsSet verifyToken(String token) throws GenericException {
     try {
       DefaultJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
       JWKSet jwkSet = new JWKSet(getPublicKey());
@@ -90,14 +96,8 @@ public class TokenServiceImpl implements TokenService {
           new DefaultJWTClaimsVerifier<>(
               new JWTClaimsSet.Builder().issuer(ISSUER).build(),
               new HashSet<>(Collections.singletonList("exp"))));
-      JWTClaimsSet process = jwtProcessor.process(token, null);
-      System.out.println(process.toJSONObject(true));
-      UserDTO userDTO = new UserDTO();
-      userDTO.setId(Long.valueOf(process.getSubject()));
-      userDTO.setUserRoles(Arrays.asList(process.getStringClaim("roles").split(DELIMITER)));
-      userDTO.setName(process.getStringClaim("name"));
-      userDTO.setUsername(process.getStringClaim("username"));
-      return userDTO;
+      return jwtProcessor.process(token, null);
+
     } catch (NumberFormatException | IllegalStateException | ParseException | JOSEException | BadJOSEException e) {
       log.error("Error verifying jwt using public key ", e);
       throw new GenericException("invalid token", HttpStatus.FORBIDDEN.value());
