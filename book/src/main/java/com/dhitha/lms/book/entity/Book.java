@@ -48,9 +48,6 @@ public class Book implements Serializable {
   @Column(name = "publication", nullable = false)
   private String publication;
 
-  //  @Column(name = "publication_year", nullable = false)
-  //  private Integer publicationYear;
-
   @Column(name = "pages", nullable = false)
   private Integer pages;
 
@@ -59,6 +56,6 @@ public class Book implements Serializable {
   private String summary;
 
   @CreationTimestamp
-  @Column(name = "added_at", columnDefinition = "TIMESTAMP")
+  @Column(name = "added_at")
   private LocalDateTime addedAt;
 }

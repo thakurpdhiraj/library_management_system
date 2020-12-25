@@ -86,11 +86,13 @@ public class BookOrderServiceImpl implements BookOrderService {
     boolean orderExists =
         orderRepository.existsByUserIdAndBookId(orderDTO.getUserId(), orderDTO.getBookId());
     if (!orderExists) {
+      //TODO: Check if user is valid
       InventoryDTO inventoryDTO = inventoryService.orderIfAvailable(orderDTO.getBookId());
       orderDTO.setBookReferenceId(inventoryDTO.getBookReferenceId());
       LocalDateTime now = LocalDateTime.now();
       orderDTO.setCollectBy(now.plusDays(3));
       orderDTO.setReturnBy(now.plusMonths(1));
+      orderDTO.setId(null);
       BookOrder order = orderRepository.saveAndFlush(mapToEntity(orderDTO));
       return mapToDTO(order);
     } else {

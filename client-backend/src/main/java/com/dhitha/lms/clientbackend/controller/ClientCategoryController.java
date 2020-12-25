@@ -1,8 +1,7 @@
 package com.dhitha.lms.clientbackend.controller;
 
-import com.dhitha.lms.clientbackend.client.UserClient;
-import com.dhitha.lms.clientbackend.dto.UserDTO;
-import feign.FeignException.FeignClientException;
+import com.dhitha.lms.clientbackend.client.BookClient;
+import com.dhitha.lms.clientbackend.dto.CategoryDTO;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -21,39 +20,41 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
+ * REST controller for book service for category
+ *
  * @author Dhiraj
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
-public class UserController {
+public class ClientCategoryController {
 
-  private final UserClient userClient;
+  private final BookClient categoryClient;
 
   @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<List<UserDTO>> getAll() throws FeignClientException{
-    return ResponseEntity.ok(userClient.getAll());
+  public ResponseEntity<List<CategoryDTO>> findAll() {
+    return ResponseEntity.ok(categoryClient.findAllCategory());
   }
 
   @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<UserDTO> get(@PathVariable Long id) throws FeignClientException{
-    return ResponseEntity.ok(userClient.get(id));
+  public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id) {
+    return ResponseEntity.ok(categoryClient.findCategoryById(id));
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<UserDTO> save(@RequestBody @Valid UserDTO userDTO) throws FeignClientException{
-    UserDTO dbUser = userClient.save(userDTO);
+  public ResponseEntity<CategoryDTO> save(@Valid @RequestBody CategoryDTO categoryDTO) {
+    CategoryDTO savedCategory = categoryClient.saveCategory(categoryDTO);
     URI uri =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
-            .buildAndExpand(dbUser.getId())
+            .buildAndExpand(savedCategory.getId())
             .toUri();
-    return ResponseEntity.created(uri).body(dbUser);
+    return ResponseEntity.created(uri).body(savedCategory);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -61,14 +62,15 @@ public class UserController {
       value = "/{id}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO user){
-    return ResponseEntity.ok(userClient.update(id, user));
+  public ResponseEntity<CategoryDTO> update(
+      @PathVariable Integer id, @Valid @RequestBody CategoryDTO categoryDTO) {
+    return ResponseEntity.ok(categoryClient.updateCategory(id, categoryDTO));
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  @DeleteMapping("/{id}")
-  ResponseEntity<Void> delete(@PathVariable Long id) throws FeignClientException{
-    userClient.delete(id);
+  @DeleteMapping(value = "/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    categoryClient.deleteCategory(id);
     return ResponseEntity.noContent().build();
   }
 }

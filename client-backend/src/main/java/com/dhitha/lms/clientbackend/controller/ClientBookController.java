@@ -1,16 +1,14 @@
-package com.dhitha.lms.book.controller;
+package com.dhitha.lms.clientbackend.controller;
 
-import com.dhitha.lms.book.dto.BookDTO;
-import com.dhitha.lms.book.error.BookNotFoundException;
-import com.dhitha.lms.book.service.BookService;
+import com.dhitha.lms.clientbackend.client.BookClient;
+import com.dhitha.lms.clientbackend.dto.BookDTO;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,40 +22,42 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
- * REST Controller for {@link com.dhitha.lms.book.entity.Book}
+ * REST controller for Books
  *
  * @author Dhiraj
  */
 @RestController
-@RequestMapping("/books/v1")
+@RequestMapping("/books")
 @RequiredArgsConstructor
-public class BookController {
+public class ClientBookController {
 
-  private final BookService bookService;
+  private final BookClient bookClient;
 
+  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookDTO>> getAllBooks(
       @RequestParam(value = "author", required = false) String author) {
     List<BookDTO> bookList;
     if (StringUtils.isEmpty(author)) {
-      bookList = bookService.findAll();
+      bookList = bookClient.getAllBooks(null);
     } else {
-      bookList = bookService.findByAuthorContaining(author);
+      bookList = bookClient.getAllBooks(author);
     }
     return ResponseEntity.ok(bookList);
   }
 
+  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookDTO> getById(@PathVariable Long id) throws BookNotFoundException {
-    return ResponseEntity.ok(bookService.findById(id));
+  public ResponseEntity<BookDTO> getById(@PathVariable Long id) {
+    return ResponseEntity.ok(bookClient.getById(id));
   }
 
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookDTO> save(@RequestBody @Valid BookDTO bookDTO) {
-
-    BookDTO savedBook = bookService.save(bookDTO);
+    BookDTO savedBook = bookClient.save(bookDTO);
     URI uri =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
@@ -66,19 +66,19 @@ public class BookController {
     return ResponseEntity.created(uri).body(savedBook);
   }
 
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PutMapping(
       value = "/{id}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookDTO> update(@PathVariable Long id, @RequestBody BookDTO bookDTO)
-      throws BookNotFoundException {
-    bookDTO.setId(id);
-    return ResponseEntity.ok(bookService.update(bookDTO));
+  public ResponseEntity<BookDTO> update(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
+    return ResponseEntity.ok(bookClient.update(id, bookDTO));
   }
 
+  @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) throws BookNotFoundException {
-    bookService.delete(id);
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    bookClient.delete(id);
     return ResponseEntity.noContent().build();
   }
 }

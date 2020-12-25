@@ -1,23 +1,13 @@
-spring:
-  profiles:
-    active: prod
-
 server:
   port: 8086
   servlet:
     context-path: /lms
-
 lms:
   client:
     key: 352019a6-1c73-11eb-adc1-0242ac120002
----
 spring:
-  profiles:
-    - prod
-    - dev
   application:
     name: lms-client-service
-
 eureka:
   instance:
     hostname: localhost

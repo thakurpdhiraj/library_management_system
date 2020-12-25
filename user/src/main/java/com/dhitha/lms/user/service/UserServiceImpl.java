@@ -6,14 +6,19 @@ import com.dhitha.lms.user.error.GenericException;
 import com.dhitha.lms.user.error.UserNotFoundException;
 import com.dhitha.lms.user.repository.UserRepository;
 import java.beans.FeatureDescriptor;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +33,7 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
@@ -69,15 +75,23 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO save(UserDTO userDTO) throws GenericException {
+    userDTO.setId(null);
     userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-    User user = userRepository.saveAndFlush(mapToEntity(userDTO));
-    return userRepository
-        .findById(user.getId())
-        .map(this::mapToDTO)
-        .orElseThrow(
-            () ->
-                new GenericException(
-                    "Error in saving user ", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    try {
+      User user = userRepository.saveAndFlush(mapToEntity(userDTO));
+      return userRepository
+          .findById(user.getId())
+          .map(this::mapToDTO)
+          .orElseThrow(
+              () ->
+                  new GenericException(
+                      "Error in saving user ", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    } catch (DataIntegrityViolationException cx) {
+      log.error("Error creating new user with details {}", userDTO, cx);
+      throw new GenericException(
+          "User with username " + userDTO.getUsername() + " already exists.",
+          HttpStatus.BAD_REQUEST.value());
+    }
   }
 
   @Override

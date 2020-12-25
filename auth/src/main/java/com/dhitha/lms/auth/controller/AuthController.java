@@ -49,6 +49,11 @@ public class AuthController {
       @RequestHeader(value = HttpHeaders.AUTHORIZATION) String token) throws GenericException {
     log.info("Verification token {} ", token);
     Assert.notNull(token, "token cannot be null");
+    if(token.startsWith("Bearer ")){
+      token = token.substring(7);
+    }else{
+      throw new IllegalArgumentException("Bearer token missing");
+    }
     return ResponseEntity.ok(authService.verifyToken(token));
   }
 }

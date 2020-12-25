@@ -21,6 +21,7 @@ public class InventoryServiceImpl implements InventoryService {
   @Override
   public InventoryDTO orderIfAvailable(Long bookId) throws GenericException {
     try {
+
       return inventoryClient.orderIfAvailable(bookId);
     } catch (FeignException.NotFound e) {
       throw new GenericException("Out of stock for Book Id: " + bookId, e.status());

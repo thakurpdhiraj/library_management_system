@@ -1,4 +1,4 @@
-package com.dhitha.lms.book.dto;
+package com.dhitha.lms.clientbackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for {@link com.dhitha.lms.book.entity.Book}
+ * DTO for exchange with Book Service
  *
  * @author Dhiraj
  */
@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 public class BookDTO implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  @JsonProperty(access = Access.READ_ONLY)
   private Long id;
 
   @NotEmpty private String name;
@@ -40,6 +39,5 @@ public class BookDTO implements Serializable {
 
   private String summary;
 
-  @JsonProperty(access = Access.READ_ONLY)
   private LocalDateTime addedAt;
 }

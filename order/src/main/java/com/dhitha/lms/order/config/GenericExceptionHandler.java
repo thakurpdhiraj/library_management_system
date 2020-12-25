@@ -59,7 +59,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
       @NonNull HttpHeaders headers,
       HttpStatus status,
       @NonNull WebRequest request) {
-    log.error("handleInvalidRequest():{} -> {}", ex.getCause(), ex.getMessage());
+    log.error("handleExceptionInternal():{} -> {}", ex.getCause(), ex);
     ErrorDTO err =
         ErrorDTO.builder()
             .error("invalid_request")

@@ -6,6 +6,7 @@ import com.dhitha.lms.book.error.GenericException;
 import com.dhitha.lms.book.service.CategoryService;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * @author Dhiraj
  */
 @RestController
-@RequestMapping("/v1/categories")
+@RequestMapping("/categories/v1")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -45,7 +46,7 @@ public class CategoryController {
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<CategoryDTO> save(@RequestBody CategoryDTO categoryDTO)
+  public ResponseEntity<CategoryDTO> save(@Valid @RequestBody CategoryDTO categoryDTO)
       throws GenericException {
     CategoryDTO savedCategory = categoryService.save(categoryDTO);
     URI uri =
@@ -61,7 +62,7 @@ public class CategoryController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<CategoryDTO> update(
-      @PathVariable Integer id, @RequestBody CategoryDTO categoryDTO)
+      @PathVariable Integer id, @Valid @RequestBody CategoryDTO categoryDTO)
       throws CategoryNotFoundException, GenericException {
     categoryDTO.setId(id);
     return ResponseEntity.ok(categoryService.update(categoryDTO));

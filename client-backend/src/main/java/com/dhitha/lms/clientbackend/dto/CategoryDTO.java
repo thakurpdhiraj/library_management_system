@@ -1,13 +1,12 @@
-package com.dhitha.lms.book.dto;
+package com.dhitha.lms.clientbackend.dto;
 
 import java.io.Serializable;
-import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for {@link com.dhitha.lms.book.entity.Category}
+ * DTO for exchange with Category Service
  *
  * @author Dhiraj
  */
@@ -19,6 +18,5 @@ public class CategoryDTO implements Serializable {
 
   private Integer id;
 
-  @NotEmpty
   private String name;
 }

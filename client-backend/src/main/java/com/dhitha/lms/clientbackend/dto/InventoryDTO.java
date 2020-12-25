@@ -1,4 +1,4 @@
-package com.dhitha.lms.inventory.dto;
+package com.dhitha.lms.clientbackend.dto;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for {@link com.dhitha.lms.inventory.entity.Inventory}
+ * DTO for Inventory
  *
  * @author Dhiraj
  */

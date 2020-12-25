@@ -1,7 +1,6 @@
 package com.dhitha.lms.clientbackend.client;
 
 import com.dhitha.lms.clientbackend.dto.UserDTO;
-import feign.FeignException.FeignClientException;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -14,7 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- * Client to connect to user service
+ * Client to connect to LMS-USER-SERVICE registered in the Eureka server with name {@literal
+ * "lms-user-service"}
  *
  * @author Dhiraj
  */
@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserClient {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  List<UserDTO> getAll() throws FeignClientException;
+  List<UserDTO> getAll();
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  UserDTO get(@PathVariable Long id) throws FeignClientException;
+  UserDTO get(@PathVariable Long id);
 
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  UserDTO save(@RequestBody UserDTO userDTO) throws FeignClientException;
+  UserDTO save(@RequestBody UserDTO userDTO);
 
   @PutMapping(
       value = "/{id}",
@@ -38,7 +38,6 @@ public interface UserClient {
       produces = MediaType.APPLICATION_JSON_VALUE)
   UserDTO update(@PathVariable Long id, @RequestBody UserDTO user);
 
-  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/{id}")
-  void delete(@PathVariable Long id) throws FeignClientException;
+  void delete(@PathVariable Long id);
 }

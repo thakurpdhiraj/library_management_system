@@ -56,7 +56,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
       @NonNull HttpHeaders headers,
       @NonNull HttpStatus status,
       @NonNull WebRequest request) {
-    log.error("handleInvalidRequest():{} -> {}", ex.getCause(), ex.getMessage());
+    log.error("handleExceptionInternal():{} -> {}", ex.getCause(), ex);
     ErrorDTO err =
         ErrorDTO.builder()
             .error("invalid_request")
@@ -94,6 +94,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(AccessDeniedException.class)
   private ResponseEntity<ErrorDTO> handleAccessDeniedException(AccessDeniedException ex) {
+    log.error("handleAccessDeniedException", ex);
     ErrorDTO err =
         ErrorDTO.builder()
             .error("access_denied")

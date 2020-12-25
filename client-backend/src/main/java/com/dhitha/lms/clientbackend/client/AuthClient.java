@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
- * Client to connect to auth service
+ * Client to connect to LMS-AUTH-SERVICE registered in the Eureka server with name {@literal
+ * "lms-auth-service"}
  *
  * @author Dhiraj
  */

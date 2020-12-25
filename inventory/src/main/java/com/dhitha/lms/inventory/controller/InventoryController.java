@@ -38,7 +38,7 @@ public class InventoryController {
   }
 
   @GetMapping(value = "/{bookId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Long> getAvailableCount(@PathVariable Long bookId) throws JSONException {
+  public ResponseEntity<Long> getAvailableCount(@PathVariable Long bookId) {
     long count = inventoryService.availableCount(bookId);
     return ResponseEntity.ok(count);
   }

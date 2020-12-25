@@ -1,34 +1,11 @@
-spring:
-  profiles:
-    active: prod
-
 server:
   port: 8081
   servlet:
     context-path: /api/auth
-
 lms:
   client:
     key: 352019a6-1c73-11eb-adc1-0242ac120002
----
 spring:
-  profiles:
-    - dev
-  application:
-    name: lms-auth-service
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-
----
-spring:
-  profiles:
-    - prod
   application:
     name: lms-auth-service
 eureka:

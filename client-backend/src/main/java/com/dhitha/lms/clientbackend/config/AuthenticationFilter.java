@@ -3,8 +3,10 @@ package com.dhitha.lms.clientbackend.config;
 import com.dhitha.lms.clientbackend.client.AuthClient;
 import com.dhitha.lms.clientbackend.dto.AuthResponseDTO;
 import com.dhitha.lms.clientbackend.dto.UserDTO;
+import com.dhitha.lms.clientbackend.util.Constants;
 import feign.FeignException.FeignClientException;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -37,9 +39,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
 
     log.info("Authentication filter called for : {}", request.getServletPath());
-    Cookie sid = WebUtils.getCookie(request, "sid");
-    Cookie sig = WebUtils.getCookie(request, "sig");
-    if (sid == null || sig == null) {
+    Cookie sid = WebUtils.getCookie(request, Constants.ID_COOKIE_NAME);
+    Cookie sig = WebUtils.getCookie(request, Constants.SIGNATURE_COOKIE_NAME);
+    if (Objects.isNull(sid) || Objects.isNull(sig)) {
       log.info("Cookie not present");
       filterChain.doFilter(request, response);
       return;
@@ -48,12 +50,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     String token = sid.getValue() + "." + sig.getValue();
     try {
       log.info("Cookies token: {}", token);
-      AuthResponseDTO authResponseDTO = authClient.verifyToken(token);
+      AuthResponseDTO authResponseDTO = authClient.verifyToken("Bearer "+token);
       String idToken = authResponseDTO.getHeader() + "." +authResponseDTO.getPayload();
-      response.addCookie(new Cookie("sid", idToken));
-      Cookie signatureCooke = new Cookie("sig", authResponseDTO.getSignature());
-      signatureCooke.setHttpOnly(true);
-      response.addCookie(signatureCooke);
+      String cookiePath = request.getContextPath() + "/";
+      Cookie sidUpdated = new Cookie(Constants.ID_COOKIE_NAME, idToken);
+      sidUpdated.setPath(cookiePath);
+      response.addCookie(sidUpdated);
+      Cookie sigUpdated = new Cookie(Constants.SIGNATURE_COOKIE_NAME, authResponseDTO.getSignature());
+      sigUpdated.setHttpOnly(true);
+      sigUpdated.setPath(cookiePath);
+      response.addCookie(sigUpdated);
       UserDTO user = authResponseDTO.getUserDTO();
       log.info("Filter user: {} ", user);
       UsernamePasswordAuthenticationToken authToken =

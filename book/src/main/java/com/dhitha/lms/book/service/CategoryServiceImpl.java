@@ -46,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryDTO save(CategoryDTO categoryDTO) throws GenericException {
     try {
+      categoryDTO.setId(null);
       Category category = categoryRepository.saveAndFlush(mapToEntity(categoryDTO));
       return mapToDTO(category);
     } catch (DataIntegrityViolationException e) {
