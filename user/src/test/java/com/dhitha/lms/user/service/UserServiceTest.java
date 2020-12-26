@@ -36,7 +36,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * Test class for {@link UserService}
+ * Unit tests for {@link UserService}
  *
  * @author Dhiraj
  */

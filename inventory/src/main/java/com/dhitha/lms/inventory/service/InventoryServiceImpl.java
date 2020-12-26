@@ -58,7 +58,7 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
-  public long availableCount(Long bookId) {
+  public long getAvailableCount(Long bookId) {
     return inventoryRepository.countByIdBookIdAndAvailable(bookId,true);
   }
 

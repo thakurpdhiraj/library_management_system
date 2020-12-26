@@ -100,7 +100,7 @@ public class TokenServiceImpl implements TokenService {
 
     } catch (NumberFormatException | IllegalStateException | ParseException | JOSEException | BadJOSEException e) {
       log.error("Error verifying jwt using public key ", e);
-      throw new GenericException("invalid token", HttpStatus.FORBIDDEN.value());
+      throw new GenericException("invalid token", HttpStatus.UNAUTHORIZED.value());
     }
   }
 

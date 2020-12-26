@@ -6,7 +6,6 @@ import com.dhitha.lms.inventory.error.InventoryNotFoundException;
 import com.dhitha.lms.inventory.service.InventoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class InventoryController {
 
   @GetMapping(value = "/{bookId}/count", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Long> getAvailableCount(@PathVariable Long bookId) {
-    long count = inventoryService.availableCount(bookId);
+    long count = inventoryService.getAvailableCount(bookId);
     return ResponseEntity.ok(count);
   }
 

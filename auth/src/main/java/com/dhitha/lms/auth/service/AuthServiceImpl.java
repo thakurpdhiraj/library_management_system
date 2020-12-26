@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -45,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
           .build();
     } catch (FeignException.NotFound e) {
       log.warn("authenticate:(AuthRequestDTO) -> Invalid Credentials");
-      throw new GenericException("Invalid Username / Password", e.status());
+      throw new GenericException("Invalid Username / Password", HttpStatus.NOT_FOUND.value());
     } catch (NoSuchElementException | FeignClientException e) {
       log.error("authenticate:(AuthRequestDTO) ->  Error connecting to User Service: ", e);
       throw new GenericException();
@@ -60,7 +61,9 @@ public class AuthServiceImpl implements AuthService {
     try {
       UserDTO userDTO = new UserDTO();
       userDTO.setId(Long.valueOf(jwtClaimsSet.getSubject()));
-      userDTO.setUserRoles(Arrays.asList(jwtClaimsSet.getStringClaim("roles").split(",")));
+      if (jwtClaimsSet.getStringClaim("roles") != null) {
+        userDTO.setUserRoles(Arrays.asList(jwtClaimsSet.getStringClaim("roles").split(",")));
+      }
       userDTO.setName(jwtClaimsSet.getStringClaim("name"));
       userDTO.setUsername(jwtClaimsSet.getStringClaim("username"));
       userDTO.setCreatedAt(jwtClaimsSet.getStringClaim("createdAt"));
