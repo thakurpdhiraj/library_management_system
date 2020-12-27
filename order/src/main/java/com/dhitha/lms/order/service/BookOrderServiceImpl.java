@@ -100,7 +100,7 @@ public class BookOrderServiceImpl implements BookOrderService {
           String.format(
               "User with id %s already has order with book %s",
               orderDTO.getUserId(), orderDTO.getBookId()),
-          HttpStatus.BAD_REQUEST.value());
+          HttpStatus.FORBIDDEN.value());
     }
   }
 

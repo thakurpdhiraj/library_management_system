@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.dhitha.lms.book.dto.BookDTO;
 import com.dhitha.lms.book.dto.CategoryDTO;
-import com.dhitha.lms.book.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -36,11 +35,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @ActiveProfiles("test")
 class BookControllerTest {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  @Autowired private ObjectMapper objectMapper;
 
   @Autowired private MockMvc mockMvc;
-
-  @Autowired private BookService bookService;
 
   @Value("${lms.client.key}")
   private String apiKey;

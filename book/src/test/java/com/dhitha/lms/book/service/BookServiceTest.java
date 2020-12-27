@@ -70,8 +70,8 @@ class BookServiceTest {
         () -> {
           when(bookRepositoryMock.findById(1L)).thenReturn(Optional.empty());
           subject.findById(1L);
-          verify(bookRepositoryMock).findById(1L);
         });
+    verify(bookRepositoryMock).findById(1L);
   }
 
   /* ********************** findByAuthor ************************** */
@@ -118,9 +118,9 @@ class BookServiceTest {
         () -> {
           when(bookRepositoryMock.findById(1L)).thenReturn(Optional.empty());
           subject.update(BookDTO.builder().id(1L).build());
-          verify(bookRepositoryMock).findById(1L);
-          verify(bookRepositoryMock, never()).saveAndFlush(any(Book.class));
         });
+    verify(bookRepositoryMock).findById(1L);
+    verify(bookRepositoryMock, never()).saveAndFlush(any(Book.class));
   }
   /* ********************** delete ************************** */
 
@@ -138,7 +138,7 @@ class BookServiceTest {
         () -> {
           doThrow(EmptyResultDataAccessException.class).when(bookRepositoryMock).deleteById(20L);
           subject.delete(20L);
-          verify(bookRepositoryMock).deleteById(200L);
         });
+    verify(bookRepositoryMock).deleteById(20L);
   }
 }

@@ -81,9 +81,9 @@ class UserServiceTest {
         () -> {
           when(userRepositoryMock.findByUsername("username")).thenReturn(Optional.empty());
           subject.findByCredentials("username", "passed");
-          verify(userRepositoryMock).findByUsername("username");
-          verify(passwordEncoder, never()).matches(anyString(), anyString());
         });
+    verify(userRepositoryMock).findByUsername("username");
+    verify(passwordEncoder, never()).matches(anyString(), anyString());
   }
 
   @Test
@@ -95,9 +95,9 @@ class UserServiceTest {
           when(userRepositoryMock.findByUsername("username"))
               .thenReturn(createMockOptionalUser(1L, "name"));
           subject.findByCredentials("username", "passed");
-          verify(userRepositoryMock).findByUsername("username");
-          verify(passwordEncoder).matches("passed", ENCODED_PASS);
         });
+    verify(userRepositoryMock).findByUsername("username");
+    verify(passwordEncoder).matches("passed", ENCODED_PASS);
   }
 
   @Test
@@ -107,9 +107,9 @@ class UserServiceTest {
         IllegalArgumentException.class,
         () -> {
           subject.findByCredentials(null, "passed");
-          verify(userRepositoryMock, never()).findByUsername(anyString());
-          verify(passwordEncoder, never()).matches(anyString(), anyString());
         });
+    verify(userRepositoryMock, never()).findByUsername(anyString());
+    verify(passwordEncoder, never()).matches(anyString(), anyString());
   }
 
   @Test
@@ -119,9 +119,9 @@ class UserServiceTest {
         IllegalArgumentException.class,
         () -> {
           subject.findByCredentials("username", null);
-          verify(userRepositoryMock, never()).findByUsername(anyString());
-          verify(passwordEncoder, never()).matches(anyString(), anyString());
         });
+    verify(userRepositoryMock, never()).findByUsername(anyString());
+    verify(passwordEncoder, never()).matches(anyString(), anyString());
   }
 
   /* ********************** findAll ************************** */
@@ -175,8 +175,8 @@ class UserServiceTest {
         () -> {
           when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
           subject.findById(1L);
-          verify(userRepositoryMock).findById(1L);
         });
+    verify(userRepositoryMock).findById(1L);
   }
 
   /* ********************** findByUserName ************************** */
@@ -206,8 +206,8 @@ class UserServiceTest {
         () -> {
           when(userRepositoryMock.findByUsername("username")).thenReturn(Optional.empty());
           subject.findByUserName("username");
-          verify(userRepositoryMock).findByUsername("username");
         });
+    verify(userRepositoryMock).findByUsername("username");
   }
 
   /* ********************** save ************************** */
@@ -241,10 +241,10 @@ class UserServiceTest {
           when(userRepositoryMock.saveAndFlush(any(User.class)))
               .thenThrow(DataIntegrityViolationException.class);
           subject.save(userMock);
-          verify(passwordEncoder).encode("pass");
-          verify(userRepositoryMock).saveAndFlush(any(User.class));
-          verify(userRepositoryMock, never()).findById(1L);
         });
+    verify(passwordEncoder).encode("pass");
+    verify(userRepositoryMock).saveAndFlush(any(User.class));
+    verify(userRepositoryMock, never()).findById(1L);
   }
 
   /* ********************** update ************************** */
@@ -276,8 +276,8 @@ class UserServiceTest {
         () -> {
           when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
           subject.update(UserDTO.builder().id(1L).build());
-          verify(userRepositoryMock, never()).saveAndFlush(any(User.class));
         });
+    verify(userRepositoryMock, never()).saveAndFlush(any(User.class));
   }
 
   /* ********************** delete ************************** */
@@ -297,8 +297,8 @@ class UserServiceTest {
         () -> {
           doThrow(EmptyResultDataAccessException.class).when(userRepositoryMock).deleteById(1L);
           subject.delete(1L);
-          verify(userRepositoryMock).deleteById(anyLong());
         });
+    verify(userRepositoryMock).deleteById(anyLong());
   }
 
   /* ********************** Utility ************************** */

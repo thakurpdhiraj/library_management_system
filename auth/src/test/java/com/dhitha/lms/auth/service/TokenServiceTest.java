@@ -2,6 +2,9 @@ package com.dhitha.lms.auth.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,14 +57,14 @@ class TokenServiceTest {
         GenericException.class,
         () -> {
           Resource mockResource =
-              new FileSystemResource(
-                  new File("src/test/resources/certs/incorrect-private-key.pem"));
-          when(resourceLoader.getResource("classpath:/certs/lms-private-key.pem"))
+          resourceLoader.getResource("classpath:/certs/incorrect-private-key.pem");
+          when(resourceLoader.getResource(anyString()))
               .thenReturn(mockResource);
           UserDTO userDTO = TestUtils.createMockUser();
           subject.generateIdToken(userDTO);
-          verify(resourceLoader).getResource("classpath:/certs/lms-private-key.pem");
         });
+
+    verify(resourceLoader).getResource("classpath:/certs/lms-private-key.pem");
   }
 
   @Test
@@ -86,14 +89,14 @@ class TokenServiceTest {
         GenericException.class,
         () -> {
           Resource mockResource =
-            new FileSystemResource(
-                new File("src/test/resources/certs/incorrect-public-key.pem"));
-          when(resourceLoader.getResource("classpath:/certs/lms-public-key.pem"))
+              resourceLoader.getResource("classpath:/certs/incorrect-public-key.pem");
+          when(resourceLoader.getResource(anyString()))
               .thenReturn(mockResource);
           String mockToken = "token";
           subject.verifyToken(mockToken);
-          verify(resourceLoader).getResource("classpath:/certs/lms-public-key.pem");
         });
+
+    verify(resourceLoader).getResource("classpath:/certs/lms-public-key.pem");
   }
 
   @Test
@@ -104,7 +107,8 @@ class TokenServiceTest {
         () -> {
           String mockToken = TestUtils.createExpiredIdToken();
           subject.verifyToken(mockToken);
-          verify(resourceLoader).getResource("classpath:/certs/lms-public-key.pem");
         });
+
+    verify(resourceLoader).getResource("classpath:/certs/lms-public-key.pem");
   }
 }

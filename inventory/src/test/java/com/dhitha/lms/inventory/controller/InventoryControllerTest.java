@@ -36,7 +36,7 @@ class InventoryControllerTest {
 
   private static final String PATH = "/v1/books";
   @Autowired private MockMvc mockMvc;
-  private ObjectMapper objectMapper = new ObjectMapper();
+  @Autowired private ObjectMapper objectMapper;
 
   @Value("${lms.client.key}")
   private String apiKey;

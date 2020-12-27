@@ -79,9 +79,9 @@ class InventoryServiceTest {
         () -> {
           when(repositoryMock.findByIdBookId(1L)).thenReturn(createMockInventory(1L, false));
           subject.orderBookIfAvailable(1L);
-          verify(repositoryMock).findByIdBookId(1L);
-          verify(repositoryMock, never()).updateAvailability(any(), any(), eq(false));
         });
+    verify(repositoryMock).findByIdBookId(1L);
+    verify(repositoryMock, never()).updateAvailability(any(), any(), eq(false));
   }
 
   @Test
@@ -93,9 +93,9 @@ class InventoryServiceTest {
         () -> {
           when(repositoryMock.findByIdBookId(1L)).thenReturn(Collections.emptyList());
           subject.orderBookIfAvailable(1L);
-          verify(repositoryMock).findByIdBookId(1L);
-          verify(repositoryMock, never()).updateAvailability(anyLong(), anyString(), eq(false));
         });
+    verify(repositoryMock).findByIdBookId(1L);
+    verify(repositoryMock, never()).updateAvailability(anyLong(), anyString(), eq(false));
   }
 
   @Test
@@ -143,8 +143,8 @@ class InventoryServiceTest {
           when(repositoryMock.saveAndFlush(any(Inventory.class)))
               .thenThrow(DataIntegrityViolationException.class);
           subject.add(InventoryDTO.builder().bookId(1L).bookReferenceId("abc").build());
-          verify(repositoryMock).saveAndFlush(any(Inventory.class));
         });
+    verify(repositoryMock).saveAndFlush(any(Inventory.class));
   }
 
   @Test
@@ -164,8 +164,8 @@ class InventoryServiceTest {
         () -> {
           doThrow(EmptyResultDataAccessException.class).when(repositoryMock).deleteByIdBookId(1L);
           subject.delete(1L);
-          verify(repositoryMock).deleteByIdBookId(anyLong());
         });
+    verify(repositoryMock).deleteByIdBookId(anyLong());
   }
 
   @Test
@@ -187,8 +187,8 @@ class InventoryServiceTest {
               .when(repositoryMock)
               .deleteById(new InventoryId(1L, "abc"));
           subject.delete(1L, "abc");
-          verify(repositoryMock).deleteById(any(InventoryId.class));
         });
+    verify(repositoryMock).deleteById(any(InventoryId.class));
   }
 
   private List<Inventory> createMockInventory(long id, boolean available) {

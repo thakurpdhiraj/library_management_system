@@ -59,6 +59,7 @@ class CategoryServiceTest {
           when(categoryRepositoryMock.findById(1)).thenReturn(Optional.empty());
           subject.findById(1);
         });
+    verify(categoryRepositoryMock).findById(1);
   }
 
   /* ******************** findAll **************************** */
@@ -118,9 +119,9 @@ class CategoryServiceTest {
         () -> {
           when(categoryRepositoryMock.findById(1)).thenReturn(Optional.empty());
           subject.update(new CategoryDTO(1, "CAT"));
-          verify(categoryRepositoryMock).findById(1);
-          verify(categoryRepositoryMock, never()).saveAndFlush(any(Category.class));
         });
+    verify(categoryRepositoryMock).findById(1);
+    verify(categoryRepositoryMock, never()).saveAndFlush(any(Category.class));
   }
   /* ******************** delete **************************** */
 
@@ -138,7 +139,7 @@ class CategoryServiceTest {
         () -> {
          doThrow(EmptyResultDataAccessException.class).when(categoryRepositoryMock).deleteById(20);
           subject.delete(20);
-          verify(categoryRepositoryMock).deleteById(20);
         });
+    verify(categoryRepositoryMock).deleteById(20);
   }
 }

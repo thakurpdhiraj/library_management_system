@@ -64,7 +64,7 @@ class AuthServiceTest {
 
   @Test
   @DisplayName("authenticate: invalid credentials input, expected GenericException")
-  void testAuthenticateWithInvalidCredentials() {
+  void testAuthenticateWithInvalidCredentials() throws Exception {
     assertThrows(
         GenericException.class,
         () -> {
@@ -72,14 +72,14 @@ class AuthServiceTest {
           when(userClient.getByCredentials(reqMock)).thenThrow(FeignException.NotFound.class);
 
           subject.authenticate(reqMock);
-          verify(userClient).getByCredentials(reqMock);
-          verify(tokenService, never()).generateIdToken(any(UserDTO.class));
         });
+    verify(userClient).getByCredentials(any(AuthRequestDTO.class));
+    verify(tokenService, never()).generateIdToken(any(UserDTO.class));
   }
 
   @Test
   @DisplayName("authenticate: valid input unexpected client exception, expected GenericException")
-  void testAuthenticateWithUnexpectedClientException() {
+  void testAuthenticateWithUnexpectedClientException() throws Exception {
     assertThrows(
         GenericException.class,
         () -> {
@@ -87,14 +87,14 @@ class AuthServiceTest {
           when(userClient.getByCredentials(reqMock)).thenThrow(FeignClientException.class);
 
           subject.authenticate(reqMock);
-          verify(userClient).getByCredentials(reqMock);
-          verify(tokenService, never()).generateIdToken(any(UserDTO.class));
         });
+    verify(userClient).getByCredentials(any(AuthRequestDTO.class));
+    verify(tokenService, never()).generateIdToken(any(UserDTO.class));
   }
 
   @Test
   @DisplayName("authenticate: valid input exception on token generation, expected GenericException")
-  void testAuthenticateWithTokenGenerationError() {
+  void testAuthenticateWithTokenGenerationError() throws Exception {
     assertThrows(
         GenericException.class,
         () -> {
@@ -104,15 +104,15 @@ class AuthServiceTest {
           when(tokenService.generateIdToken(userDTO)).thenThrow(GenericException.class);
 
           subject.authenticate(reqMock);
-          verify(userClient).getByCredentials(reqMock);
-          verify(tokenService).generateIdToken(any(UserDTO.class));
         });
+    verify(userClient).getByCredentials(any(AuthRequestDTO.class));
+    verify(tokenService).generateIdToken(any(UserDTO.class));
   }
 
   @Test
   @DisplayName(
       "authenticate: valid input invalid token results NoSuchElementException, expected GenericException")
-  void testAuthenticateWithInvalidTokenGeneration() {
+  void testAuthenticateWithInvalidTokenGeneration() throws Exception {
     assertThrows(
         GenericException.class,
         () -> {
@@ -122,9 +122,10 @@ class AuthServiceTest {
           when(tokenService.generateIdToken(userDTO)).thenReturn("abc.xyz");
 
           subject.authenticate(reqMock);
-          verify(userClient).getByCredentials(reqMock);
-          verify(tokenService).generateIdToken(any(UserDTO.class));
         });
+
+    verify(userClient).getByCredentials(any(AuthRequestDTO.class));
+    verify(tokenService).generateIdToken(any(UserDTO.class));
   }
 
   @Test
@@ -147,22 +148,23 @@ class AuthServiceTest {
 
   @Test
   @DisplayName("verifyToken: invalid input, expected GenericException")
-  void testVerifyTokenInvalidToken() {
+  void testVerifyTokenInvalidToken() throws Exception {
 
     assertThrows(
         GenericException.class,
         () -> {
           when(tokenService.verifyToken("token")).thenThrow(GenericException.class);
           subject.verifyToken("token");
-          verify(tokenService).verifyToken("token");
-          verify(tokenService, never()).generateIdToken(any(UserDTO.class), any(Date.class));
         });
+
+    verify(tokenService).verifyToken("token");
+    verify(tokenService, never()).generateIdToken(any(UserDTO.class), any(Date.class));
   }
 
   @Test
   @DisplayName(
       "verifyToken: invalid type of claim eg(accountNonExpired should be boolean not string), expected GenericException")
-  void testVerifyTokenInvalidClaim() {
+  void testVerifyTokenInvalidClaim() throws Exception {
 
     assertThrows(
         GenericException.class,
@@ -171,15 +173,16 @@ class AuthServiceTest {
               new Builder().subject("1").claim("accountNonExpired", "true").build();
           when(tokenService.verifyToken("token")).thenReturn(mockClaimResult);
           subject.verifyToken("token");
-          verify(tokenService).verifyToken("token");
-          verify(tokenService, never()).generateIdToken(any(UserDTO.class), any(Date.class));
         });
+
+    verify(tokenService).verifyToken("token");
+    verify(tokenService, never()).generateIdToken(any(UserDTO.class), any(Date.class));
   }
 
   @Test
   @DisplayName(
       "verifyToken: invalid token results NoSuchElementException, expected GenericException")
-  void testVerifyTokenInvalidTokenGeneration() {
+  void testVerifyTokenInvalidTokenGeneration() throws Exception {
 
     assertThrows(
         GenericException.class,
@@ -189,9 +192,9 @@ class AuthServiceTest {
           when(tokenService.generateIdToken(any(UserDTO.class), any(Date.class)))
               .thenReturn("abc.xyz");
           subject.verifyToken("token");
-          verify(tokenService).verifyToken("token");
-          verify(tokenService).generateIdToken(any(UserDTO.class), any(Date.class));
         });
+    verify(tokenService).verifyToken("token");
+    verify(tokenService).generateIdToken(any(UserDTO.class), any(Date.class));
   }
 
   private AuthRequestDTO createMockReq() {

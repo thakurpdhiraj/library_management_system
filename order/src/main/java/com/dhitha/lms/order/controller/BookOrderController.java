@@ -89,7 +89,7 @@ public class BookOrderController {
     return ResponseEntity.created(uri).body(savedOrder);
   }
 
-  @PutMapping(value = "/{id}/collect")
+  @PutMapping(value = "/{id}/collect", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookOrderDTO> collectBook(@PathVariable Long id)
       throws OrderNotFoundException {
     return ResponseEntity.ok(bookOrderService.collectBook(id));
