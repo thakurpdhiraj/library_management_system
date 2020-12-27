@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,23 +23,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-/** @author Dhiraj */
+/**
+ * Unit tests for {@link CategoryService}
+ *
+ * @author Dhiraj
+ */
 @ExtendWith(MockitoExtension.class)
-public class CategoryServiceTest {
+class CategoryServiceTest {
 
   private final ModelMapper modelMapper = new ModelMapper();
   @Mock private CategoryRepository categoryRepositoryMock;
   private CategoryService subject;
 
   @BeforeEach
-  public void init() {
+  void init() {
     subject = new CategoryServiceImpl(categoryRepositoryMock, modelMapper);
   }
 
   /* ******************** findById **************************** */
   @Test
-  public void testFindById() throws Exception {
+  void testFindById() throws Exception {
     when(categoryRepositoryMock.findById(1)).thenReturn(Optional.of(new Category(1, "CAT", null)));
     CategoryDTO result = subject.findById(1);
     verify(categoryRepositoryMock).findById(1);
@@ -46,18 +52,19 @@ public class CategoryServiceTest {
   }
 
   @Test
-  public void testFindByIdThrowsCategoryNotFoundException() {
+  void testFindByIdThrowsCategoryNotFoundException() {
     assertThrows(
         CategoryNotFoundException.class,
         () -> {
           when(categoryRepositoryMock.findById(1)).thenReturn(Optional.empty());
           subject.findById(1);
         });
+    verify(categoryRepositoryMock).findById(1);
   }
 
   /* ******************** findAll **************************** */
   @Test
-  public void testFindAll() {
+  void testFindAll() {
     when(categoryRepositoryMock.findAll())
         .thenReturn(Collections.singletonList(new Category(1, "CAT", null)));
     List<CategoryDTO> result = subject.findAll();
@@ -66,7 +73,7 @@ public class CategoryServiceTest {
 
   /* ******************** save **************************** */
   @Test
-  public void testSave() throws Exception {
+  void testSave() throws Exception {
     when(categoryRepositoryMock.saveAndFlush(any(Category.class)))
         .thenReturn(new Category(1, "CAT", null));
     CategoryDTO result = subject.save(new CategoryDTO(null, "CAT"));
@@ -77,7 +84,7 @@ public class CategoryServiceTest {
   /* ******************** update **************************** */
 
   @Test
-  public void testUpdate() throws Exception {
+  void testUpdate() throws Exception {
     Category mock = new Category(1, "DOG", null);
     when(categoryRepositoryMock.findById(1)).thenReturn(Optional.of(new Category(1, "CAT", null)));
     when(categoryRepositoryMock.saveAndFlush(mock)).thenReturn(mock);
@@ -88,7 +95,16 @@ public class CategoryServiceTest {
   }
 
   @Test
-  public void testUpdateOnNullNameReturnsPreviousStoredCategory() throws Exception {
+  void testUpdateWithSameName() throws Exception {
+    when(categoryRepositoryMock.findById(1)).thenReturn(Optional.of(new Category(1, "CAT", null)));
+    CategoryDTO result = subject.update(new CategoryDTO(1, "CAT"));
+    assertEquals("CAT", result.getName());
+    verify(categoryRepositoryMock).findById(1);
+    verify(categoryRepositoryMock, never()).saveAndFlush(any(Category.class));
+  }
+
+  @Test
+  void testUpdateOnNullNameReturnsPreviousStoredCategory() throws Exception {
     when(categoryRepositoryMock.findById(1)).thenReturn(Optional.of(new Category(1, "CAT", null)));
     CategoryDTO result = subject.update(new CategoryDTO(1, null));
     assertEquals("CAT", result.getName());
@@ -97,37 +113,33 @@ public class CategoryServiceTest {
   }
 
   @Test
-  public void testUpdateThrowsCategoryNotFoundException() {
+  void testUpdateThrowsCategoryNotFoundException() {
     assertThrows(
         CategoryNotFoundException.class,
         () -> {
           when(categoryRepositoryMock.findById(1)).thenReturn(Optional.empty());
           subject.update(new CategoryDTO(1, "CAT"));
-          verify(categoryRepositoryMock).findById(1);
-          verify(categoryRepositoryMock, never()).saveAndFlush(any(Category.class));
         });
+    verify(categoryRepositoryMock).findById(1);
+    verify(categoryRepositoryMock, never()).saveAndFlush(any(Category.class));
   }
   /* ******************** delete **************************** */
 
   @Test
-  public void testDelete() throws Exception {
-    Category mock = new Category(1, "CAT", null);
-    when(categoryRepositoryMock.findById(1)).thenReturn(Optional.of(mock));
-    doNothing().when(categoryRepositoryMock).delete(mock);
+  void testDelete() throws Exception {
+    doNothing().when(categoryRepositoryMock).deleteById(1);
     subject.delete(1);
-    verify(categoryRepositoryMock).findById(1);
-    verify(categoryRepositoryMock).delete(any(Category.class));
+    verify(categoryRepositoryMock).deleteById(1);
   }
 
   @Test
-  public void testDeleteThrowsCategoryNotFoundException() {
+  void testDeleteThrowsCategoryNotFoundException() {
     assertThrows(
         CategoryNotFoundException.class,
         () -> {
-          when(categoryRepositoryMock.findById(1)).thenReturn(Optional.empty());
-          subject.delete(1);
-          verify(categoryRepositoryMock).findById(1);
-          verify(categoryRepositoryMock, never()).delete(any(Category.class));
+         doThrow(EmptyResultDataAccessException.class).when(categoryRepositoryMock).deleteById(20);
+          subject.delete(20);
         });
+    verify(categoryRepositoryMock).deleteById(20);
   }
 }

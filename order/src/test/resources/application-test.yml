@@ -1,0 +1,32 @@
+server:
+  port: 8084
+  servlet:
+    context-path: /api/orders
+lms:
+  client:
+    key: 352019a6-1c73-11eb-adc1-0242ac120002
+spring:
+  application:
+    name: lms-order-service
+  datasource:
+    url: jdbc:h2:mem:lms_orders;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    data: classpath:data-test.sql
+  h2:
+    console:
+      enabled: true
+      path: /h2-orders
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

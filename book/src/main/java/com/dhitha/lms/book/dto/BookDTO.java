@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class BookDTO implements Serializable {
   private static final long serialVersionUID = 1L;
 
+  @JsonProperty(access = Access.READ_ONLY)
   private Long id;
 
   @NotEmpty private String name;

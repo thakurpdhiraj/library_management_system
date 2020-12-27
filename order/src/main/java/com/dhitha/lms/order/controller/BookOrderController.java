@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/** @author Dhiraj */
+/**
+ * Controller for Orders
+ *
+ * @author Dhiraj
+ */
 @RestController
 @RequestMapping("/v1")
 @RequiredArgsConstructor
@@ -39,6 +43,11 @@ public class BookOrderController {
   @GetMapping(value = "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllByUser(@PathVariable Long userId) {
     return ResponseEntity.ok(bookOrderService.findAllByUser(userId));
+  }
+
+  @GetMapping(value = "/users/{userId}/history", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<BookOrderHistoryDTO>> findAllHistoryOfUser(@PathVariable Long userId) {
+    return ResponseEntity.ok(bookOrderHistoryService.findAllForUser(userId));
   }
 
   @GetMapping(value = "/books/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +89,7 @@ public class BookOrderController {
     return ResponseEntity.created(uri).body(savedOrder);
   }
 
-  @PutMapping(value = "/{id}/collect")
+  @PutMapping(value = "/{id}/collect", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookOrderDTO> collectBook(@PathVariable Long id)
       throws OrderNotFoundException {
     return ResponseEntity.ok(bookOrderService.collectBook(id));
@@ -93,8 +102,4 @@ public class BookOrderController {
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping(value = "/history", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<BookOrderHistoryDTO>> findAllHistoryOfUser(@RequestParam Long userId) {
-    return ResponseEntity.ok(bookOrderHistoryService.findAllForUser(userId));
-  }
 }

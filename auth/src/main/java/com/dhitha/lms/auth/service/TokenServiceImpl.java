@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -47,35 +48,43 @@ public class TokenServiceImpl implements TokenService {
   private static final String ISSUER = "http://localhost:8081";
   private static final int TOKEN_EXPIRY_MIN = 30;
   private static final JWSAlgorithm SIGN_ALGORITHM = JWSAlgorithm.RS256;
+  private static final String DELIMITER = ",";
 
   private final ResourceLoader resourceLoader;
 
   @Override
   public String generateIdToken(UserDTO userDTO) throws GenericException {
-    Instant issueTime = Instant.now();
-    Instant expiryTime = Instant.now().plus(TOKEN_EXPIRY_MIN, ChronoUnit.MINUTES);
+   return generateIdToken(userDTO,null);
+  }
 
+  @Override
+  public String generateIdToken(UserDTO userDTO, Date issueTime) throws GenericException {
+    if(issueTime == null){
+      issueTime = Date.from(Instant.now());
+    }
+    Instant expiryTime = Instant.now().plus(TOKEN_EXPIRY_MIN, ChronoUnit.MINUTES);
     JWTClaimsSet idToken =
         new Builder()
             .issuer(ISSUER)
             .expirationTime(Date.from(expiryTime))
-            .issueTime(Date.from(issueTime))
-            .notBeforeTime(Date.from(issueTime))
+            .issueTime(issueTime)
+            .notBeforeTime(issueTime)
             .subject(String.valueOf(userDTO.getId()))
             .claim("name", userDTO.getName())
+            .claim("username", userDTO.getUsername())
             .claim("createdAt", userDTO.getCreatedAt())
             .claim("updatedAt", userDTO.getUpdatedAt())
             .claim("accountNonExpired", userDTO.getAccountNonExpired())
             .claim("accountNonLocked", userDTO.getAccountNonLocked())
             .claim("credentialsNonExpired", userDTO.getCredentialsNonExpired())
             .claim("enabled", userDTO.getEnabled())
-            .claim("roles", String.join(",", userDTO.getUserRoles()))
+            .claim("roles", String.join(DELIMITER, userDTO.getUserRoles()))
             .build();
     return this.signAndSerializeToken(idToken);
   }
 
   @Override
-  public void verifyToken(String token) throws GenericException {
+  public JWTClaimsSet verifyToken(String token) throws GenericException {
     try {
       DefaultJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
       JWKSet jwkSet = new JWKSet(getPublicKey());
@@ -87,11 +96,11 @@ public class TokenServiceImpl implements TokenService {
           new DefaultJWTClaimsVerifier<>(
               new JWTClaimsSet.Builder().issuer(ISSUER).build(),
               new HashSet<>(Collections.singletonList("exp"))));
-      jwtProcessor.process(token, null);
-    } catch (IllegalStateException | ParseException | JOSEException | BadJOSEException e) {
+      return jwtProcessor.process(token, null);
+
+    } catch (NumberFormatException | IllegalStateException | ParseException | JOSEException | BadJOSEException e) {
       log.error("Error verifying jwt using public key ", e);
-      // should the error be bad request ???
-      throw new GenericException("invalid token", HttpStatus.BAD_REQUEST.value());
+      throw new GenericException("invalid token", HttpStatus.UNAUTHORIZED.value());
     }
   }
 

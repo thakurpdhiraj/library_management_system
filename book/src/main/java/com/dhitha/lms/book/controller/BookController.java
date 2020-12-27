@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * @author Dhiraj
  */
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/books/v1")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -55,6 +56,7 @@ public class BookController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookDTO> save(@RequestBody @Valid BookDTO bookDTO) {
+
     BookDTO savedBook = bookService.save(bookDTO);
     URI uri =
         ServletUriComponentsBuilder.fromCurrentRequest()

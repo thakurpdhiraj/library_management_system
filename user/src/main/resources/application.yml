@@ -1,19 +1,11 @@
-spring:
-  profiles:
-    active: dev
-
 server:
   port: 8085
   servlet:
     context-path: /api/users
-
 lms:
   client:
     key: 352019a6-1c73-11eb-adc1-0242ac120002
----
 spring:
-  profiles:
-    - dev
   application:
     name: lms-user-service
   datasource:
@@ -29,33 +21,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
-
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-
----
-spring:
-  profiles:
-    - prod
-  application:
-    name: lms-user-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/lms_users
-    username: root
-    password: password
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: ALWAYS
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
-    show-sql: true
 eureka:
   instance:
     hostname: localhost

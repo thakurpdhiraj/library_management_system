@@ -75,7 +75,7 @@ public class UserController {
     return ResponseEntity.ok(userService.update(user));
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping(value = "/{id}")
   public ResponseEntity<Void> delete(@PathVariable Long id) throws UserNotFoundException {
     userService.delete(id);
     return ResponseEntity.noContent().build();

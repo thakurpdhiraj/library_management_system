@@ -45,7 +45,7 @@ public interface InventoryService {
    * @param bookId
    * @return
    */
-  long availableCount(Long bookId);
+  long getAvailableCount(Long bookId);
 
   /**
    * Add a new book to the inventory

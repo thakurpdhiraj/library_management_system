@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 /**
  * Unit test for {@link BookService}
@@ -29,20 +31,20 @@ import org.modelmapper.ModelMapper;
  * @author Dhiraj
  */
 @ExtendWith(MockitoExtension.class)
-public class BookServiceTest {
+class BookServiceTest {
 
   private final ModelMapper modelMapper = new ModelMapper();
   @Mock private BookRepository bookRepositoryMock;
   private BookService subject;
 
   @BeforeEach
-  public void init() {
+  void init() {
     subject = new BookServiceImpl(bookRepositoryMock, modelMapper);
   }
 
   /* ********************** findAll ************************** */
   @Test
-  public void testFindAll() {
+  void testFindAll() {
     Book book = Book.builder().name("book").build();
     when(bookRepositoryMock.findAll()).thenReturn(Collections.singletonList(book));
     List<BookDTO> result = subject.findAll();
@@ -53,7 +55,7 @@ public class BookServiceTest {
 
   /* ********************** findById ************************** */
   @Test
-  public void testFindById() throws Exception {
+  void testFindById() throws Exception {
     Book book = Book.builder().name("book").build();
     when(bookRepositoryMock.findById(1L)).thenReturn(Optional.of(book));
     BookDTO result = subject.findById(1L);
@@ -62,19 +64,19 @@ public class BookServiceTest {
   }
 
   @Test
-  public void testFindByIdThrowsBookNotFoundException() throws Exception {
+  void testFindByIdThrowsBookNotFoundException() throws Exception {
     assertThrows(
         BookNotFoundException.class,
         () -> {
           when(bookRepositoryMock.findById(1L)).thenReturn(Optional.empty());
           subject.findById(1L);
-          verify(bookRepositoryMock).findById(1L);
         });
+    verify(bookRepositoryMock).findById(1L);
   }
 
   /* ********************** findByAuthor ************************** */
   @Test
-  public void testFindByAuthor() {
+  void testFindByAuthor() {
     Book book = Book.builder().name("book").author("author").build();
     when(bookRepositoryMock.findByAuthorContaining("author"))
         .thenReturn(Collections.singletonList(book));
@@ -85,7 +87,7 @@ public class BookServiceTest {
 
   /* ********************** save ************************** */
   @Test
-  public void testSave() {
+  void testSave() {
     BookDTO bookDTO = BookDTO.builder().name("book").author("author").build();
     Book book = Book.builder().id(1L).name("book").author("author").build();
     when(bookRepositoryMock.saveAndFlush(any(Book.class)))
@@ -96,7 +98,7 @@ public class BookServiceTest {
   }
   /* ********************** update ************************** */
   @Test
-  public void testUpdate() throws Exception{
+  void testUpdate() throws Exception{
     BookDTO bookDTO = BookDTO.builder().id(1L).name("new").build();
     Book book = Book.builder().id(1L).name("book").author("author").build();
     when(bookRepositoryMock.findById(1L)).thenReturn(Optional.of(book));
@@ -110,35 +112,33 @@ public class BookServiceTest {
   }
 
   @Test
-  public void testUpdateThrowsBookNotFoundException() {
+  void testUpdateThrowsBookNotFoundException() {
     assertThrows(
         BookNotFoundException.class,
         () -> {
           when(bookRepositoryMock.findById(1L)).thenReturn(Optional.empty());
           subject.update(BookDTO.builder().id(1L).build());
-          verify(bookRepositoryMock).findById(1L);
-          verify(bookRepositoryMock, never()).saveAndFlush(any(Book.class));
         });
+    verify(bookRepositoryMock).findById(1L);
+    verify(bookRepositoryMock, never()).saveAndFlush(any(Book.class));
   }
   /* ********************** delete ************************** */
 
   @Test
-  public void testDelete() throws Exception {
-    Book book = Book.builder().id(1L).name("book").author("author").build();
-    when(bookRepositoryMock.findById(1L)).thenReturn(Optional.of(book));
-    doNothing().when(bookRepositoryMock).delete(book);
+  void testDelete() throws Exception {
+    doNothing().when(bookRepositoryMock).deleteById(1L);
     subject.delete(1L);
+    verify(bookRepositoryMock).deleteById(1L);
   }
 
   @Test
-  public void testDeleteThrowsBookNotFoundException() {
+  void testDeleteThrowsBookNotFoundException() {
     assertThrows(
         BookNotFoundException.class,
         () -> {
-          when(bookRepositoryMock.findById(1L)).thenReturn(Optional.empty());
-          subject.delete(1L);
-          verify(bookRepositoryMock).findById(1L);
-          verify(bookRepositoryMock, never()).delete(any(Book.class));
+          doThrow(EmptyResultDataAccessException.class).when(bookRepositoryMock).deleteById(20L);
+          subject.delete(20L);
         });
+    verify(bookRepositoryMock).deleteById(20L);
   }
 }

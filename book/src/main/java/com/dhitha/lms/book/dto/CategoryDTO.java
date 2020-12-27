@@ -1,6 +1,7 @@
 package com.dhitha.lms.book.dto;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class CategoryDTO implements Serializable {
 
   private Integer id;
 
+  @NotEmpty
   private String name;
 }

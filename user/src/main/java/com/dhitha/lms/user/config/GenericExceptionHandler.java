@@ -59,7 +59,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
       @NonNull HttpHeaders headers,
       HttpStatus status,
       @NonNull WebRequest request) {
-    log.error("handleInvalidRequest():{} -> {}", ex.getCause(), ex.getMessage());
+    log.error("handleExceptionInternal():{} -> {}", ex.getCause(), ex);
     ErrorDTO err =
         ErrorDTO.builder()
             .error("invalid_request")
@@ -67,7 +67,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
             .status(status.value())
             .timestamp(LocalDateTime.now())
             .build();
-    return ResponseEntity.badRequest().body(err);
+    return ResponseEntity.status(status).body(err);
   }
 
   @ExceptionHandler({UserNotFoundException.class})
@@ -111,7 +111,7 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({Exception.class})
   private ResponseEntity<ErrorDTO> handleException(Exception ex) {
-    log.error("handleException():{} -> {}", ex.getCause(), ex.getMessage());
+    log.error("handleException():{} -> {}", ex.getCause(), ex);
     ErrorDTO err =
         ErrorDTO.builder()
             .error("server_error")

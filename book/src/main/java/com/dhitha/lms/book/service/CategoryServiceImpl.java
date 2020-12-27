@@ -46,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryDTO save(CategoryDTO categoryDTO) throws GenericException {
     try {
+      categoryDTO.setId(null);
       Category category = categoryRepository.saveAndFlush(mapToEntity(categoryDTO));
       return mapToDTO(category);
     } catch (DataIntegrityViolationException e) {
@@ -59,10 +60,17 @@ public class CategoryServiceImpl implements CategoryService {
   public CategoryDTO update(CategoryDTO categoryDTO)
       throws CategoryNotFoundException, GenericException {
     CategoryDTO dbCategory = this.findById(categoryDTO.getId());
-    if (StringUtils.isEmpty(categoryDTO.getName())) {
+    if (StringUtils.isEmpty(categoryDTO.getName()) || dbCategory.getName().equals(categoryDTO.getName())) {
       return dbCategory;
     }
-    return this.save(categoryDTO);
+    try {
+      Category updatedCategory = categoryRepository.saveAndFlush(mapToEntity(categoryDTO));
+      return mapToDTO(updatedCategory);
+    } catch (DataIntegrityViolationException e) {
+      log.warn("Error: {} : {}", e.getCause(), e.getMessage());
+      throw new GenericException(
+          "Category with name :'" + categoryDTO.getName() + "' already present", 400);
+    }
   }
 
   @Override

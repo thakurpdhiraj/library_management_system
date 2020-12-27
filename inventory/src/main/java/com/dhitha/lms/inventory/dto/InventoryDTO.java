@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO for {@link com.dhitha.lms.inventory.entity.Inventory}
- * @author Dhiraj */
+ *
+ * @author Dhiraj
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

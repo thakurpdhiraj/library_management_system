@@ -5,8 +5,11 @@ import com.dhitha.lms.auth.dto.AuthRequestDTO;
 import com.dhitha.lms.auth.dto.AuthResponseDTO;
 import com.dhitha.lms.auth.dto.UserDTO;
 import com.dhitha.lms.auth.error.GenericException;
+import com.nimbusds.jwt.JWTClaimsSet;
 import feign.FeignException;
 import feign.FeignException.FeignClientException;
+import java.text.ParseException;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 /**
  * Implementation for {@link AuthService}
- * @author Dhiraj */
+ *
+ * @author Dhiraj
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -30,15 +35,18 @@ public class AuthServiceImpl implements AuthService {
   public AuthResponseDTO authenticate(AuthRequestDTO authDTO) throws GenericException {
     try {
       UserDTO userDTO = userClient.getByCredentials(authDTO);
+      //TODO: Check for account expired, enabled and other details
       String idToken = tokenService.generateIdToken(userDTO);
       StringTokenizer stringTokenizer = new StringTokenizer(idToken, "\\.");
       return AuthResponseDTO.builder()
           .header(stringTokenizer.nextToken())
           .payload(stringTokenizer.nextToken())
           .signature(stringTokenizer.nextToken())
+          .userDTO(userDTO)
           .build();
     } catch (FeignException.NotFound e) {
-      throw new GenericException("Invalid Username / Password", e.status());
+      log.warn("authenticate:(AuthRequestDTO) -> Invalid Credentials");
+      throw new GenericException("Invalid Username / Password", HttpStatus.NOT_FOUND.value());
     } catch (NoSuchElementException | FeignClientException e) {
       log.error("authenticate:(AuthRequestDTO) ->  Error connecting to User Service: ", e);
       throw new GenericException();
@@ -46,7 +54,35 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public void verifyToken(String token) throws GenericException {
-     tokenService.verifyToken(token);
+  public AuthResponseDTO verifyToken(String token) throws GenericException {
+    JWTClaimsSet jwtClaimsSet = tokenService.verifyToken(token);
+    log.info("Verification ClaimSet: {}", jwtClaimsSet.toJSONObject(true));
+
+    try {
+      UserDTO userDTO = new UserDTO();
+      userDTO.setId(Long.valueOf(jwtClaimsSet.getSubject()));
+      if (jwtClaimsSet.getStringClaim("roles") != null) {
+        userDTO.setUserRoles(Arrays.asList(jwtClaimsSet.getStringClaim("roles").split(",")));
+      }
+      userDTO.setName(jwtClaimsSet.getStringClaim("name"));
+      userDTO.setUsername(jwtClaimsSet.getStringClaim("username"));
+      userDTO.setCreatedAt(jwtClaimsSet.getStringClaim("createdAt"));
+      userDTO.setUpdatedAt(jwtClaimsSet.getStringClaim("updatedAt"));
+      userDTO.setAccountNonExpired(jwtClaimsSet.getBooleanClaim("accountNonExpired"));
+      userDTO.setAccountNonLocked(jwtClaimsSet.getBooleanClaim("accountNonLocked"));
+      userDTO.setEnabled(jwtClaimsSet.getBooleanClaim("enabled"));
+      userDTO.setCredentialsNonExpired(jwtClaimsSet.getBooleanClaim("credentialsNonExpired"));
+      String idToken = tokenService.generateIdToken(userDTO, jwtClaimsSet.getIssueTime());
+      StringTokenizer stringTokenizer = new StringTokenizer(idToken, "\\.");
+      return AuthResponseDTO.builder()
+          .header(stringTokenizer.nextToken())
+          .payload(stringTokenizer.nextToken())
+          .signature(stringTokenizer.nextToken())
+          .userDTO(userDTO)
+          .build();
+    } catch (ParseException | NoSuchElementException e) {
+      log.error("verifyToken(String) -> Exception while verifying token", e);
+      throw new GenericException();
+    }
   }
 }
