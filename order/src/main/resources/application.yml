@@ -18,14 +18,12 @@ spring:
       enabled: true
       path: /h2-orders
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: create
 eureka:
-  instance:
-    hostname: localhost
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/

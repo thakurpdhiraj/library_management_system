@@ -1,0 +1,109 @@
+version: "3.7"
+
+services:
+  lms-discovery-service:
+    image: lms-discovery-service
+    container_name: lms-discovery-service
+    build: ./server
+    environment:
+      - EUREKA_HOST=lms-discovery-service
+    ports:
+      - "8761:8761"
+    restart: on-failure
+    networks:
+      - lms-backend-n
+
+  lms-auth-service:
+    image: lms-auth-service
+    container_name: lms-auth-service
+    build: ./auth
+    environment:
+      - EUREKA_HOST=lms-discovery-service
+      - WAIT_HOSTS=lms-discovery-service:8761
+    ports:
+      - "8081"
+    depends_on:
+      - lms-discovery-service
+    restart: on-failure
+    networks:
+      - lms-backend-n
+
+  lms-book-service:
+    image: lms-book-service
+    container_name: lms-book-service
+    build: ./book
+    environment:
+      - EUREKA_HOST=lms-discovery-service
+      - WAIT_HOSTS=lms-discovery-service:8761
+    ports:
+      - "8082"
+    depends_on:
+      - lms-discovery-service
+    restart: on-failure
+    networks:
+      - lms-backend-n
+
+  lms-inventory-service:
+    image: lms-inventory-service
+    container_name: lms-inventory-service
+    build: ./inventory
+    environment:
+      - EUREKA_HOST=lms-discovery-service
+      - WAIT_HOSTS=lms-discovery-service:8761
+    ports:
+      - "8083"
+    depends_on:
+      - lms-discovery-service
+    restart: on-failure
+    networks:
+      - lms-backend-n
+
+  lms-order-service:
+    image: lms-order-service
+    container_name: lms-order-service
+    build: ./order
+    environment:
+      - EUREKA_HOST=lms-discovery-service
+      - WAIT_HOSTS=lms-discovery-service:8761
+    ports:
+      - "8084"
+    depends_on:
+      - lms-discovery-service
+    restart: on-failure
+    networks:
+      - lms-backend-n
+
+  lms-user-service:
+    image: lms-user-service
+    container_name: lms-user-service
+    build: ./user
+    environment:
+      - EUREKA_HOST=lms-discovery-service
+      - WAIT_HOSTS=lms-discovery-service:8761
+    ports:
+      - "8085"
+    depends_on:
+      - lms-discovery-service
+    restart: on-failure
+    networks:
+      - lms-backend-n
+
+  lms-client-service:
+    image: lms-client-service
+    container_name: lms-client-service
+    build: ./client-backend
+    environment:
+      - EUREKA_HOST=lms-discovery-service
+      - WAIT_HOSTS=lms-discovery-service:8761
+    ports:
+      - "8086:8086"
+    depends_on:
+      - lms-discovery-service
+    restart: on-failure
+    networks:
+      - lms-backend-n
+
+
+
+networks:
+  lms-backend-n: {}
