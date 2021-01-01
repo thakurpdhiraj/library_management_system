@@ -2,7 +2,6 @@ package com.dhitha.lms.clientbackend.controller.admin;
 
 import com.dhitha.lms.clientbackend.client.OrderClient;
 import com.dhitha.lms.clientbackend.dto.BookOrderDTO;
-import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -10,12 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * Controller for Orders for admins
@@ -47,19 +43,6 @@ public class ClientOrderAdminController {
   @GetMapping(value = "/overdue/collect", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllCollectionOverdue() {
     return ResponseEntity.ok(client.findAllCollectionOverdue(null));
-  }
-
-  @PostMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookOrderDTO> orderBook(@RequestBody BookOrderDTO orderDTO) {
-    BookOrderDTO savedOrder = client.orderBook(orderDTO);
-    URI uri =
-        ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(savedOrder.getId())
-            .toUri();
-    return ResponseEntity.created(uri).body(savedOrder);
   }
 
   @PutMapping(value = "/{id}/collect")
