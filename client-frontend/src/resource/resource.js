@@ -17,6 +17,7 @@ axiosInstance.interceptors.request.use((config) => {
       return config;
     } else {
       sessionStorage.removeItem("user");
+      store.commit("setErrorMessage", "Kindly Login to continue");
       router.push("/login");
     }
   }
@@ -24,18 +25,21 @@ axiosInstance.interceptors.request.use((config) => {
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    if (response.status == 401) {
-      sessionStorage.removeItem("user");
-      store.commit("setErrorMessage", response.data.error_description);
-      router.push("/login");
-    } else if (response.status == 403) {
-      console.log("not enough permission");
-      store.commit("setErrorMessage", response.data.error_description);
-    }
     return response;
   },
   (error) => {
+    debugger;
+    console.log(error);
     if (error.response && error.response.data) {
+      if (error.response.status == 401) {
+        sessionStorage.removeItem("user");
+        store.commit("setErrorMessage", response.data.error_description);
+        router.push("/login");
+        return;
+      } else if (error.response.status == 403) {
+        console.log("403 resource");
+        store.commit("setErrorMessage", error.response.data.error_description);
+      }
       return Promise.reject(error.response.data);
     }
     return Promise.reject(error.message);

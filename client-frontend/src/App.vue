@@ -62,6 +62,7 @@
 
 <script>
 import * as auth from "./service/auth";
+import * as util from "./util/authUtil";
 export default {
   data: () => ({
     appName: "Library Management System",
@@ -74,10 +75,11 @@ export default {
     logout() {
       console.log("logout");
       auth.logout().then(() => {
-        this.$store.commit("loggedOut");
+        util.removeSessionUser();
         this.$router.push("/login");
       });
     },
   },
+  computed: {},
 };
 </script>

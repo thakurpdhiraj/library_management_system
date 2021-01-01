@@ -12,7 +12,11 @@
               <v-row v-if="error">
                 <v-col>
                   <v-alert dense outlined type="error">
-                    {{ errorMessage }}
+                    {{
+                      errorMessage != null
+                        ? errorMessage
+                        : "Something went wrong. Please try again!"
+                    }}
                   </v-alert>
                 </v-col>
               </v-row>
@@ -57,6 +61,7 @@
 
 <script>
 import * as auth from "../service/auth";
+import * as util from "../util/authUtil";
 export default {
   data: () => ({
     cred: {
@@ -65,7 +70,7 @@ export default {
     },
     showPass: false,
     error: false,
-    dialog: true,
+    dialog: false,
     rules: {
       required: (value) => !!value || "Required.",
     },
@@ -81,7 +86,6 @@ export default {
         .then(() => {
           this.loading = false;
           this.dialog = false;
-          this.$store.commit("loggedIn");
           this.$router.push(this.$route.query.redirect || "/");
         })
         .catch((err) => {
@@ -106,6 +110,13 @@ export default {
         password.trim() != ""
       );
     },
+  },
+  beforeMount() {
+    if (util.isAuthenticated()) {
+      this.$router.push(this.$route.query.redirect || "/");
+    } else {
+      this.dialog = true;
+    }
   },
 };
 </script>

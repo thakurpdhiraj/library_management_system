@@ -1,15 +1,8 @@
-const state = {
-  authenticated: false,
-};
+const state = {};
 
-const getters = {
-  isAuthenticated: (state) => state.authenticated,
-};
+const getters = {};
 
-const mutations = {
-  loggedIn: (state) => (state.authenticated = true),
-  loggedOut: (state) => (state.authenticated = false),
-};
+const mutations = {};
 
 const actions = {};
 
