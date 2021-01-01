@@ -26,51 +26,20 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/categories")
+@PreAuthorize("hasAuthority('USER')")
 @RequiredArgsConstructor
 public class ClientCategoryController {
 
   private final BookClient categoryClient;
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<CategoryDTO>> findAll() {
     return ResponseEntity.ok(categoryClient.findAllCategory());
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id) {
     return ResponseEntity.ok(categoryClient.findCategoryById(id));
-  }
-
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<CategoryDTO> save(@Valid @RequestBody CategoryDTO categoryDTO) {
-    CategoryDTO savedCategory = categoryClient.saveCategory(categoryDTO);
-    URI uri =
-        ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(savedCategory.getId())
-            .toUri();
-    return ResponseEntity.created(uri).body(savedCategory);
-  }
-
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @PutMapping(
-      value = "/{id}",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<CategoryDTO> update(
-      @PathVariable Integer id, @Valid @RequestBody CategoryDTO categoryDTO) {
-    return ResponseEntity.ok(categoryClient.updateCategory(id, categoryDTO));
-  }
-
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @DeleteMapping(value = "/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Integer id) {
-    categoryClient.deleteCategory(id);
-    return ResponseEntity.noContent().build();
   }
 }
