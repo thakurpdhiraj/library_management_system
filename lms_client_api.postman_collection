@@ -1719,7 +1719,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/admin/orders/",
+									"raw": "http://localhost:8086/lms/orders/",
 									"protocol": "http",
 									"host": [
 										"localhost"
