@@ -30,6 +30,5 @@ public class ErrorDTO implements Serializable {
   private int status;
 
   @DateTimeFormat(iso = ISO.DATE_TIME)
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime timestamp;
 }

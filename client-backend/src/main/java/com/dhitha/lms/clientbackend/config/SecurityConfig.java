@@ -2,20 +2,28 @@ package com.dhitha.lms.clientbackend.config;
 
 import com.dhitha.lms.clientbackend.dto.ErrorDTO;
 import com.dhitha.lms.clientbackend.util.Constants;
+import com.dhitha.lms.clientbackend.util.CookieUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Security Configuration to protect from non internal calls
@@ -37,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.csrf()
         .disable()
+        .cors(Customizer.withDefaults())
         .authorizeRequests()
         .antMatchers("/login")
         .permitAll()
@@ -46,12 +55,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .logout()
         .permitAll()
-        .deleteCookies(Constants.ID_COOKIE_NAME, Constants.SIGNATURE_COOKIE_NAME)
+        .addLogoutHandler(
+            (request, response, authentication) -> {
+              CookieUtil.removeCookie(Constants.ID_COOKIE_NAME, response);
+              CookieUtil.removeCookie(Constants.SIGNATURE_COOKIE_NAME, response);
+            })
         .logoutSuccessHandler(
             (request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
         .and()
         .exceptionHandling()
-        .accessDeniedHandler((request, response, accessDeniedException) -> createAccessDeniedError(response))
+        .accessDeniedHandler(
+            (request, response, accessDeniedException) -> createAccessDeniedError(response))
         .authenticationEntryPoint((request, response, authException) -> createError(response))
         .and()
         .sessionManagement()
@@ -61,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .disable();
   }
 
-  private void createError(HttpServletResponse response) throws IOException{
+  private void createError(HttpServletResponse response) throws IOException {
     ErrorDTO error =
         ErrorDTO.builder()
             .error("access_denied")
@@ -89,5 +103,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     objectMapper.writeValue(out, error);
     out.flush();
+  }
+
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+    configuration.setAllowCredentials(true);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 }
