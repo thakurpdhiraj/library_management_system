@@ -27,7 +27,7 @@
 											"});\r",
 											"\r",
 											"pm.test(\"Response contains a sig cookie\", function() {\r",
-											"    pm.expect(pm.cookies.has('sid')).to.be.true;\r",
+											"    pm.expect(pm.cookies.has('sig')).to.be.true;\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -101,7 +101,8 @@
 									{
 										"key": "Content-Type",
 										"value": "application/x-www-form-urlencoded",
-										"type": "text"
+										"type": "text",
+										"disabled": true
 									}
 								],
 								"body": {
@@ -215,7 +216,7 @@
 									}
 								],
 								"url": {
-									"raw": "http://localhost:8086/lms/users/",
+									"raw": "http://localhost:8086/lms/admin/users/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -223,6 +224,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"users",
 										""
 									]
@@ -256,7 +258,49 @@
 									}
 								],
 								"url": {
-									"raw": "http://localhost:8086/lms/users/1",
+									"raw": "http://localhost:8086/lms/admin/users/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8086",
+									"path": [
+										"lms",
+										"admin",
+										"users",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Authenticated User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "lms-key",
+										"type": "text",
+										"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8086/lms/users/me",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -265,7 +309,7 @@
 									"path": [
 										"lms",
 										"users",
-										"1"
+										"me"
 									]
 								}
 							},
@@ -310,7 +354,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/users",
+									"raw": "http://localhost:8086/lms/admin/users",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -318,6 +362,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"users"
 									]
 								}
@@ -359,7 +404,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/users/{{newUserId}}",
+									"raw": "http://localhost:8086/lms/admin/users/{{newUserId}}",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -367,6 +412,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"users",
 										"{{newUserId}}"
 									]
@@ -393,7 +439,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/users/{{newUserId}}",
+									"raw": "http://localhost:8086/lms/admin/users/{{newUserId}}",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -401,6 +447,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"users",
 										"{{newUserId}}"
 									]
@@ -632,7 +679,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/books/",
+									"raw": "http://localhost:8086/lms/admin/books/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -640,6 +687,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"books",
 										""
 									]
@@ -676,7 +724,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/books/{{newBookId}}",
+									"raw": "http://localhost:8086/lms/admin/books/{{newBookId}}",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -684,6 +732,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"books",
 										"{{newBookId}}"
 									]
@@ -711,7 +760,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/books/{{newBookId}}",
+									"raw": "http://localhost:8086/lms/admin/books/{{newBookId}}",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -719,6 +768,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"books",
 										"{{newBookId}}"
 									]
@@ -825,7 +875,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/categories/",
+									"raw": "http://localhost:8086/lms/admin/categories/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -833,6 +883,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"categories",
 										""
 									]
@@ -868,7 +919,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/categories/{{newCatId}}",
+									"raw": "http://localhost:8086/lms/admin/categories/{{newCatId}}",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -876,6 +927,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"categories",
 										"{{newCatId}}"
 									]
@@ -902,7 +954,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/categories/{{newCatId}}",
+									"raw": "http://localhost:8086/lms/admin/categories/{{newCatId}}",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -910,6 +962,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"categories",
 										"{{newCatId}}"
 									]
@@ -1035,41 +1088,6 @@
 							"response": []
 						},
 						{
-							"name": "Get Inventory of Book",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8086/lms/inventory/books/2",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8086",
-									"path": [
-										"lms",
-										"inventory",
-										"books",
-										"2"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Get Inventory Count",
 							"event": [
 								{
@@ -1106,6 +1124,42 @@
 							"response": []
 						},
 						{
+							"name": "Get Inventory of Book",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8086/lms/admin/inventory/books/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8086",
+									"path": [
+										"lms",
+										"admin",
+										"inventory",
+										"books",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Save New Book To Inventory",
 							"event": [
 								{
@@ -1133,7 +1187,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/inventory/books/",
+									"raw": "http://localhost:8086/lms/admin/inventory/books/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1141,6 +1195,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"inventory",
 										"books",
 										""
@@ -1168,7 +1223,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/inventory/books/1",
+									"raw": "http://localhost:8086/lms/admin/inventory/books/1",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1176,6 +1231,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"inventory",
 										"books",
 										"1"
@@ -1203,7 +1259,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/inventory/books/2?bookReferenceId=2b-2c-1",
+									"raw": "http://localhost:8086/lms/admin/inventory/books/2?bookReferenceId=2b-2c-1",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1211,6 +1267,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"inventory",
 										"books",
 										"2"
@@ -1343,40 +1400,6 @@
 							"response": []
 						},
 						{
-							"name": "Get Single Order",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8086/lms/orders/1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8086",
-									"path": [
-										"lms",
-										"orders",
-										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Get Orders For User",
 							"event": [
 								{
@@ -1448,41 +1471,6 @@
 							"response": []
 						},
 						{
-							"name": "Get Orders For Book",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8086/lms/orders/books/2",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8086",
-									"path": [
-										"lms",
-										"orders",
-										"books",
-										"2"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Get Orders Overdue For Return Of User",
 							"event": [
 								{
@@ -1512,41 +1500,6 @@
 										"orders",
 										"users",
 										"1",
-										"overdue",
-										"return"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Orders Overdue For Return Of ALL",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8086/lms/orders/overdue/return",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8086",
-									"path": [
-										"lms",
-										"orders",
 										"overdue",
 										"return"
 									]
@@ -1592,6 +1545,113 @@
 							"response": []
 						},
 						{
+							"name": "Get Single Order",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8086/lms/admin/orders/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8086",
+									"path": [
+										"lms",
+										"admin",
+										"orders",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Orders For Book",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8086/lms/admin/orders/books/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8086",
+									"path": [
+										"lms",
+										"admin",
+										"orders",
+										"books",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Orders Overdue For Return Of ALL",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8086/lms/admin/orders/overdue/return",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8086",
+									"path": [
+										"lms",
+										"admin",
+										"orders",
+										"overdue",
+										"return"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Get Orders Overdue For Collection for ALL",
 							"event": [
 								{
@@ -1610,7 +1670,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/orders/overdue/collect",
+									"raw": "http://localhost:8086/lms/admin/orders/overdue/collect",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1618,6 +1678,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"orders",
 										"overdue",
 										"collect"
@@ -1650,7 +1711,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"userId\": 3,\r\n        \"bookId\": 2,\r\n        \"bookReferenceId\": \"2b-2c-abc\",\r\n        \"orderedAt\": \"2020-09-25T19:16:11\",\r\n        \"collectedAt\": \"2020-09-26T19:16:11\",\r\n        \"collectBy\": null,\r\n        \"returnedAt\": null,\r\n        \"returnBy\": \"2020-10-15T19:16:11\"\r\n    }",
+									"raw": "{\r\n        \"userId\": 5,\r\n        \"bookId\": 2\r\n    }",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1658,7 +1719,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8086/lms/orders/",
+									"raw": "http://localhost:8086/lms/admin/orders/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1666,6 +1727,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"orders",
 										""
 									]
@@ -1692,7 +1754,7 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/orders/{{newOrderId}}/collect",
+									"raw": "http://localhost:8086/lms/admin/orders/{{newOrderId}}/collect",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1700,6 +1762,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"orders",
 										"{{newOrderId}}",
 										"collect"
@@ -1727,7 +1790,7 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8086/lms/orders/{{newOrderId}}/return",
+									"raw": "http://localhost:8086/lms/admin/orders/{{newOrderId}}/return",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1735,6 +1798,7 @@
 									"port": "8086",
 									"path": [
 										"lms",
+										"admin",
 										"orders",
 										"{{newOrderId}}",
 										"return"
