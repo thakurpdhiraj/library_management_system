@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import store from "../store/store";
 import * as util from "../util/authUtil";
 
-import Home from "../views/Home.vue";
+import User from "../views/User.vue";
 import Login from "../views/Login.vue";
 import Admin from "../views/Admin.vue";
 import Error from "../views/Error.vue";
@@ -13,8 +13,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "User",
+    component: User,
     meta: {
       reqAuth: true,
       reqRole: "USER",
@@ -56,7 +56,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.reqAuth)) {
-    debugger;
     if (!util.isAuthenticated()) {
       next({
         path: "/login",
@@ -70,8 +69,16 @@ router.beforeEach((to, from, next) => {
           store.commit("setErrorMessage", "Insufficient Privilege.");
           next("/error");
         }
+      } else if (to.matched.some((record) => record.meta.reqRole == "USER")) {
+        if (!util.isAdmin()) {
+          next();
+        } else {
+          store.commit("setErrorMessage", "Insufficient Privilege.");
+          next("/error");
+        }
+      } else {
+        next();
       }
-      next();
     }
   } else {
     next();
