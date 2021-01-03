@@ -26,7 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/categories")
-@PreAuthorize("hasAuthority('USER')")
+@PreAuthorize("hasAnyAuthority('ADMIN','USER')")
 @RequiredArgsConstructor
 public class ClientCategoryController {
 

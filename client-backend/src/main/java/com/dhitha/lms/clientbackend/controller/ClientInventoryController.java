@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/inventory/books")
-@PreAuthorize("hasAuthority('USER')")
+@PreAuthorize("hasAnyAuthority('ADMIN','USER')")
 @RequiredArgsConstructor
 public class ClientInventoryController {
 

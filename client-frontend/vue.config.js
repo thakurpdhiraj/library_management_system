@@ -1,4 +1,7 @@
 module.exports = {
   lintOnSave: false,
-  transpileDependencies: ["vuetify"]
+  transpileDependencies: ["vuetify"],
+  configureWebpack: {
+    devtool: "source-map",
+  },
 };
