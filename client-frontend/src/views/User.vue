@@ -15,7 +15,7 @@
       <v-col>
         <v-tabs right>
           <v-tab>
-            <v-icon left>mdi-book-plus</v-icon>
+            <v-icon left>mdi-book-multiple</v-icon>
             Orders
           </v-tab>
           <v-tab-item><orders></orders></v-tab-item>

@@ -1,7 +1,14 @@
 <template>
-  <v-dialog v-model="dialog" max-width="60%" persistent>
+  <v-dialog
+    v-model="dialog"
+    :fullscreen="$vuetify.breakpoint.mobile"
+    persistent
+  >
     <template v-slot:activator="{ on, attrs }">
-      <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+      <v-btn dark color="deep-purple darken-4" v-bind="attrs" v-on="on">
+        <v-icon left dark>
+          mdi-book-plus
+        </v-icon>
         New Order
       </v-btn>
     </template>
