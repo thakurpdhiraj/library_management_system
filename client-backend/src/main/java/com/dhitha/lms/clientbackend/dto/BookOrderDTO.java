@@ -26,6 +26,8 @@ public class BookOrderDTO implements Serializable {
 
   @NotNull private Long bookId;
 
+  private String bookName;
+
   private String bookReferenceId;
 
   private LocalDateTime orderedAt;

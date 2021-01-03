@@ -23,6 +23,8 @@ public class BookOrderHistoryDTO implements Serializable {
 
   private Long bookId;
 
+  private String bookName;
+
   private String bookReferenceId;
 
   private LocalDateTime orderedAt;
