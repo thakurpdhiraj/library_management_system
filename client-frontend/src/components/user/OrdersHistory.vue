@@ -3,7 +3,7 @@
     v-model="dialog"
     :fullscreen="$vuetify.breakpoint.mobile"
     persistent
-    overlay-opacity="0.95"
+    overlay-opacity="1"
     :height="$vuetify.breakpoint.mobile ? '100vh' : '50vh'"
     :footer-props="{
       'items-per-page-text': 'Orders per page',

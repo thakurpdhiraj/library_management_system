@@ -17,3 +17,21 @@ export const getUsersOrderHistory = async () => {
     return await response.data;
   }
 };
+
+export const getUsersOrderReturnOverdue = async () => {
+  let response = await resource.get("/orders/users/me/overdue/return");
+  if (!response.status === 200) {
+    throw new Error(response.data);
+  } else {
+    return await response.data;
+  }
+};
+
+export const getUsersOrderCollectionOverdue = async () => {
+  let response = await resource.get("/orders/users/me/overdue/collect");
+  if (!response.status === 200) {
+    throw new Error(response.data);
+  } else {
+    return await response.data;
+  }
+};

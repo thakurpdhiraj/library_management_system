@@ -4,7 +4,7 @@
       <v-col>
         <v-data-table
           :headers="headers"
-          :items="filterOrders"
+          :items="orders"
           class="elevation-10"
           :loading="loading"
           loading-text="Loading...Please wait"
@@ -28,7 +28,7 @@
           </template>
           <template v-slot:top>
             <template v-if="$vuetify.breakpoint.mobile">
-              <order-history></order-history>
+              <orders-history></orders-history>
               <new-order @newAdded="newAdded = true"></new-order>
               <v-list>
                 <v-list-group :value="false" prepend-icon="mdi-filter">
@@ -72,7 +72,7 @@
                 </v-list>
               </v-menu>
               <v-spacer></v-spacer>
-              <order-history></order-history>
+              <orders-history></orders-history>
               <new-order @newAdded="newAdded = true"></new-order>
             </v-toolbar>
           </template>
@@ -84,7 +84,7 @@
 
 <script>
 import NewOrder from "./NewOrder";
-import OrderHistory from "./OrderHistory";
+import OrdersHistory from "./OrdersHistory";
 import * as orders from "../../service/order";
 export default {
   data: () => ({
@@ -118,7 +118,6 @@ export default {
       },
       { text: "Return By", value: "returnBy", class: "indigo--text darken-4" },
     ],
-    filterOrders: [],
     orders: [],
     newAdded: false,
     loading: false,
@@ -132,9 +131,7 @@ export default {
         .then((data) => {
           this.loading = false;
           this.newAdded = false;
-
           this.replaceArray(this.orders, data);
-          this.replaceArray(this.filterOrders, data);
         })
         .catch((err) => {
           console.log(err);
@@ -164,16 +161,35 @@ export default {
       }
     },
     filterCollectionOverdue() {
-      this.filterOrders.splice(1, 1);
-      console.log("ret over", this.filterOrders, this.orders);
+      orders
+        .getUsersOrderCollectionOverdue()
+        .then((data) => {
+          this.loading = false;
+          this.newAdded = false;
+          this.replaceArray(this.orders, data);
+        })
+        .catch((err) => {
+          console.log(err);
+          this.loading = false;
+          this.$store.commit("setErrorMessage", err.error_description);
+        });
     },
     filterReturnOverdue() {
-      this.filterOrders.splice(1, 1);
-      console.log("ret over", this.filterOrders, this.orders);
+      orders
+        .getUsersOrderReturnOverdue()
+        .then((data) => {
+          this.loading = false;
+          this.newAdded = false;
+          this.replaceArray(this.orders, data);
+        })
+        .catch((err) => {
+          console.log(err);
+          this.loading = false;
+          this.$store.commit("setErrorMessage", err.error_description);
+        });
     },
     filterAll() {
-      this.replaceArray(this.filterOrders, this.orders);
-      console.log("ret over", this.filterOrders, this.orders);
+      this.findAllOrders();
     },
     replaceArray(dest, src) {
       dest.length = 0;
@@ -192,7 +208,7 @@ export default {
   },
   components: {
     NewOrder,
-    OrderHistory,
+    OrdersHistory,
   },
   watch: {
     newAdded(value) {
