@@ -67,13 +67,13 @@ export default {
       filterData: [
         { value: "name", label: "Name" },
         { value: "author", label: "Author" },
-        { value: "publication", label: "Publication" },
+        { value: "publication", label: "Publication" }
       ],
       textFields: [],
       books: [],
       selectedNewBook: null,
       benched: 0,
-      loading: false,
+      loading: false
     };
   },
   methods: {
@@ -90,12 +90,14 @@ export default {
       console.log("search book");
       books
         .findAllBooks()
-        .then((data) => {
+        .then(data => {
           this.loading = false;
           this.books = data;
         })
-        .catch((err) => {});
-    },
+        .catch(err => {
+          console.log("Error", err);
+        });
+    }
   },
   computed: {
     isSelected() {
@@ -105,11 +107,11 @@ export default {
       if (this.selectedNewBook != null)
         return this.selectedNewBook.name + ",  " + this.selectedNewBook.author;
       else return "";
-    },
+    }
   },
   created() {
     this.searchBooks();
-  },
+  }
 };
 </script>
 

@@ -1,12 +1,12 @@
 import resource from "../resource/resource";
 import * as util from "../util/authUtil";
 
-export const login = async (cred) => {
+export const login = async cred => {
   let response = await resource.post(
     "/login",
     new URLSearchParams({
       username: cred.username,
-      password: cred.password,
+      password: cred.password
     })
   );
 

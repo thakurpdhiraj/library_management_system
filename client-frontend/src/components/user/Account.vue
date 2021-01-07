@@ -16,7 +16,7 @@ export default {
 
   created() {
     console.log("account created");
-  },
+  }
 };
 </script>
 

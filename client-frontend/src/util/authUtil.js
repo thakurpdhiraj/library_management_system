@@ -7,13 +7,13 @@ export const isAdmin = () => {
   return user.roles.includes("ADMIN");
 };
 
-export const setSessionUser = (user) => {
+export const setSessionUser = user => {
   sessionStorage.setItem(
     "user",
     JSON.stringify({
       name: user.username,
       roles: user.userRoles,
-      id: user.id,
+      id: user.id
     })
   );
 };

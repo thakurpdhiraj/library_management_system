@@ -13,7 +13,7 @@
           :sort-by="['orderedAt']"
           :sort-desc="['true']"
           :footer-props="{
-            'items-per-page-text': 'Orders per page',
+            'items-per-page-text': 'Orders per page'
           }"
         >
           <template v-slot:[`item.collectBy`]="{ item }">
@@ -93,34 +93,34 @@ export default {
         text: "Book Name",
         align: "start",
         value: "bookName",
-        class: "indigo--text darken-4",
+        class: "indigo--text darken-4"
       },
       {
         text: "Book Reference Id",
         value: "bookReferenceId",
         sortable: false,
-        class: "indigo--text darken-4",
+        class: "indigo--text darken-4"
       },
       {
         text: "Ordered At",
         value: "orderedAt",
-        class: "indigo--text darken-4",
+        class: "indigo--text darken-4"
       },
       {
         text: "Collected At",
         value: "collectedAt",
-        class: "indigo--text darken-4",
+        class: "indigo--text darken-4"
       },
       {
         text: "Collect By",
         value: "collectBy",
-        class: "indigo--text darken-43",
+        class: "indigo--text darken-43"
       },
-      { text: "Return By", value: "returnBy", class: "indigo--text darken-4" },
+      { text: "Return By", value: "returnBy", class: "indigo--text darken-4" }
     ],
     orders: [],
     newAdded: false,
-    loading: false,
+    loading: false
   }),
   methods: {
     findAllOrders() {
@@ -128,12 +128,12 @@ export default {
       this.loading = true;
       orders
         .getUsersOrder()
-        .then((data) => {
+        .then(data => {
           this.loading = false;
           this.newAdded = false;
           this.replaceArray(this.orders, data);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.loading = false;
           this.$store.commit("setErrorMessage", err.error_description);
@@ -163,12 +163,12 @@ export default {
     filterCollectionOverdue() {
       orders
         .getUsersOrderCollectionOverdue()
-        .then((data) => {
+        .then(data => {
           this.loading = false;
           this.newAdded = false;
           this.replaceArray(this.orders, data);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.loading = false;
           this.$store.commit("setErrorMessage", err.error_description);
@@ -177,12 +177,12 @@ export default {
     filterReturnOverdue() {
       orders
         .getUsersOrderReturnOverdue()
-        .then((data) => {
+        .then(data => {
           this.loading = false;
           this.newAdded = false;
           this.replaceArray(this.orders, data);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.loading = false;
           this.$store.commit("setErrorMessage", err.error_description);
@@ -200,7 +200,7 @@ export default {
       let now = Date.now();
       let diff = time - now;
       return diff / (1000 * 3600 * 24);
-    },
+    }
   },
   created() {
     console.log("orders created");
@@ -208,15 +208,15 @@ export default {
   },
   components: {
     NewOrder,
-    OrdersHistory,
+    OrdersHistory
   },
   watch: {
-    newAdded(value) {
+    newAdded() {
       if (this.newAdded) {
         this.findAllOrders();
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

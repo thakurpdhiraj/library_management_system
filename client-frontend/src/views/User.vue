@@ -32,20 +32,19 @@
 </template>
 
 <script>
-import * as userService from "../service/user";
 import Orders from "../components/user/Orders";
 import Account from "../components/user/Account";
 export default {
   methods: {},
   components: {
     Orders,
-    Account,
+    Account
   },
   computed: {
     errorMessage() {
       return this.$store.getters.getErrorMessage;
-    },
-  },
+    }
+  }
 };
 </script>
 

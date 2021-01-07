@@ -88,7 +88,7 @@ export default {
   data: () => ({
     dialog: false,
     o1: 1,
-    selectedNewBook: null,
+    selectedNewBook: null
   }),
   methods: {
     close() {
@@ -108,8 +108,8 @@ export default {
     orderBook() {
       console.log("order book");
       //this.$emit("newAdded"); if successfully ordered
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -19,8 +19,8 @@ export default {
   computed: {
     errorMessage() {
       return this.$store.getters.getErrorMessage;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -26,7 +26,7 @@ import * as util from "./util/authUtil";
 export default {
   data: () => ({
     appName: "Library Management System",
-    apShortName: "LMS",
+    apShortName: "LMS"
   }),
   methods: {
     logout() {
@@ -34,7 +34,7 @@ export default {
         util.removeSessionUser();
         this.$router.push("/login");
       });
-    },
-  },
+    }
+  }
 };
 </script>

@@ -6,7 +6,7 @@
     overlay-opacity="1"
     :height="$vuetify.breakpoint.mobile ? '100vh' : '50vh'"
     :footer-props="{
-      'items-per-page-text': 'Orders per page',
+      'items-per-page-text': 'Orders per page'
     }"
   >
     <template v-slot:activator="{ on, attrs }">
@@ -55,9 +55,9 @@ export default {
       { text: "Book Reference Id", value: "bookReferenceId", sortable: false },
       { text: "Ordered At", value: "orderedAt" },
       { text: "Collected At", value: "collectedAt" },
-      { text: "Returned At", value: "returnedAt" },
+      { text: "Returned At", value: "returnedAt" }
     ],
-    history: [],
+    history: []
   }),
   methods: {
     close() {
@@ -68,28 +68,28 @@ export default {
       this.loading = true;
       orders
         .getUsersOrderHistory()
-        .then((data) => {
+        .then(data => {
           this.loading = false;
           this.history.length = 0;
           this.history.push(...data);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.loading = false;
           this.$store.commit("setErrorMessage", err.error_description);
         });
-    },
+    }
   },
   created() {
     console.log("orders history created");
   },
   watch: {
-    dialog(value) {
+    dialog() {
       if (this.dialog) {
         this.findAllOrdersHistory();
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
