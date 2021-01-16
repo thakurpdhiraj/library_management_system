@@ -32,6 +32,7 @@ export default {
     logout() {
       auth.logout().then(() => {
         util.removeSessionUser();
+        this.$store.commit("setErrorMessage", null);
         this.$router.push("/login");
       });
     }
