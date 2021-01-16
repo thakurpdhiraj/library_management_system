@@ -22,7 +22,7 @@ public class BookOrderDTO implements Serializable {
 
   private Long id;
 
-  @NotNull private Long userId;
+  private Long userId;
 
   @NotNull private Long bookId;
 
