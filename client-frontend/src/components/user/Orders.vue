@@ -77,6 +77,15 @@
             </v-toolbar>
           </template>
         </v-data-table>
+        <v-snackbar :value="newAdded" top timeout="4000" color="success">
+          <v-icon>mdi-check-circle</v-icon>
+          New Book successfully ordered!
+          <template v-slot:action="{ attrs }">
+            <v-btn color="white" text v-bind="attrs" @click="newAdded = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
       </v-col>
     </v-row>
   </v-container>
@@ -130,7 +139,6 @@ export default {
         .getUsersOrder()
         .then(data => {
           this.loading = false;
-          this.newAdded = false;
           this.replaceArray(this.orders, data);
         })
         .catch(err => {
@@ -165,7 +173,6 @@ export default {
         .getUsersOrderCollectionOverdue()
         .then(data => {
           this.loading = false;
-          this.newAdded = false;
           this.replaceArray(this.orders, data);
         })
         .catch(err => {
@@ -179,7 +186,6 @@ export default {
         .getUsersOrderReturnOverdue()
         .then(data => {
           this.loading = false;
-          this.newAdded = false;
           this.replaceArray(this.orders, data);
         })
         .catch(err => {
@@ -213,6 +219,7 @@ export default {
   watch: {
     newAdded() {
       if (this.newAdded) {
+        setTimeout(() => (this.newAdded = false), 4000);
         this.findAllOrders();
       }
     }

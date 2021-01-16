@@ -1,8 +1,8 @@
 import resource from "../resource/resource";
 
-export const getAllUsers = async () => {
-  let response = await resource.get("/admin/users");
-  console.log(response);
+export const findAvailableBookCount = async id => {
+  console.log("search inventory for", id);
+  let response = await resource.get(`/inventory/books/${id}/count`);
   if (response.status !== 200) {
     throw new Error(response.data);
   } else {

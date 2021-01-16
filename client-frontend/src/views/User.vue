@@ -1,10 +1,10 @@
 <template>
   <v-container class="pa-0">
-    <v-row v-if="errorMessage != null">
+    <v-row v-if="errorMessage">
       <v-col cols="12">
-        <v-alert dense outlined type="error">
+        <v-alert dense outlined transition="scale-transition" type="error">
           {{
-            errorMessage != null
+            errorMessage
               ? errorMessage
               : "Something went wrong. Please try again!"
           }}

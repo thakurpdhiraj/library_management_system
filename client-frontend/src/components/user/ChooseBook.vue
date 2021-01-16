@@ -17,18 +17,26 @@
               >
                 <template v-slot:default="{ active }">
                   <v-list-item-content>
-                    <v-list-item-title v-text="item.name"></v-list-item-title>
+                    <v-list-item-title
+                      class="green--text"
+                      v-text="item.name"
+                    ></v-list-item-title>
                     <v-list-item-subtitle
                       v-text="
                         'Author: ' +
                           item.author +
-                          ', Publisher: ' +
-                          item.publication
+                          ' , Category: ' +
+                          item.category.name +
+                          ' , Publisher: ' +
+                          item.publication +
+                          ' , Published At: ' +
+                          (item.publicationYear ? item.publicationYear : '-')
                       "
                     ></v-list-item-subtitle>
                     <v-list-item-subtitle
                       v-if="active"
                       v-text="item.summary"
+                      class="text-truncate"
                     ></v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -53,8 +61,8 @@
       >
         Continue
       </v-btn>
-      <span class="ml-5" v-if="selectedNewBook">to order :</span>
-      <span class="ml-2" v-text="orderName"></span>
+      <span class="ml-5" v-if="selectedNewBook">Order :</span>
+      <span class="ml-2 text-truncate" v-text="orderName"></span>
     </v-card-actions>
   </v-card>
 </template>
@@ -78,7 +86,7 @@ export default {
   },
   methods: {
     searchInventory() {
-      this.$emit("searchInventory", this.selectedNewBook.name);
+      this.$emit("searchInventory", this.selectedNewBook);
     },
     addFilter() {
       // create button to add text fields for different filter in filterData

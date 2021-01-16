@@ -22,7 +22,7 @@ export const login = async cred => {
 export const logout = async () => {
   let response = await resource.post("/logout");
 
-  if (!response.status === 200) {
+  if (response.status !== 200) {
     throw new Error(response.data);
   } else {
     util.removeSessionUser();

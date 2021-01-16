@@ -12,7 +12,12 @@
               <v-container>
                 <v-row v-if="errorMessage != null">
                   <v-col>
-                    <v-alert dense outlined type="error">
+                    <v-alert
+                      dense
+                      outlined
+                      transition="scale-transition"
+                      type="error"
+                    >
                       {{
                         errorMessage != null
                           ? errorMessage

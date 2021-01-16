@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-alert dense outlined type="error">
+        <v-alert dense outlined transition="scale-transition" type="error">
           {{
             errorMessage != null
               ? errorMessage
