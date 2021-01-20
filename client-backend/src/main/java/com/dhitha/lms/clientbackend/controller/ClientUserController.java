@@ -47,7 +47,7 @@ public class ClientUserController {
   }
 
   @PostMapping(
-      value = "/change-password",
+      value = "/me/change-password",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserDTO> changeUserPassword(

@@ -21,7 +21,7 @@ const routes = [
     }
   },
   {
-    path: "/admin",
+    path: "/admin*",
     name: "Admin",
     component: Admin,
     meta: {
@@ -73,8 +73,7 @@ router.beforeEach((to, from, next) => {
         if (!util.isAdmin()) {
           next();
         } else {
-          store.commit("setErrorMessage", "Insufficient Privilege.");
-          next("/error");
+          next("/admin");
         }
       } else {
         next();

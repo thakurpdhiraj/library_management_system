@@ -47,7 +47,7 @@
                 </v-list-group>
               </v-list>
             </template>
-            <v-toolbar flat v-if="!$vuetify.breakpoint.mobile">
+            <v-toolbar flat v-else>
               <v-toolbar-title>My Orders</v-toolbar-title>
               <v-divider class="mx-5" inset vertical></v-divider>
               <v-menu bottom transition="slide-y-transition">

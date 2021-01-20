@@ -9,6 +9,15 @@ export const getAllUsers = async () => {
   }
 };
 
+export const getUser = async id => {
+  let response = await resource.get(`/admin/users/${id}`);
+  if (response.status !== 200) {
+    throw new Error(response.data);
+  } else {
+    return await response.data;
+  }
+};
+
 export const getLoggedInUser = async () => {
   let response = await resource.get("/users/me");
   if (response.status !== 200) {
@@ -31,7 +40,7 @@ export const updateUser = async user => {
 };
 
 export const changePassword = async cred => {
-  let response = await resource.post("/users/change-password", {
+  let response = await resource.post("/users/me/change-password", {
     password: cred.password
   });
   if (response.status !== 200) {

@@ -6,9 +6,7 @@
       <v-toolbar-title v-if="$vuetify.breakpoint.smAndUp">{{
         appName
       }}</v-toolbar-title>
-      <v-toolbar-title v-if="$vuetify.breakpoint.smAndDown">{{
-        apShortName
-      }}</v-toolbar-title>
+      <v-toolbar-title v-else>{{ apShortName }}</v-toolbar-title>
       <v-spacer />
       <v-btn @click="logout">Logout</v-btn>
     </v-app-bar>

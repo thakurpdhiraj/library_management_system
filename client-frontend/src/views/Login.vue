@@ -95,7 +95,8 @@ export default {
           this.dialog = false;
           let url = "/";
           if (util.isAdmin()) {
-            url = "/admin/orders";
+            url = "/admin";
+            this.$store.commit("setHome", url);
           }
           this.$router.push(this.$route.query.redirect || url);
         })
