@@ -26,10 +26,4 @@ public class GenericException extends Exception {
     this.message = message;
     this.status = status;
   }
-
-  @Override
-  public String getMessage() {
-    return message;
-  }
-
 }

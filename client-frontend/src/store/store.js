@@ -6,18 +6,18 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    errorMessage: null,
+    errorMessage: null
   },
   getters: {
-    getErrorMessage: (state) => state.errorMessage,
+    getErrorMessage: state => state.errorMessage
   },
   mutations: {
     setErrorMessage(state, message) {
       state.errorMessage = message;
-    },
+    }
   },
   actions: {},
   modules: {
-    userStore,
-  },
+    userStore
+  }
 });

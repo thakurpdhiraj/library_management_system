@@ -12,7 +12,12 @@
               <v-container>
                 <v-row v-if="errorMessage != null">
                   <v-col>
-                    <v-alert dense outlined type="error">
+                    <v-alert
+                      dense
+                      outlined
+                      transition="scale-transition"
+                      type="error"
+                    >
                       {{
                         errorMessage != null
                           ? errorMessage
@@ -68,15 +73,15 @@ export default {
   data: () => ({
     cred: {
       username: null,
-      password: null,
+      password: null
     },
     showPass: false,
     error: false,
     dialog: false,
     rules: {
-      required: (value) => !!value || "Required.",
+      required: value => !!value || "Required."
     },
-    loading: false,
+    loading: false
   }),
   methods: {
     login() {
@@ -94,11 +99,11 @@ export default {
           }
           this.$router.push(this.$route.query.redirect || url);
         })
-        .catch((err) => {
+        .catch(err => {
           this.loading = false;
           this.$store.commit("setErrorMessage", err.error_description);
         });
-    },
+    }
   },
   computed: {
     errorMessage() {
@@ -114,7 +119,7 @@ export default {
         password.trim() != "" &&
         !this.loading
       );
-    },
+    }
   },
   beforeMount() {
     if (util.isAuthenticated()) {
@@ -126,7 +131,7 @@ export default {
     } else {
       this.dialog = true;
     }
-  },
+  }
 };
 </script>
 

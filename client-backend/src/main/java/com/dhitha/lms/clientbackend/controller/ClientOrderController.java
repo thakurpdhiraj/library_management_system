@@ -75,7 +75,9 @@ public class ClientOrderController {
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookOrderDTO> orderBook(@RequestBody BookOrderDTO orderDTO) {
+  public ResponseEntity<BookOrderDTO> orderBook(@RequestBody BookOrderDTO orderDTO, Authentication authentication) {
+    UserDTO userDTO = (UserDTO)authentication.getPrincipal();
+    orderDTO.setUserId(userDTO.getId());
     BookOrderDTO savedOrder = client.orderBook(orderDTO);
     URI uri =
         ServletUriComponentsBuilder.fromCurrentRequest()
@@ -86,6 +88,6 @@ public class ClientOrderController {
     savedOrder.setBookName(bookNames.get(savedOrder.getBookId()));
     return ResponseEntity.created(uri).body(savedOrder);
   }
-  
-  
+
+
 }

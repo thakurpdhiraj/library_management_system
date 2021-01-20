@@ -6,10 +6,10 @@ import * as util from "../util/authUtil";
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8086/lms",
   withCredentials: true,
-  timeout: 10000,
+  timeout: 10000
 });
 
-axiosInstance.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use(config => {
   if (config.url === "/login") {
     return config;
   } else {
@@ -34,10 +34,10 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 axiosInstance.interceptors.response.use(
-  (response) => {
+  response => {
     return response;
   },
-  (error) => {
+  error => {
     if (error.response && error.response.data) {
       if (error.response.status == 401) {
         console.log("401");

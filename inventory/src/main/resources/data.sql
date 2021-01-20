@@ -1,4 +1,13 @@
 insert into inventory(book_id,book_reference_id,category_id) values (1,'1b-1c-1',1);
-insert into inventory(book_id,book_reference_id,category_id) values (2,'2b-2c-2',2);
-insert into inventory(book_id,book_reference_id,category_id) values (2,'2b-2c-3',2);
-insert into inventory(book_id,book_reference_id,category_id) values (2,'2b-2c-4',2);
+insert into inventory(book_id,book_reference_id,category_id) values (2,'2b-1c-1',1);
+insert into inventory(book_id,book_reference_id,category_id) values (2,'2b-1c-2',1);
+insert into inventory(book_id,book_reference_id,category_id) values (2,'2b-1c-3',1);
+insert into inventory(book_id,book_reference_id,category_id) values (3,'3b-2c-1',2);
+insert into inventory(book_id,book_reference_id,category_id) values (3,'3b-2c-2',2);
+insert into inventory(book_id,book_reference_id,category_id) values (4,'4b-2c-1',2);
+insert into inventory(book_id,book_reference_id,category_id) values (5,'5b-2c-1',2);
+insert into inventory(book_id,book_reference_id,category_id) values (6,'6b-2c-1',2);
+insert into inventory(book_id,book_reference_id,category_id) values (9,'9b-2c-1',2);
+insert into inventory(book_id,book_reference_id,category_id) values (10,'10b-2c-1',1);
+insert into inventory(book_id,book_reference_id,category_id) values (10,'10b-2c-2',1);
+insert into inventory(book_id,book_reference_id,category_id) values (11,'11b-1c-1',1);

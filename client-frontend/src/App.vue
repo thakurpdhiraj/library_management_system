@@ -3,7 +3,12 @@
     <v-app-bar app fixed>
       <v-icon>mdi-library</v-icon>
       <v-spacer></v-spacer>
-      <v-toolbar-title>{{ appName }}</v-toolbar-title>
+      <v-toolbar-title v-if="$vuetify.breakpoint.smAndUp">{{
+        appName
+      }}</v-toolbar-title>
+      <v-toolbar-title v-if="$vuetify.breakpoint.smAndDown">{{
+        apShortName
+      }}</v-toolbar-title>
       <v-spacer />
       <v-btn @click="logout">Logout</v-btn>
     </v-app-bar>
@@ -21,14 +26,16 @@ import * as util from "./util/authUtil";
 export default {
   data: () => ({
     appName: "Library Management System",
+    apShortName: "LMS"
   }),
   methods: {
     logout() {
       auth.logout().then(() => {
         util.removeSessionUser();
+        this.$store.commit("setErrorMessage", null);
         this.$router.push("/login");
       });
-    },
-  },
+    }
+  }
 };
 </script>

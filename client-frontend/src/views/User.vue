@@ -1,10 +1,10 @@
 <template>
   <v-container class="pa-0">
-    <v-row v-if="errorMessage != null">
+    <v-row v-if="errorMessage">
       <v-col cols="12">
-        <v-alert dense outlined type="error">
+        <v-alert dense outlined transition="scale-transition" type="error">
           {{
-            errorMessage != null
+            errorMessage
               ? errorMessage
               : "Something went wrong. Please try again!"
           }}
@@ -15,7 +15,7 @@
       <v-col>
         <v-tabs right>
           <v-tab>
-            <v-icon left>mdi-book-plus</v-icon>
+            <v-icon left>mdi-book-multiple</v-icon>
             Orders
           </v-tab>
           <v-tab-item><orders></orders></v-tab-item>
@@ -32,20 +32,19 @@
 </template>
 
 <script>
-import * as userService from "../service/user";
 import Orders from "../components/user/Orders";
 import Account from "../components/user/Account";
 export default {
   methods: {},
   components: {
     Orders,
-    Account,
+    Account
   },
   computed: {
     errorMessage() {
       return this.$store.getters.getErrorMessage;
-    },
-  },
+    }
+  }
 };
 </script>
 

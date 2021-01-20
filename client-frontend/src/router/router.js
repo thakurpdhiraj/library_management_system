@@ -17,8 +17,8 @@ const routes = [
     component: User,
     meta: {
       reqAuth: true,
-      reqRole: "USER",
-    },
+      reqRole: "USER"
+    }
   },
   {
     path: "/admin",
@@ -26,8 +26,8 @@ const routes = [
     component: Admin,
     meta: {
       reqAuth: true,
-      reqRole: "ADMIN",
-    },
+      reqRole: "ADMIN"
+    }
   },
   {
     path: "/login",
@@ -35,8 +35,8 @@ const routes = [
     component: Login,
     meta: {
       reqAuth: false,
-      reqRole: "ANY",
-    },
+      reqRole: "ANY"
+    }
   },
   {
     path: "/error",
@@ -44,32 +44,32 @@ const routes = [
     component: Error,
     meta: {
       reqAuth: false,
-      reqRole: "ANY",
-    },
-  },
+      reqRole: "ANY"
+    }
+  }
 ];
 
 const router = new VueRouter({
   mode: "history",
-  routes,
+  routes
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.reqAuth)) {
+  if (to.matched.some(record => record.meta.reqAuth)) {
     if (!util.isAuthenticated()) {
       next({
         path: "/login",
-        query: { redirect: to.fullPath },
+        query: { redirect: to.fullPath }
       });
     } else {
-      if (to.matched.some((record) => record.meta.reqRole == "ADMIN")) {
+      if (to.matched.some(record => record.meta.reqRole == "ADMIN")) {
         if (util.isAdmin()) {
           next();
         } else {
           store.commit("setErrorMessage", "Insufficient Privilege.");
           next("/error");
         }
-      } else if (to.matched.some((record) => record.meta.reqRole == "USER")) {
+      } else if (to.matched.some(record => record.meta.reqRole == "USER")) {
         if (!util.isAdmin()) {
           next();
         } else {
