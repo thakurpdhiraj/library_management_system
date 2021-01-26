@@ -149,7 +149,7 @@ export default {
       this.loading = true;
       this.updateText = null;
       users
-        .updateUser(this.user)
+        .updateMe(this.user)
         .then(data => {
           this.loading = false;
           this.user = data;

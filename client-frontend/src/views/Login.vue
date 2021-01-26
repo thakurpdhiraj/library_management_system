@@ -31,6 +31,7 @@
                     <v-text-field
                       label="Username*"
                       v-model="cred.username"
+                      placeholder=" "
                       :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
@@ -38,6 +39,7 @@
                     <v-text-field
                       label="Password*"
                       v-model="cred.password"
+                      placeholder=" "
                       :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="showPass ? 'text' : 'password'"
                       @click:append="showPass = !showPass"

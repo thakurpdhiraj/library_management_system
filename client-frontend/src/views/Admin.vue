@@ -24,13 +24,13 @@
             <v-icon left>mdi-book-multiple</v-icon>
             Orders
           </v-tab>
-          <v-tab-item><user-orders></user-orders></v-tab-item>
+          <v-tab-item><order-page></order-page></v-tab-item>
 
           <v-tab>
             <v-icon left>mdi-account-multiple</v-icon>
             Users
           </v-tab>
-          <v-tab-item><find-users></find-users></v-tab-item>
+          <v-tab-item><user-page></user-page></v-tab-item>
         </v-tabs>
       </v-col>
     </v-row>
@@ -38,13 +38,13 @@
 </template>
 
 <script>
-import UserOrders from "../components/admin/orders/UserOrders";
-import FindUsers from "../components/admin/users/FindUsers";
+import OrderPage from "../components/admin/orders/OrderPage";
+import UserPage from "../components/admin/users/UserPage";
 export default {
   methods: {},
   components: {
-    UserOrders,
-    FindUsers
+    OrderPage,
+    UserPage
   },
   computed: {
     errorMessage() {

@@ -18,6 +18,29 @@ export const getUser = async id => {
   }
 };
 
+export const updateUser = async user => {
+  let response = await resource.put(`/admin/users/${user.id}`, {
+    name: user.name,
+    email: user.email,
+    enabled: user.enabled,
+    userRoles: user.userRoles
+  });
+  if (response.status !== 200) {
+    throw new Error(response.data);
+  } else {
+    return await response.data;
+  }
+};
+
+export const deleteUser = async id => {
+  let response = await resource.delete(`/admin/users/${id}`);
+  if (response.status !== 204) {
+    throw new Error(response.data);
+  } else {
+    return await response.data;
+  }
+};
+
 export const getLoggedInUser = async () => {
   let response = await resource.get("/users/me");
   if (response.status !== 200) {
@@ -27,7 +50,7 @@ export const getLoggedInUser = async () => {
   }
 };
 
-export const updateUser = async user => {
+export const updateMe = async user => {
   let response = await resource.put("/users/me", {
     name: user.name,
     email: user.email
