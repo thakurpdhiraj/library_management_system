@@ -1,5 +1,18 @@
 <template>
   <v-container>
+    <v-row v-if="successMessage">
+      <v-col cols="12">
+        <v-alert
+          dense
+          outlined
+          dismissible
+          transition="scale-transition"
+          type="success"
+        >
+          {{ successMessage }}
+        </v-alert>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col :loading="loading">
         <v-form @submit.prevent="findUser">
@@ -19,18 +32,6 @@
         <v-card v-if="user" class="elevation-20">
           <v-card-text>
             <v-container>
-              <v-row v-if="successMessage">
-                <v-col cols="12">
-                  <v-alert
-                    dense
-                    outlined
-                    transition="scale-transition"
-                    type="success"
-                  >
-                    {{ successMessage }}
-                  </v-alert>
-                </v-col>
-              </v-row>
               <v-row>
                 <v-col cols="12" sm="4">
                   <v-text-field
@@ -108,7 +109,7 @@
               </template>
               <v-card>
                 <v-card-text>
-                  Are you sure you want to delete {{ user.username }} ?
+                  Are you sure you want to delete ' {{ user.username }} ' ?
                 </v-card-text>
 
                 <v-divider></v-divider>
@@ -132,7 +133,7 @@
 </template>
 
 <script>
-import * as userService from "../../../service/user";
+import * as userService from "@/service/user";
 export default {
   data() {
     return {
@@ -184,7 +185,6 @@ export default {
         });
     },
     deleteUser() {
-      this.dialog = false;
       this.successMessage = null;
       this.loading = true;
       userService
@@ -193,6 +193,7 @@ export default {
           this.user = null;
           this.successMessage = "User deleted successfully";
           this.loading = false;
+          this.dialog = false;
         })
         .catch(err => {
           this.loading = false;

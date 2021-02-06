@@ -18,6 +18,20 @@ export const getUser = async id => {
   }
 };
 
+export const saveUser = async user => {
+  let response = await resource.post("/admin/users/", {
+    name: user.name,
+    email: user.email,
+    username: user.username,
+    userRoles: user.userRoles
+  });
+  if (response.status !== 201) {
+    throw new Error(response.data);
+  } else {
+    return await response.data;
+  }
+};
+
 export const updateUser = async user => {
   let response = await resource.put(`/admin/users/${user.id}`, {
     name: user.name,
