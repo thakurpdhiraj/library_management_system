@@ -10,6 +10,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(config => {
+  store.commit("setErrorMessage", null);
   if (config.url === "/login") {
     return config;
   } else {
