@@ -6,7 +6,7 @@
           <v-tab><v-icon left>mdi-account</v-icon>Details</v-tab>
           <v-tab-item transition="slide-y-transition">
             <v-card :loading="loading" v-if="user">
-              <v-form @submit.prevent="updateUser">
+              <v-form @submit.prevent="updateUser" v-model="editValid">
                 <v-card-text>
                   <v-container>
                     <v-row>
@@ -28,7 +28,7 @@
                         <v-text-field
                           label="Email*"
                           v-model="user.email"
-                          :rules="[rules.required]"
+                          :rules="[rules.required, rules.email]"
                         ></v-text-field>
                       </v-col>
 
@@ -52,7 +52,12 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text type="submit">
+                  <v-btn
+                    :disabled="!editValid"
+                    color="green darken-1"
+                    text
+                    type="submit"
+                  >
                     Update
                   </v-btn>
                 </v-card-actions>
@@ -119,7 +124,7 @@
 </template>
 
 <script>
-import * as users from "../../service/user";
+import * as users from "@/service/user";
 export default {
   computed: {
     cred() {
@@ -135,13 +140,18 @@ export default {
     rules: {
       required: value => !!value || "Required.",
       length: value =>
-        (!!value && value.length >= 4) || "Minimum 4 characters required"
+        (!!value && value.length >= 4) || "Minimum 4 characters required",
+      email: v => {
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return pattern.test(v) || "Invalid e-mail.";
+      }
     },
     showPass: false,
     password: null,
     confirmPassword: null,
     confirmErrorMessage: null,
     valid: false,
+    editValid: false,
     updateText: null
   }),
   methods: {

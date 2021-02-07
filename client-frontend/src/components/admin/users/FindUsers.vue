@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined>
+  <v-card>
     <v-container>
       <v-row v-if="message">
         <v-col cols="12">

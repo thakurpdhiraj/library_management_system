@@ -1,9 +1,9 @@
 <template>
-  <v-card outlined>
-    <v-container outline>
+  <v-card>
+    <v-container>
       <v-row v-if="message">
         <v-col cols="12">
-          <v-card class="elevation-0">
+          <v-card class="elevation-5">
             <v-alert
               dense
               outlined
@@ -46,7 +46,7 @@
             v-model="valid"
             ref="form"
           >
-            <v-card class="elevation-5">
+            <v-card elevation="0">
               <v-card-text>
                 <v-container>
                   <v-row>

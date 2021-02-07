@@ -1,6 +1,6 @@
 <template>
-  <v-container class="pa-0">
-    <v-row v-if="errorMessage">
+  <v-container class="px-0">
+    <v-row v-if="errorMessage" class="mt-3">
       <v-col cols="12">
         <v-alert
           dense
@@ -53,5 +53,3 @@ export default {
   }
 };
 </script>
-
-<style></style>
