@@ -13,37 +13,43 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-tabs right>
-          <v-tab>
-            <v-icon left>mdi-book-multiple</v-icon>
-            Orders
-          </v-tab>
-          <v-tab-item><orders></orders></v-tab-item>
-
-          <v-tab>
-            <v-icon left>mdi-account-edit</v-icon>
-            Account
-          </v-tab>
-          <v-tab-item><account></account> </v-tab-item>
-        </v-tabs>
+        <Tabs :tabs="tabs" :right="true" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import Orders from "../components/user/Orders";
-import Account from "../components/user/Account";
+import Tabs from "@/components/common/Tabs";
+import Orders from "@/components/user/Orders";
+import Account from "@/components/user/Account";
 export default {
   methods: {},
   components: {
-    Orders,
-    Account
+    Tabs
   },
   computed: {
     errorMessage() {
       return this.$store.getters.getErrorMessage;
     }
+  },
+  data() {
+    return {
+      tabs: [
+        {
+          id: 0,
+          name: "Orders",
+          icon: "mdi-book-multiple",
+          component: Orders
+        },
+        {
+          id: 1,
+          name: "Users",
+          icon: "mdi-account-edit",
+          component: Account
+        }
+      ]
+    };
   }
 };
 </script>

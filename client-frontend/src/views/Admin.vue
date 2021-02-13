@@ -19,37 +19,50 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-tabs right>
-          <v-tab>
-            <v-icon left>mdi-book-multiple</v-icon>
-            Orders
-          </v-tab>
-          <v-tab-item><order-page></order-page></v-tab-item>
-
-          <v-tab>
-            <v-icon left>mdi-account-multiple</v-icon>
-            Users
-          </v-tab>
-          <v-tab-item><user-page></user-page></v-tab-item>
-        </v-tabs>
+        <Tabs :tabs="tabs" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import OrderPage from "../components/admin/orders/OrderPage";
-import UserPage from "../components/admin/users/UserPage";
+import Tabs from "@/components/common/Tabs";
+import OrderPage from "@/components/admin/orders/OrderPage";
+import UserPage from "@/components/admin/users/UserPage";
+import BookPage from "@/components/admin/books/BookPage";
 export default {
   methods: {},
   components: {
-    OrderPage,
-    UserPage
+    Tabs
   },
   computed: {
     errorMessage() {
       return this.$store.getters.getErrorMessage;
     }
+  },
+  data() {
+    return {
+      tabs: [
+        {
+          id: 0,
+          name: "Orders",
+          icon: "mdi-book-multiple",
+          component: OrderPage
+        },
+        {
+          id: 1,
+          name: "Users",
+          icon: "mdi-account-multiple",
+          component: UserPage
+        },
+        {
+          id: 2,
+          name: "Books",
+          icon: "mdi-book-open-page-variant",
+          component: BookPage
+        }
+      ]
+    };
   }
 };
 </script>

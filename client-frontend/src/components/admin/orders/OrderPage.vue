@@ -1,15 +1,23 @@
 <template>
-  <v-tabs vertical>
-    <v-tab><v-icon left>mdi-file-find</v-icon>Find Order</v-tab>
-    <v-tab-item transition="slide-y-transition"></v-tab-item>
-    <v-tab><v-icon left>mdi-account-plus</v-icon>Add User</v-tab>
-    <v-tab-item transition="slide-y-transition"></v-tab-item>
-  </v-tabs>
+  <Tabs :vertical="true" />
 </template>
 
 <script>
+import Tabs from "@/components/common/Tabs";
 export default {
-  components: {}
+  data() {
+    return {
+      tabs: [
+        {
+          id: 0,
+          name: "Find User",
+          icon: "mdi-file-find",
+          component: null
+        }
+      ]
+    };
+  },
+  components: { Tabs }
 };
 </script>
 

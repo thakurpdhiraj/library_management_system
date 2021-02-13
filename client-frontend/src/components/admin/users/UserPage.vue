@@ -1,23 +1,32 @@
 <template>
-  <v-tabs vertical>
-    <v-tab><v-icon left>mdi-account-search</v-icon>Find User</v-tab>
-    <v-tab-item transition="slide-y-transition">
-      <find-users></find-users>
-    </v-tab-item>
-    <v-tab><v-icon left>mdi-account-plus</v-icon>Add User</v-tab>
-    <v-tab-item transition="slide-y-transition">
-      <new-user></new-user>
-    </v-tab-item>
-  </v-tabs>
+  <Tabs :tabs="tabs" :vertical="true" />
 </template>
 
 <script>
-import NewUser from "../users/NewUser";
-import FindUsers from "../users/FindUsers";
+import Tabs from "@/components/common/Tabs";
+import NewUser from "./NewUser";
+import FindUsers from "./FindUsers";
 export default {
+  data() {
+    return {
+      tabs: [
+        {
+          id: 0,
+          name: "Find User",
+          icon: "mdi-account-search",
+          component: FindUsers
+        },
+        {
+          id: 1,
+          name: "Add User",
+          icon: "mdi-account-plus",
+          component: NewUser
+        }
+      ]
+    };
+  },
   components: {
-    NewUser,
-    FindUsers
+    Tabs
   }
 };
 </script>

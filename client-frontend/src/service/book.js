@@ -17,3 +17,12 @@ export const findAllBooks = async () => {
     return await response.data;
   }
 };
+
+export const saveBook = async book => {
+  let response = await resource.post("/admin/books/", book);
+  if (response.status !== 201) {
+    throw new Error(response.data);
+  } else {
+    return await response.data;
+  }
+};

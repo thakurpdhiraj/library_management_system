@@ -48,6 +48,9 @@ public class Book implements Serializable {
   @Column(name = "publication", nullable = false)
   private String publication;
 
+  @Column(name = "publication_year")
+  private Integer publicationYear;
+
   @Column(name = "pages", nullable = false)
   private Integer pages;
 
