@@ -21,8 +21,8 @@
 
 <script>
 import Tabs from "@/components/common/Tabs";
-import Orders from "@/components/user/Orders";
-import Account from "@/components/user/Account";
+import MyOrdersPage from "@/components/user/orders/MyOrdersPage";
+import AccountPage from "@/components/user/account/AccountPage";
 export default {
   methods: {},
   components: {
@@ -40,13 +40,13 @@ export default {
           id: 0,
           name: "Orders",
           icon: "mdi-book-multiple",
-          component: Orders
+          component: MyOrdersPage
         },
         {
           id: 1,
-          name: "Users",
+          name: "Account",
           icon: "mdi-account-edit",
-          component: Account
+          component: AccountPage
         }
       ]
     };

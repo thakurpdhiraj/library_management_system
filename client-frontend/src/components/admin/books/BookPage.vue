@@ -7,6 +7,10 @@ import Tabs from "@/components/common/Tabs";
 import NewBook from "./NewBook";
 import FindBooks from "./FindBooks";
 export default {
+  name: "BookPage",
+  components: {
+    Tabs
+  },
   data() {
     return {
       tabs: [
@@ -19,9 +23,6 @@ export default {
         }
       ]
     };
-  },
-  components: {
-    Tabs
   }
 };
 </script>

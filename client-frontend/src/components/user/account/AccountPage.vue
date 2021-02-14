@@ -4,10 +4,10 @@
 
 <script>
 import Tabs from "@/components/common/Tabs";
-import NewUser from "./NewUser";
-import FindUsers from "./FindUsers";
+import ChangePassword from "./ChangePassword";
+import EditAccount from "./EditAccount";
 export default {
-  name: "UserPage",
+  name: "AccountPages",
   components: {
     Tabs
   },
@@ -16,15 +16,15 @@ export default {
       tabs: [
         {
           id: 0,
-          name: "Find User",
-          icon: "mdi-account-search",
-          component: FindUsers
+          name: "Edit Account",
+          icon: "mdi-account",
+          component: EditAccount
         },
         {
           id: 1,
-          name: "Add User",
-          icon: "mdi-account-plus",
-          component: NewUser
+          name: "Edit Password",
+          icon: "mdi-lock",
+          component: ChangePassword
         }
       ]
     };

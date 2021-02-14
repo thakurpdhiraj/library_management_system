@@ -30,6 +30,7 @@ import Tabs from "@/components/common/Tabs";
 import OrderPage from "@/components/admin/orders/OrderPage";
 import UserPage from "@/components/admin/users/UserPage";
 import BookPage from "@/components/admin/books/BookPage";
+import AccountPage from "@/components/user/account/AccountPage";
 export default {
   methods: {},
   components: {
@@ -60,6 +61,12 @@ export default {
           name: "Books",
           icon: "mdi-book-open-page-variant",
           component: BookPage
+        },
+        {
+          id: 4,
+          name: "Account",
+          icon: "mdi-account-edit",
+          component: AccountPage
         }
       ]
     };

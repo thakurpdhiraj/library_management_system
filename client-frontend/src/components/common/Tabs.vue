@@ -19,6 +19,7 @@
 
 <script>
 export default {
+  name: "Tabs",
   data() {
     return {
       tab: 0
@@ -27,6 +28,7 @@ export default {
   props: {
     tabs: {
       type: Array,
+      required: true,
       default: () => []
     },
     vertical: {

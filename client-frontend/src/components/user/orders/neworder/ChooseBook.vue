@@ -30,7 +30,7 @@
                           ' , Publisher: ' +
                           item.publication +
                           ' , Published At: ' +
-                          (item.publicationYear ? item.publicationYear : '-')
+                          (item.publicationYear || '-')
                       "
                     ></v-list-item-subtitle>
                     <v-list-item-subtitle
@@ -57,19 +57,22 @@
         color="green"
         text
         @click="searchInventory"
-        :disabled="!isSelected"
+        :disabled="!selectedNewBook"
       >
         Continue
       </v-btn>
-      <span class="ml-5" v-if="selectedNewBook">Order :</span>
-      <span class="ml-2 text-truncate" v-text="orderName"></span>
+      <span class="ml-5" v-if="selectedNewBook && !$vuetify.breakpoint.mobile">
+        Order :
+      </span>
+      <span class="ml-2 text-truncate">{{ orderName }}</span>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import * as books from "../../service/book";
+import * as bookService from "@/service/book";
 export default {
+  name: "ChooseBook",
   data() {
     return {
       filterData: [
@@ -77,10 +80,9 @@ export default {
         { value: "author", label: "Author" },
         { value: "publication", label: "Publication" }
       ],
-      textFields: [],
+      textFields: [], // TODO
       books: [],
       selectedNewBook: null,
-      benched: 0,
       loading: false
     };
   },
@@ -95,8 +97,7 @@ export default {
     searchBooks() {
       //cache result?
       this.loading = true;
-      console.log("search book");
-      books
+      bookService
         .findAllBooks()
         .then(data => {
           this.loading = false;
@@ -108,9 +109,6 @@ export default {
     }
   },
   computed: {
-    isSelected() {
-      return this.selectedNewBook != null;
-    },
     orderName() {
       if (this.selectedNewBook != null)
         return this.selectedNewBook.name + ",  " + this.selectedNewBook.author;

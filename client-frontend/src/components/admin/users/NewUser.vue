@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card flat>
     <v-container>
       <v-row v-if="message">
         <v-col cols="12">
@@ -76,7 +76,7 @@
                         v-model="user.userRoles"
                         :items="roles"
                         multiple
-                        :rules="[rules.minOne]"
+                        :rules="[rules.minLength(1, user.userRoles, 'role')]"
                         label="Roles"
                       ></v-select>
                     </v-col>
@@ -98,7 +98,9 @@
 
 <script>
 import * as userService from "@/service/user";
+import * as ruleUtil from "@/util/ruleUtil";
 export default {
+  name: "NewUser",
   data() {
     return {
       user: {
@@ -110,14 +112,7 @@ export default {
       valid: false,
       loading: false,
       roles: ["ADMIN", "USER"],
-      rules: {
-        required: v => !!v || "Required",
-        minOne: v => (!!v && v.length > 0) || "Atleast 1 role is required",
-        email: v => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return pattern.test(v) || "Invalid e-mail.";
-        }
-      },
+      rules: ruleUtil.rules,
       message: null,
       isError: false,
       userData: null
@@ -134,7 +129,7 @@ export default {
         .then(data => {
           this.userData = {
             "User Id": data.id,
-            "User Name": data.username,
+            Username: data.username,
             Name: data.name,
             Email: data.email,
             "Added At": data.createdAt

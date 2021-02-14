@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("hasAuthority('USER')")
+@PreAuthorize("hasAnyAuthority('ADMIN','USER')")
 @RequiredArgsConstructor
 public class ClientUserController {
 
@@ -41,9 +41,12 @@ public class ClientUserController {
   public ResponseEntity<UserDTO> updateTokenAuthenticatedUser(
       @RequestBody UserDTO userDTO, Authentication authentication) {
     UserDTO loggedInUser = (UserDTO) authentication.getPrincipal();
-    loggedInUser.setEmail(userDTO.getEmail());
-    loggedInUser.setName(userDTO.getName());
-    return ResponseEntity.ok(userClient.update(loggedInUser.getId(), loggedInUser));
+    UserDTO user = new UserDTO();
+    Assert.notNull(userDTO.getEmail(), "Email cannot be empty");
+    Assert.notNull(userDTO.getName(), "Name cannot be empty");
+    user.setEmail(userDTO.getEmail());
+    user.setName(userDTO.getName());
+    return ResponseEntity.ok(userClient.update(loggedInUser.getId(), user));
   }
 
   @PostMapping(
@@ -55,8 +58,9 @@ public class ClientUserController {
     //do some more thing with changing password
     UserDTO loggedInUser = (UserDTO) authentication.getPrincipal();
     Assert.notNull(userDTO.getPassword(), "Password cannot be empty");
-    loggedInUser.setPassword(userDTO.getPassword());
-    loggedInUser.setCredentialsNonExpired(true);
-    return ResponseEntity.ok(userClient.update(loggedInUser.getId(), loggedInUser));
+    UserDTO user = new UserDTO();
+    user.setPassword(userDTO.getPassword());
+    user.setCredentialsNonExpired(true);
+    return ResponseEntity.ok(userClient.update(loggedInUser.getId(), user));
   }
 }

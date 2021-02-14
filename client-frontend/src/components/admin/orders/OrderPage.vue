@@ -5,6 +5,10 @@
 <script>
 import Tabs from "@/components/common/Tabs";
 export default {
+  name: "OrderPage",
+  components: {
+    Tabs
+  },
   data() {
     return {
       tabs: [
@@ -16,8 +20,7 @@ export default {
         }
       ]
     };
-  },
-  components: { Tabs }
+  }
 };
 </script>
 

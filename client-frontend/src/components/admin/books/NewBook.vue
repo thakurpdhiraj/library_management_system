@@ -49,7 +49,7 @@
                         label="Pages *"
                         clearable
                         v-model="book.pages"
-                        :rules="[rules.required, rules.page]"
+                        :rules="[rules.required, rules.number]"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
@@ -72,7 +72,7 @@
                     </v-col>
                     <v-col cols="12" sm="4">
                       <v-text-field
-                        label="Published Year"
+                        label="Published Year *"
                         clearable
                         v-model="book.publicationYear"
                         :rules="[rules.year]"
@@ -110,8 +110,9 @@
 
 <script>
 import * as bookService from "@/service/book";
-import isFinite from "lodash/isFinite";
+import * as ruleUtil from "@/util/ruleUtil";
 export default {
+  name: "NewBook",
   data() {
     return {
       book: {
@@ -125,18 +126,7 @@ export default {
       },
       valid: false,
       loading: false,
-      rules: {
-        required: v => !!v || "Required",
-        page: v => (!!v && isFinite(Number(v))) || "Invalid page numbers",
-        year: v => {
-          const data = Number(v);
-          const currYear = new Date().getFullYear();
-          return (
-            (!!data && isFinite(data) && data >= 1000 && data <= currYear) ||
-            "Invalid publication year. Valid years: 1000 - " + currYear
-          );
-        }
-      },
+      rules: ruleUtil.rules,
       message: null,
       isError: false,
       categories: []

@@ -1,20 +1,20 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import store from "../store/store";
-import * as util from "../util/authUtil";
+import store from "@/store/store";
+import * as util from "@/util/authUtil";
 
-import User from "../views/User.vue";
-import Login from "../views/Login.vue";
-import Admin from "../views/Admin.vue";
-import Error from "../views/Error.vue";
+import UserView from "@/views/UserView.vue";
+import LoginView from "@/views/LoginView.vue";
+import AdminView from "@/views/AdminView.vue";
+import ErrorView from "@/views/ErrorView.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "User",
-    component: User,
+    name: "UserView",
+    component: UserView,
     meta: {
       reqAuth: true,
       reqRole: "USER"
@@ -22,8 +22,8 @@ const routes = [
   },
   {
     path: "/admin*",
-    name: "Admin",
-    component: Admin,
+    name: "AdminView",
+    component: AdminView,
     meta: {
       reqAuth: true,
       reqRole: "ADMIN"
@@ -31,8 +31,8 @@ const routes = [
   },
   {
     path: "/login",
-    name: "Login",
-    component: Login,
+    name: "LoginView",
+    component: LoginView,
     meta: {
       reqAuth: false,
       reqRole: "ANY"
@@ -40,8 +40,8 @@ const routes = [
   },
   {
     path: "/error",
-    name: "Error",
-    component: Error,
+    name: "ErrorView",
+    component: ErrorView,
     meta: {
       reqAuth: false,
       reqRole: "ANY"

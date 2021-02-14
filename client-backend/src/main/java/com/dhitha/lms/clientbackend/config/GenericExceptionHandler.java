@@ -31,12 +31,18 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({FeignException.class})
   private ResponseEntity<ErrorDTO> handleFeignException(FeignException e) {
-    log.error("FeignError: {}, {}", e.contentUTF8(), e);
+    if (!(e instanceof FeignException.BadRequest)
+        && !(e instanceof FeignException.NotFound)
+        && !(e instanceof FeignException.Forbidden)
+        && !(e instanceof FeignException.Unauthorized)) {
+      log.error("FeignError: {}, {}", e.contentUTF8(), e);
+    }
     ErrorDTO errorDTO;
     try {
       errorDTO = objectMapper.readValue(e.contentUTF8(), ErrorDTO.class);
-      log.debug("Mapped Error DTO {}", errorDTO);
+      log.info("Mapped Error DTO {}", errorDTO);
     } catch (JsonProcessingException jsonProcessingException) {
+      log.error("Error converting error DTO: ", jsonProcessingException);
       errorDTO =
           ErrorDTO.builder()
               .error("invalid_request")
