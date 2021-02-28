@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.ISBN;
 
 /**
  * DTO for {@link com.dhitha.lms.book.entity.Book}
@@ -25,6 +26,9 @@ public class BookDTO implements Serializable {
 
   @JsonProperty(access = Access.READ_ONLY)
   private Long id;
+
+  @NotEmpty @ISBN
+  private String isbn;
 
   @NotEmpty private String name;
 

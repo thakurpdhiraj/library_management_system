@@ -93,10 +93,10 @@
                 </v-container>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="green" dark :disabled="!valid" type="submit">
+                <v-btn color="green" text dark :disabled="!valid" type="submit">
                   Add
                 </v-btn>
-                <v-btn color="yellow" text dark @click="clear">
+                <v-btn color="blue darken-1" text dark @click="clear">
                   Clear
                 </v-btn>
               </v-card-actions>

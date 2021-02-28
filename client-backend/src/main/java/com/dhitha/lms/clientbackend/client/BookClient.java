@@ -4,6 +4,7 @@ import com.dhitha.lms.clientbackend.dto.BookDTO;
 import com.dhitha.lms.clientbackend.dto.CategoryDTO;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface BookClient {
 
   @GetMapping(value = "/books/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-  List<BookDTO> getAllBooks(@RequestParam(required = false) String author);
+  List<BookDTO> getAllBooks(@SpringQueryMap BookDTO bookDTO,
+      @RequestParam(value = "categoryId", required = false) Integer categoryId);
 
   @GetMapping(value = "/books/v1/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   BookDTO getById(@PathVariable Long id);

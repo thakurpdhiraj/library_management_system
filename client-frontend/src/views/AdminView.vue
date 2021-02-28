@@ -52,18 +52,18 @@ export default {
         },
         {
           id: 1,
-          name: "Users",
-          icon: "mdi-account-multiple",
-          component: UserPage
-        },
-        {
-          id: 2,
           name: "Books",
           icon: "mdi-book-open-page-variant",
           component: BookPage
         },
         {
-          id: 4,
+          id: 2,
+          name: "Users",
+          icon: "mdi-account-multiple",
+          component: UserPage
+        },
+        {
+          id: 3,
           name: "Account",
           icon: "mdi-account-edit",
           component: AccountPage

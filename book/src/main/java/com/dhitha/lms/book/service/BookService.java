@@ -14,9 +14,10 @@ public interface BookService {
   /**
    * Find all books in LMS
    *
+   * @param bookDTO books to search
    * @return list of books
    */
-  List<BookDTO> findAll();
+  List<BookDTO> findAll(BookDTO bookDTO);
 
   /**
    * Find book with id
@@ -26,14 +27,6 @@ public interface BookService {
    * @throws BookNotFoundException if no book exists with id
    */
   BookDTO findById(Long id) throws BookNotFoundException;
-
-  /**
-   * Find all books of the Author
-   *
-   * @param author the author name matching expression %author%
-   * @return list of all books with the expression
-   */
-  List<BookDTO> findByAuthorContaining(String author);
 
   /**
    * Save a book

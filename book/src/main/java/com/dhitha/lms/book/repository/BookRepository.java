@@ -3,6 +3,7 @@ package com.dhitha.lms.book.repository;
 import com.dhitha.lms.book.entity.Book;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,13 +12,6 @@ import org.springframework.stereotype.Repository;
  * @author Dhiraj
  */
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
-  /**
-   * Find all books by author name
-   *
-   * @param author name of the author
-   * @return list of books written by the author
-   */
-  List<Book> findByAuthorContaining(String author);
 }

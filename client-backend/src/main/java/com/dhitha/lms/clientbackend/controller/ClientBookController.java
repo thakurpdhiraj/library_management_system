@@ -28,14 +28,9 @@ public class ClientBookController {
   private final BookClient bookClient;
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<BookDTO>> getAllBooks(
-      @RequestParam(value = "author", required = false) String author) {
-    List<BookDTO> bookList;
-    if (StringUtils.isEmpty(author)) {
-      bookList = bookClient.getAllBooks(null);
-    } else {
-      bookList = bookClient.getAllBooks(author);
-    }
+  public ResponseEntity<List<BookDTO>> getAllBooks(BookDTO bookDTO,
+      @RequestParam(value = "categoryId", required = false) Integer categoryId) {
+    List<BookDTO> bookList = bookClient.getAllBooks(bookDTO, categoryId);
     return ResponseEntity.ok(bookList);
   }
 

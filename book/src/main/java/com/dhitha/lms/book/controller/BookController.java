@@ -1,17 +1,16 @@
 package com.dhitha.lms.book.controller;
 
 import com.dhitha.lms.book.dto.BookDTO;
+import com.dhitha.lms.book.dto.CategoryDTO;
 import com.dhitha.lms.book.error.BookNotFoundException;
 import com.dhitha.lms.book.service.BookService;
+import com.dhitha.lms.book.service.CategoryService;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,14 +35,10 @@ public class BookController {
   private final BookService bookService;
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<BookDTO>> getAllBooks(
-      @RequestParam(value = "author", required = false) String author) {
-    List<BookDTO> bookList;
-    if (StringUtils.isEmpty(author)) {
-      bookList = bookService.findAll();
-    } else {
-      bookList = bookService.findByAuthorContaining(author);
-    }
+  public ResponseEntity<List<BookDTO>> getAllBooks(@RequestParam BookDTO bookDTO,
+      @RequestParam(value = "categoryId", required = false) Integer categoryId) {
+    bookDTO.setCategory(new CategoryDTO(categoryId, null));
+    List<BookDTO> bookList = bookService.findAll(bookDTO);
     return ResponseEntity.ok(bookList);
   }
 

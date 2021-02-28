@@ -4,6 +4,7 @@ import com.dhitha.lms.book.dto.BookDTO;
 import com.dhitha.lms.book.entity.Book;
 import com.dhitha.lms.book.error.BookNotFoundException;
 import com.dhitha.lms.book.repository.BookRepository;
+import com.dhitha.lms.book.repository.BookSpecification;
 import java.beans.FeatureDescriptor;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +31,11 @@ public class BookServiceImpl implements BookService {
   private final ModelMapper modelMapper;
 
   @Override
-  public List<BookDTO> findAll() {
-    return bookRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+  public List<BookDTO> findAll(BookDTO bookDTO) {
+    BookSpecification bookSpecification = new BookSpecification(bookDTO);
+    return bookRepository.findAll(bookSpecification).stream()
+        .map(this::mapToDTO)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -41,13 +44,6 @@ public class BookServiceImpl implements BookService {
         .findById(id)
         .map(this::mapToDTO)
         .orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
-  }
-
-  @Override
-  public List<BookDTO> findByAuthorContaining(String author) {
-    return bookRepository.findByAuthorContaining(author).stream()
-        .map(this::mapToDTO)
-        .collect(Collectors.toList());
   }
 
   @Override

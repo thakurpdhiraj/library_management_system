@@ -57,7 +57,7 @@ class BookControllerTest {
 
   @Test
   @Order(2)
-  void testGetAllOfAuthor() throws Exception {
+  void testGetAllByAuthor() throws Exception {
     mockMvc
         .perform(get("/books/v1").param("author", "JK").header("lms-key", apiKey))
         .andExpect(status().isOk())
@@ -68,6 +68,34 @@ class BookControllerTest {
 
   @Test
   @Order(3)
+  void testGetAllByName() throws Exception {
+    mockMvc
+        .perform(get("/books/v1").param("name", "Data Structure").header("lms-key", apiKey))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)))
+        .andExpect(jsonPath("$[0].name", is("Data Structure and Algorithm")));
+  }
+
+  @Test
+  @Order(4)
+  void testGetAllByPublication() throws Exception {
+    mockMvc
+        .perform(get("/books/v1").param("publication", "WB").header("lms-key", apiKey))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)));
+  }
+
+  @Test
+  @Order(5)
+  void testGetAllByCategory() throws Exception {
+    mockMvc
+        .perform(get("/books/v1").param("categoryId", "2").header("lms-key", apiKey))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)));
+  }
+
+  @Test
+  @Order(6)
   void testGetById() throws Exception {
     mockMvc
         .perform(get("/books/v1/{id}", 1).header("lms-key", apiKey))
@@ -78,7 +106,7 @@ class BookControllerTest {
   }
 
   @Test
-  @Order(4)
+  @Order(7)
   void testGetByIdNotFound() throws Exception {
     mockMvc
         .perform(get("/books/v1/{id}", 200).header("lms-key", apiKey))
@@ -86,12 +114,13 @@ class BookControllerTest {
   }
 
   @Test
-  @Order(5)
+  @Order(8)
   void testPost() throws Exception {
     BookDTO bookDTO =
         BookDTO.builder()
             .name("test")
             .author("TT")
+            .isbn("979-8013-9-9459-1")
             .publication("TTP")
             .category(new CategoryDTO(1, "TECHNOLOGY"))
             .pages(100)
@@ -108,7 +137,7 @@ class BookControllerTest {
   }
 
   @Test
-  @Order(6)
+  @Order(9)
   void testPostInvalidRequest() throws Exception {
     BookDTO bookDTO = BookDTO.builder().name("test").build();
     mockMvc
@@ -122,7 +151,29 @@ class BookControllerTest {
   }
 
   @Test
-  @Order(7)
+  @Order(10)
+  void testPostInvalidISBN() throws Exception {
+    BookDTO bookDTO =
+        BookDTO.builder()
+            .name("test")
+            .author("TT")
+            .isbn("98910")
+            .publication("TTP")
+            .category(new CategoryDTO(1, "TECHNOLOGY"))
+            .pages(100)
+            .build();
+    mockMvc
+        .perform(
+            post("/books/v1")
+                .header("lms-key", apiKey)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(bookDTO)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  @Order(11)
   void testPut() throws Exception {
     BookDTO bookDTO = BookDTO.builder().name("Data Structures and Algorithms").build();
     mockMvc
@@ -138,7 +189,7 @@ class BookControllerTest {
   }
 
   @Test
-  @Order(8)
+  @Order(12)
   void testDelete() throws Exception {
     mockMvc
         .perform(delete("/books/v1/{id}", 1).header("lms-key", apiKey))
@@ -146,7 +197,7 @@ class BookControllerTest {
   }
 
   @Test
-  @Order(9)
+  @Order(13)
   void testDeleteNotFound() throws Exception {
     mockMvc
         .perform(delete("/books/v1/{id}", 200).header("lms-key", apiKey))
@@ -154,10 +205,8 @@ class BookControllerTest {
   }
 
   @Test
-  @Order(10)
+  @Order(14)
   void testWithoutApiKey() throws Exception {
-    mockMvc
-        .perform(delete("/books/v1/{id}", 2))
-        .andExpect(status().isForbidden());
+    mockMvc.perform(delete("/books/v1/{id}", 2)).andExpect(status().isForbidden());
   }
 }
