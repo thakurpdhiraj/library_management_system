@@ -31,6 +31,7 @@
                     <v-text-field
                       label="Username*"
                       v-model="cred.username"
+                      placeholder=" "
                       :rules="[rules.required]"
                     ></v-text-field>
                   </v-col>
@@ -38,6 +39,7 @@
                     <v-text-field
                       label="Password*"
                       v-model="cred.password"
+                      placeholder=" "
                       :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="showPass ? 'text' : 'password'"
                       @click:append="showPass = !showPass"
@@ -95,7 +97,8 @@ export default {
           this.dialog = false;
           let url = "/";
           if (util.isAdmin()) {
-            url = "/admin/orders";
+            url = "/admin";
+            this.$store.commit("setHome", url);
           }
           this.$router.push(this.$route.query.redirect || url);
         })

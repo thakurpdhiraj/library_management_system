@@ -23,7 +23,7 @@ public class OrderUtil {
   }
 
   public Map<Long, String> getAllBookNames(){
-    List<BookDTO> allBooks = bookClient.getAllBooks(null);
+    List<BookDTO> allBooks = bookClient.getAllBooks(null, null);
     return allBooks.stream()
         .collect(Collectors.toMap(BookDTO::getId, BookDTO::getName));
   }

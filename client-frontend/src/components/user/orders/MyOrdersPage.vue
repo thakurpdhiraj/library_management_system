@@ -28,56 +28,30 @@
           </template>
           <template v-slot:top>
             <template v-if="$vuetify.breakpoint.mobile">
-              <orders-history></orders-history>
-              <new-order @newAdded="newAdded = true"></new-order>
-              <v-list>
-                <v-list-group :value="false" prepend-icon="mdi-filter">
-                  <template v-slot:activator>
-                    <v-list-item-title>Filters</v-list-item-title>
-                  </template>
-                  <v-list-item link @click="filterCollectionOverdue">
-                    <v-list-item-title>Collection Overdue</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item link @click="filterReturnOverdue">
-                    <v-list-item-title>Return Overdue</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item link @click="filterAll">
-                    <v-list-item-title>All</v-list-item-title>
-                  </v-list-item>
-                </v-list-group>
-              </v-list>
+              <MyOrdersHistory />
+              <NewOrder @newAdded="newAdded = true" />
+              <FilterOrder
+                @collectionOrders="filterCollectionOverdue"
+                @returnOrders="filterReturnOverdue"
+                @allOrders="filterAll"
+              />
             </template>
-            <v-toolbar flat v-if="!$vuetify.breakpoint.mobile">
+
+            <v-toolbar flat v-else>
               <v-toolbar-title>My Orders</v-toolbar-title>
               <v-divider class="mx-5" inset vertical></v-divider>
-              <v-menu bottom transition="slide-y-transition">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="indigo darken-4" dark v-bind="attrs" v-on="on">
-                    <v-icon left dark>
-                      mdi-filter
-                    </v-icon>
-                    Filter
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item link @click="filterCollectionOverdue">
-                    <v-list-item-title>Collection Overdue</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item link @click="filterReturnOverdue">
-                    <v-list-item-title>Return Overdue</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item link @click="filterAll">
-                    <v-list-item-title>All</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+              <FilterOrder
+                @collectionOrders="filterCollectionOverdue"
+                @returnOrders="filterReturnOverdue"
+                @allOrders="filterAll"
+              />
               <v-spacer></v-spacer>
-              <orders-history></orders-history>
-              <new-order @newAdded="newAdded = true"></new-order>
+              <MyOrdersHistory />
+              <NewOrder @newAdded="newAdded = true" />
             </v-toolbar>
           </template>
         </v-data-table>
-        <v-snackbar :value="newAdded" top timeout="4000" color="success">
+        <v-snackbar :value="newAdded" top timeout="5000" color="success">
           <v-icon>mdi-check-circle</v-icon>
           New Book successfully ordered!
           <template v-slot:action="{ attrs }">
@@ -92,50 +66,54 @@
 </template>
 
 <script>
-import NewOrder from "./NewOrder";
-import OrdersHistory from "./OrdersHistory";
-import * as orders from "../../service/order";
+import NewOrder from "./neworder/NewOrder";
+import MyOrdersHistory from "./history/MyOrdersHistory";
+import FilterOrder from "./utility/FilterOrder";
+import * as orderService from "@/service/order";
 export default {
-  data: () => ({
-    headers: [
-      {
-        text: "Book Name",
-        align: "start",
-        value: "bookName",
-        class: "indigo--text darken-4"
-      },
-      {
-        text: "Book Reference Id",
-        value: "bookReferenceId",
-        sortable: false,
-        class: "indigo--text darken-4"
-      },
-      {
-        text: "Ordered At",
-        value: "orderedAt",
-        class: "indigo--text darken-4"
-      },
-      {
-        text: "Collected At",
-        value: "collectedAt",
-        class: "indigo--text darken-4"
-      },
-      {
-        text: "Collect By",
-        value: "collectBy",
-        class: "indigo--text darken-43"
-      },
-      { text: "Return By", value: "returnBy", class: "indigo--text darken-4" }
-    ],
-    orders: [],
-    newAdded: false,
-    loading: false
-  }),
+  name: "MyOrdersPage",
+  data() {
+    return {
+      headers: [
+        {
+          text: "Book Name",
+          align: "start",
+          value: "bookName",
+          class: "indigo--text darken-4"
+        },
+        {
+          text: "Book Reference Id",
+          value: "bookReferenceId",
+          sortable: false,
+          class: "indigo--text darken-4"
+        },
+        {
+          text: "Ordered At",
+          value: "orderedAt",
+          class: "indigo--text darken-4"
+        },
+        {
+          text: "Collected At",
+          value: "collectedAt",
+          class: "indigo--text darken-4"
+        },
+        {
+          text: "Collect By",
+          value: "collectBy",
+          class: "indigo--text darken-4"
+        },
+        { text: "Return By", value: "returnBy", class: "indigo--text darken-4" }
+      ],
+      orders: [],
+      newAdded: false,
+      loading: false
+    };
+  },
   methods: {
     findAllOrders() {
       console.log("finding orders");
       this.loading = true;
-      orders
+      orderService
         .getUsersOrder()
         .then(data => {
           this.loading = false;
@@ -169,7 +147,7 @@ export default {
       }
     },
     filterCollectionOverdue() {
-      orders
+      orderService
         .getUsersOrderCollectionOverdue()
         .then(data => {
           this.loading = false;
@@ -182,7 +160,7 @@ export default {
         });
     },
     filterReturnOverdue() {
-      orders
+      orderService
         .getUsersOrderReturnOverdue()
         .then(data => {
           this.loading = false;
@@ -209,12 +187,12 @@ export default {
     }
   },
   created() {
-    console.log("orders created");
     this.findAllOrders();
   },
   components: {
     NewOrder,
-    OrdersHistory
+    MyOrdersHistory,
+    FilterOrder
   },
   watch: {
     newAdded() {

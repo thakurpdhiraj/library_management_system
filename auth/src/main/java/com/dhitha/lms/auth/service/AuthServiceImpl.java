@@ -46,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
           .build();
     } catch (FeignException.NotFound e) {
       log.warn("authenticate:(AuthRequestDTO) -> Invalid Credentials");
+      // if below status is changed to 401, check https://github.com/OpenFeign/feign/issues/260
+      // feign cannot send the response body which results in empty response
       throw new GenericException("Invalid Username / Password", HttpStatus.NOT_FOUND.value());
     } catch (NoSuchElementException | FeignClientException e) {
       log.error("authenticate:(AuthRequestDTO) ->  Error connecting to User Service: ", e);

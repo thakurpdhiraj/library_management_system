@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,9 +25,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
-/** @author Dhiraj */
+/**
+ * Filter to verify and refresh session cookie. On each request if the token are valid, updated
+ * tokens are set in the session which increases the duration of session expiry
+ *
+ * @author Dhiraj
+ */
 @Component
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationFilter extends OncePerRequestFilter {
 
@@ -38,8 +44,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
-
-    log.info("Authentication filter called for : {}", request.getServletPath());
     Cookie sid = WebUtils.getCookie(request, Constants.ID_COOKIE_NAME);
     Cookie sig = WebUtils.getCookie(request, Constants.SIGNATURE_COOKIE_NAME);
     if (Objects.isNull(sid) || Objects.isNull(sig)) {
@@ -50,14 +54,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     String token = sid.getValue() + "." + sig.getValue();
     try {
-      log.info("Cookies token: {}", token);
       AuthResponseDTO authResponseDTO = authClient.verifyToken("Bearer " + token);
       String idToken = authResponseDTO.getHeader() + "." + authResponseDTO.getPayload();
       CookieUtil.addCookie(Constants.ID_COOKIE_NAME, idToken, false, response);
       CookieUtil.addCookie(
           Constants.SIGNATURE_COOKIE_NAME, authResponseDTO.getSignature(), true, response);
       UserDTO user = authResponseDTO.getUserDTO();
-      log.info("Filter user: {} ", user);
       UsernamePasswordAuthenticationToken authToken =
           new UsernamePasswordAuthenticationToken(
               user,

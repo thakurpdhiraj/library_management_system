@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.ISBN;
 
 /**
  * DTO for exchange with Book Service
@@ -26,6 +27,9 @@ public class BookDTO implements Serializable {
   private Long id;
 
   @NotEmpty private String name;
+
+  @NotEmpty @ISBN
+  private String isbn;
 
   @NotNull private CategoryDTO category;
 

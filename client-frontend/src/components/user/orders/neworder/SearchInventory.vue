@@ -38,12 +38,15 @@
 </template>
 
 <script>
-import * as inventory from "../../service/inventory";
+import * as inventoryService from "@/service/inventory";
 export default {
-  data: () => ({
-    count: 0,
-    loading: false
-  }),
+  name: "SearchInventory",
+  data() {
+    return {
+      count: 0,
+      loading: false
+    };
+  },
   props: {
     selectedNewBook: {
       type: Object,
@@ -59,7 +62,7 @@ export default {
     },
     searchInventory() {
       this.loading = true;
-      inventory
+      inventoryService
         .findAvailableBookCount(this.selectedNewBook.id)
         .then(data => {
           this.count = data;

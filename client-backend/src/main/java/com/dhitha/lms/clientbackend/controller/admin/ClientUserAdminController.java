@@ -1,5 +1,7 @@
 package com.dhitha.lms.clientbackend.controller.admin;
 
+import static com.dhitha.lms.clientbackend.util.Constants.DEFAULT_PWD;
+
 import com.dhitha.lms.clientbackend.client.UserClient;
 import com.dhitha.lms.clientbackend.dto.UserDTO;
 import java.net.URI;
@@ -46,6 +48,11 @@ public class ClientUserAdminController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserDTO> save(@RequestBody @Valid UserDTO userDTO) {
+    userDTO.setPassword(DEFAULT_PWD);
+    userDTO.setAccountNonExpired(true);
+    userDTO.setCredentialsNonExpired(false);
+    userDTO.setAccountNonLocked(true);
+    userDTO.setEnabled(true);
     UserDTO dbUser = userClient.save(userDTO);
     URI uri =
         ServletUriComponentsBuilder.fromCurrentRequest()

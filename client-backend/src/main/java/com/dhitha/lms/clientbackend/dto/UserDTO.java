@@ -26,7 +26,7 @@ public class UserDTO implements Serializable {
 
   @NotEmpty private String username;
 
-  @NotEmpty private String password;
+  private String password;
 
   private Boolean accountNonExpired;
 

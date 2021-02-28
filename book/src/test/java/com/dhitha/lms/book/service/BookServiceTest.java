@@ -1,6 +1,5 @@
 package com.dhitha.lms.book.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,6 +13,7 @@ import com.dhitha.lms.book.dto.BookDTO;
 import com.dhitha.lms.book.entity.Book;
 import com.dhitha.lms.book.error.BookNotFoundException;
 import com.dhitha.lms.book.repository.BookRepository;
+import com.dhitha.lms.book.repository.BookSpecification;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * Unit test for {@link BookService}
@@ -46,9 +47,9 @@ class BookServiceTest {
   @Test
   void testFindAll() {
     Book book = Book.builder().name("book").build();
-    when(bookRepositoryMock.findAll()).thenReturn(Collections.singletonList(book));
-    List<BookDTO> result = subject.findAll();
-    verify(bookRepositoryMock).findAll();
+    when(bookRepositoryMock.findAll(any(BookSpecification.class))).thenReturn(Collections.singletonList(book));
+    List<BookDTO> result = subject.findAll(BookDTO.builder().name("book").build());
+    verify(bookRepositoryMock).findAll(any(BookSpecification.class));
     assertEquals(1, result.size());
     assertEquals("book", result.get(0).getName());
   }
@@ -74,41 +75,28 @@ class BookServiceTest {
     verify(bookRepositoryMock).findById(1L);
   }
 
-  /* ********************** findByAuthor ************************** */
-  @Test
-  void testFindByAuthor() {
-    Book book = Book.builder().name("book").author("author").build();
-    when(bookRepositoryMock.findByAuthorContaining("author"))
-        .thenReturn(Collections.singletonList(book));
-    List<BookDTO> result = subject.findByAuthorContaining("author");
-    verify(bookRepositoryMock).findByAuthorContaining("author");
-    assertThat(result).hasSize(1).contains(BookDTO.builder().name("book").author("author").build());
-  }
-
   /* ********************** save ************************** */
   @Test
   void testSave() {
     BookDTO bookDTO = BookDTO.builder().name("book").author("author").build();
     Book book = Book.builder().id(1L).name("book").author("author").build();
-    when(bookRepositoryMock.saveAndFlush(any(Book.class)))
-        .thenReturn(book);
+    when(bookRepositoryMock.saveAndFlush(any(Book.class))).thenReturn(book);
     BookDTO result = subject.save(bookDTO);
     verify(bookRepositoryMock).saveAndFlush(any(Book.class));
-    assertEquals(1L,result.getId());
+    assertEquals(1L, result.getId());
   }
   /* ********************** update ************************** */
   @Test
-  void testUpdate() throws Exception{
+  void testUpdate() throws Exception {
     BookDTO bookDTO = BookDTO.builder().id(1L).name("new").build();
     Book book = Book.builder().id(1L).name("book").author("author").build();
     when(bookRepositoryMock.findById(1L)).thenReturn(Optional.of(book));
     book.setName("new");
-    when(bookRepositoryMock.saveAndFlush(any(Book.class)))
-        .thenReturn(book);
+    when(bookRepositoryMock.saveAndFlush(any(Book.class))).thenReturn(book);
     BookDTO result = subject.update(bookDTO);
     verify(bookRepositoryMock).saveAndFlush(any(Book.class));
-    assertEquals(1L,result.getId());
-    assertEquals("new",result.getName());
+    assertEquals(1L, result.getId());
+    assertEquals("new", result.getName());
   }
 
   @Test

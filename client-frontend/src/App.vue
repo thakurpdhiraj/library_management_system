@@ -6,16 +6,12 @@
       <v-toolbar-title v-if="$vuetify.breakpoint.smAndUp">{{
         appName
       }}</v-toolbar-title>
-      <v-toolbar-title v-if="$vuetify.breakpoint.smAndDown">{{
-        apShortName
-      }}</v-toolbar-title>
+      <v-toolbar-title v-else>{{ apShortName }}</v-toolbar-title>
       <v-spacer />
       <v-btn @click="logout">Logout</v-btn>
     </v-app-bar>
     <v-main>
-      <v-container fluid class="pa-0">
-        <router-view />
-      </v-container>
+      <router-view />
     </v-main>
   </v-app>
 </template>
@@ -39,3 +35,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.v-window__container {
+  min-height: 80vh;
+}
+</style>
