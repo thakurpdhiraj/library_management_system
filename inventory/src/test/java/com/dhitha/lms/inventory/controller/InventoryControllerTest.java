@@ -78,6 +78,29 @@ class InventoryControllerTest {
 
   @Test
   @Order(4)
+  @DisplayName("delete, delete: delete all inventory with book id which has one copy loaned, expected 400")
+  void testDeleteWithBookIdFailsAsInventoryLoaned() throws Exception {
+    mockMvc
+        .perform(
+            delete(PATH + "/{bookId}", 2)
+                .header("lms-key", apiKey))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @Order(5)
+  @DisplayName("delete, delete: delete all inventory with reference id which is loaned, expected 400")
+  void testDeleteWithReferenceIdFailsAsInventoryLoaned() throws Exception {
+    mockMvc
+        .perform(
+            delete(PATH + "/{bookId}", 2)
+                .queryParam("bookReferenceId", "2b-2c-2")
+                .header("lms-key", apiKey))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @Order(6)
   @DisplayName("post, orderIfAvailable: no inventory available for book id, expected 404")
   void testOrderIfAvailableNoBookAvailable() throws Exception {
     mockMvc
@@ -89,7 +112,7 @@ class InventoryControllerTest {
   }
 
   @Test
-  @Order(5)
+  @Order(7)
   @DisplayName("post, returnBook: return book with valid ordered book reference id, expected 200")
   void testReturnBook() throws Exception {
     mockMvc
@@ -104,14 +127,13 @@ class InventoryControllerTest {
   }
 
   @Test
-  @Order(6)
+  @Order(8)
   @DisplayName("post, save: add new inventory, expected 201")
   void testSave() throws Exception {
     InventoryDTO mockInventory =
         InventoryDTO.builder()
             .bookId(4L)
             .isbn("979-199-640-416-3")
-            .bookReferenceId("4b-1c-1")
             .categoryId(1)
             .available(true)
             .build();
@@ -120,14 +142,16 @@ class InventoryControllerTest {
             post(PATH)
                 .content(objectMapper.writeValueAsString(mockInventory))
                 .header("lms-key", apiKey)
+                .header("count", 2)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
-        .andExpect(status().isCreated());
-    checkCount(4, 1);
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$", hasSize(2)));
+    checkCount(4, 2);
   }
 
   @Test
-  @Order(7)
+  @Order(9)
   @DisplayName("delete, delete: delete inventory, expected 204")
   void testDelete() throws Exception {
     mockMvc
@@ -137,7 +161,7 @@ class InventoryControllerTest {
   }
 
   @Test
-  @Order(8)
+  @Order(10)
   @DisplayName("delete, delete: delete inventory with book reference, expected 204")
   void testDeleteWithReferenceId() throws Exception {
     mockMvc

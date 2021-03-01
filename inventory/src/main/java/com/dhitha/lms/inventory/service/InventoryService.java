@@ -42,19 +42,20 @@ public interface InventoryService {
   /**
    * Count of books available
    *
-   * @param bookId
-   * @return
+   * @param bookId -
+   * @return total number of book available for requested book id
    */
   long getAvailableCount(Long bookId);
 
   /**
-   * Add a new book to the inventory
+   * Add {@literal 'count'} number of books. Generates unique reference number for each book
    *
-   * @param inventory DTO containing the book id , book reference , category for the new book
+   * @param inventory DTO containing the book id , isbn , category for the new book
+   * @param count total inventory to add
    * @throws GenericException if a book with combination of book id and book reference is already
    *     present
    */
-  void add(InventoryDTO inventory) throws GenericException;
+  List<InventoryDTO> add(InventoryDTO inventory, Integer count) throws GenericException;
 
   /**
    * Delete an inventory of all books by book id

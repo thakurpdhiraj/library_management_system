@@ -17,12 +17,12 @@ import static org.mockito.Mockito.when;
 import com.dhitha.lms.inventory.dto.InventoryDTO;
 import com.dhitha.lms.inventory.entity.Inventory;
 import com.dhitha.lms.inventory.entity.InventoryId;
-import com.dhitha.lms.inventory.error.GenericException;
 import com.dhitha.lms.inventory.error.InventoryNotFoundException;
 import com.dhitha.lms.inventory.repository.InventoryRepository;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 /**
@@ -41,7 +40,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 @ExtendWith(MockitoExtension.class)
 class InventoryServiceTest {
 
-  private ModelMapper modelMapper = new ModelMapper();
+  private final ModelMapper modelMapper = new ModelMapper();
   @Mock private InventoryRepository repositoryMock;
   private InventoryService subject;
 
@@ -129,66 +128,83 @@ class InventoryServiceTest {
   @DisplayName("add: new inventory added, expected success")
   void testAdd() throws Exception {
     Inventory mockInventory = createMockInventory(1L, true).get(0);
-    when(repositoryMock.saveAndFlush(any(Inventory.class))).thenReturn(mockInventory);
-    subject.add(InventoryDTO.builder().bookId(1L).bookReferenceId("abc").build());
-    verify(repositoryMock).saveAndFlush(any(Inventory.class));
+    when(repositoryMock.saveAll(any())).thenReturn(Collections.singletonList(mockInventory));
+    subject.add(InventoryDTO.builder().bookId(1L).isbn("abc").build(), 1);
+    verify(repositoryMock).saveAll(any());
   }
 
   @Test
-  @DisplayName("add: same inventory already present, expected GenericException")
-  void testAddWithDuplicate() {
-    assertThrows(
-        GenericException.class,
-        () -> {
-          when(repositoryMock.saveAndFlush(any(Inventory.class)))
-              .thenThrow(DataIntegrityViolationException.class);
-          subject.add(InventoryDTO.builder().bookId(1L).bookReferenceId("abc").build());
-        });
-    verify(repositoryMock).saveAndFlush(any(Inventory.class));
-  }
-
-  @Test
-  @DisplayName("add: delete all inventory of book with id, expected success")
+  @DisplayName("delete: delete all inventory of book with id, expected success")
   void testDeleteWithBookId() throws Exception {
+    when(repositoryMock.findByIdBookId(1L))
+        .thenReturn(Collections.singletonList(Inventory.builder().available(true).build()));
     doNothing().when(repositoryMock).deleteByIdBookId(1L);
     subject.delete(1L);
+    verify(repositoryMock).findByIdBookId(anyLong());
     verify(repositoryMock).deleteByIdBookId(anyLong());
   }
 
   @Test
   @DisplayName(
-      "add: deleting a book with id which is not present, expected InventoryNotFoundException")
+      "delete: deleting a book with id which is not present, expected InventoryNotFoundException")
   void testDeleteWithNoInventoryPresent() {
+    when(repositoryMock.findByIdBookId(1L)).thenReturn(Collections.emptyList());
     assertThrows(
         InventoryNotFoundException.class,
-        () -> {
-          doThrow(EmptyResultDataAccessException.class).when(repositoryMock).deleteByIdBookId(1L);
-          subject.delete(1L);
-        });
-    verify(repositoryMock).deleteByIdBookId(anyLong());
+        () -> subject.delete(1L));
+    verify(repositoryMock).findByIdBookId(anyLong());
+    verify(repositoryMock, never()).deleteByIdBookId(anyLong());
   }
 
   @Test
-  @DisplayName("add: delete all inventory of book with id & reference id, expected success")
-  void testDeleteWithBookIdAndBookReference() throws Exception {
+  @DisplayName(
+      "delete: deleting a book with id which is not available / loaned, expected InventoryNotFoundException")
+  void testDeleteWithNoInventoryAvailable() {
+    when(repositoryMock.findByIdBookId(1L))
+        .thenReturn(Collections.singletonList(Inventory.builder().available(false).build()));
+    assertThrows(
+        InventoryNotFoundException.class,
+        () -> subject.delete(1L));
+    verify(repositoryMock).findByIdBookId(anyLong());
+    verify(repositoryMock, never()).deleteByIdBookId(anyLong());
+  }
+
+  @Test
+  @DisplayName(
+      "delete: delete inventory of book with id & reference id which is available / not loaned, expected success")
+  void testDeleteWithBookIdAndBookReferenceAvailable() throws Exception {
+    when(repositoryMock.findByIdBookIdAndIdBookReferenceId(1L, "abc"))
+        .thenReturn(Optional.of(Inventory.builder().available(true).build()));
     doNothing().when(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(1L, "abc");
     subject.delete(1L, "abc");
+    verify(repositoryMock).findByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
     verify(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
+  }
+
+  @Test
+  @DisplayName(
+      "delete: delete all inventory of book with id & reference id with some book not available / loaned, expected exception")
+  void testDeleteWithBookIdAndBookReferenceNotAvailable() {
+    when(repositoryMock.findByIdBookIdAndIdBookReferenceId(1L, "abc"))
+        .thenReturn(Optional.of(Inventory.builder().available(false).build()));
+    assertThrows(
+        InventoryNotFoundException.class,
+        () -> subject.delete(1L, "abc"));
+    verify(repositoryMock).findByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
+    verify(repositoryMock, never()).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
   }
 
   @Test
   @DisplayName(
       "add: deleting a book with id & reference id which is not present, expected InventoryNotFoundException")
   void testDeleteWithNoInventoryPresentOfBookReference() {
+    when(repositoryMock.findByIdBookIdAndIdBookReferenceId(1L, "abc"))
+        .thenReturn(Optional.empty());
     assertThrows(
         InventoryNotFoundException.class,
-        () -> {
-          doThrow(EmptyResultDataAccessException.class)
-              .when(repositoryMock)
-              .deleteByIdBookIdAndIdBookReferenceId(1L, "abc");
-          subject.delete(1L, "abc");
-        });
-    verify(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
+        () -> subject.delete(1L, "abc"));
+    verify(repositoryMock).findByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
+    verify(repositoryMock, never()).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
   }
 
   private List<Inventory> createMockInventory(long id, boolean available) {
