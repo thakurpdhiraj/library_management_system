@@ -101,20 +101,23 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
-  public void delete(Long bookId, String bookReferenceId) throws InventoryNotFoundException {
-    Optional<Inventory> inventory =
-        inventoryRepository.findByIdBookIdAndIdBookReferenceId(bookId, bookReferenceId);
-    if (inventory.isEmpty()) {
-      throw new InventoryNotFoundException(
-          String.format("No Book found with id %s and reference id %s", bookId, bookReferenceId));
+  @Transactional(rollbackOn = InventoryNotFoundException.class)
+  public void delete(Long bookId, List<String> bookReferenceIdList) throws InventoryNotFoundException {
+    for(String bookReferenceId: bookReferenceIdList) {
+      Optional<Inventory> inventory =
+          inventoryRepository.findByIdBookIdAndIdBookReferenceId(bookId, bookReferenceId);
+      if (inventory.isEmpty()) {
+        throw new InventoryNotFoundException(
+            String.format("No Book found with id %s and reference id %s", bookId, bookReferenceId));
+      }
+      if (!inventory.get().getAvailable()) {
+        throw new InventoryNotFoundException(
+            String.format(
+                "Book with id %s and reference id %s is loaned and cannot be deleted",
+                bookId, bookReferenceId));
+      }
+      inventoryRepository.deleteByIdBookIdAndIdBookReferenceId(bookId, bookReferenceId);
     }
-    if (!inventory.get().getAvailable()) {
-      throw new InventoryNotFoundException(
-          String.format(
-              "Book with id %s and reference id %s is loaned and cannot be deleted",
-              bookId, bookReferenceId));
-    }
-    inventoryRepository.deleteByIdBookIdAndIdBookReferenceId(bookId, bookReferenceId);
   }
 
   private InventoryDTO mapToDTO(Inventory inventory) {

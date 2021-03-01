@@ -73,5 +73,5 @@ public interface InventoryService {
    * @throws InventoryNotFoundException in case no book is present wih combination of book id and
    *     book reference id
    */
-  void delete(Long bookId, String bookReferenceId) throws InventoryNotFoundException;
+  void delete(Long bookId, List<String> bookReferenceId) throws InventoryNotFoundException;
 }

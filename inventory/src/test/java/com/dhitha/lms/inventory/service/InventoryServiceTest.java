@@ -176,7 +176,7 @@ class InventoryServiceTest {
     when(repositoryMock.findByIdBookIdAndIdBookReferenceId(1L, "abc"))
         .thenReturn(Optional.of(Inventory.builder().available(true).build()));
     doNothing().when(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(1L, "abc");
-    subject.delete(1L, "abc");
+    subject.delete(1L, Collections.singletonList("abc"));
     verify(repositoryMock).findByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
     verify(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
   }
@@ -189,7 +189,7 @@ class InventoryServiceTest {
         .thenReturn(Optional.of(Inventory.builder().available(false).build()));
     assertThrows(
         InventoryNotFoundException.class,
-        () -> subject.delete(1L, "abc"));
+        () -> subject.delete(1L, Collections.singletonList("abc")));
     verify(repositoryMock).findByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
     verify(repositoryMock, never()).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
   }
@@ -202,7 +202,7 @@ class InventoryServiceTest {
         .thenReturn(Optional.empty());
     assertThrows(
         InventoryNotFoundException.class,
-        () -> subject.delete(1L, "abc"));
+        () -> subject.delete(1L, Collections.singletonList("abc")));
     verify(repositoryMock).findByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
     verify(repositoryMock, never()).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
   }

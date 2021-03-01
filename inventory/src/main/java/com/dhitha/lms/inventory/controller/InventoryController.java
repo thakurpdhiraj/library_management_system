@@ -68,9 +68,9 @@ public class InventoryController {
 
   @DeleteMapping(value = "/{bookId}")
   public ResponseEntity<Void> delete(
-      @PathVariable Long bookId, @RequestParam(required = false) String bookReferenceId)
+      @PathVariable Long bookId, @RequestParam(required = false) List<String> bookReferenceId)
       throws InventoryNotFoundException {
-    if (StringUtils.isEmpty(bookReferenceId)) {
+    if (bookReferenceId == null || bookReferenceId.isEmpty()) {
       inventoryService.delete(bookId);
     } else {
       inventoryService.delete(bookId, bookReferenceId);
