@@ -171,9 +171,9 @@ class InventoryServiceTest {
   @Test
   @DisplayName("add: delete all inventory of book with id & reference id, expected success")
   void testDeleteWithBookIdAndBookReference() throws Exception {
-    doNothing().when(repositoryMock).deleteById(new InventoryId(1L, "abc"));
+    doNothing().when(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(1L, "abc");
     subject.delete(1L, "abc");
-    verify(repositoryMock).deleteById(any(InventoryId.class));
+    verify(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
   }
 
   @Test
@@ -185,21 +185,21 @@ class InventoryServiceTest {
         () -> {
           doThrow(EmptyResultDataAccessException.class)
               .when(repositoryMock)
-              .deleteById(new InventoryId(1L, "abc"));
+              .deleteByIdBookIdAndIdBookReferenceId(1L, "abc");
           subject.delete(1L, "abc");
         });
-    verify(repositoryMock).deleteById(any(InventoryId.class));
+    verify(repositoryMock).deleteByIdBookIdAndIdBookReferenceId(anyLong(), anyString());
   }
 
   private List<Inventory> createMockInventory(long id, boolean available) {
     return Arrays.asList(
         Inventory.builder()
-            .id(new InventoryId(id, "abc"))
+            .id(new InventoryId(id, "isbn", "abc"))
             .available(available)
             .categoryId(1)
             .build(),
         Inventory.builder()
-            .id(new InventoryId(id, "pqr"))
+            .id(new InventoryId(id, "isbn", "pqr"))
             .available(available)
             .categoryId(1)
             .build());

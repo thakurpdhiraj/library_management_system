@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
  *
  * @author Dhiraj
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
@@ -109,6 +110,7 @@ class InventoryControllerTest {
     InventoryDTO mockInventory =
         InventoryDTO.builder()
             .bookId(4L)
+            .isbn("979-199-640-416-3")
             .bookReferenceId("4b-1c-1")
             .categoryId(1)
             .available(true)

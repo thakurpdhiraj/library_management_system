@@ -38,6 +38,13 @@ public interface InventoryRepository extends JpaRepository<Inventory, InventoryI
   void deleteByIdBookId(Long bookId);
 
   /**
+   * Delete all inventory corresponding to book id and book reference id
+   * @param bookId -
+   * @param bookReferenceId -
+   */
+  void deleteByIdBookIdAndIdBookReferenceId(Long bookId, String bookReferenceId);
+
+  /**
    * Update the availability of inventory
    * @param bookId -
    * @param bookReferenceId -

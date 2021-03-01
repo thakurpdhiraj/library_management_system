@@ -2,7 +2,6 @@ package com.dhitha.lms.inventory.service;
 
 import com.dhitha.lms.inventory.dto.InventoryDTO;
 import com.dhitha.lms.inventory.entity.Inventory;
-import com.dhitha.lms.inventory.entity.InventoryId;
 import com.dhitha.lms.inventory.error.GenericException;
 import com.dhitha.lms.inventory.error.InventoryNotFoundException;
 import com.dhitha.lms.inventory.repository.InventoryRepository;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
  * @author Dhiraj
  */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 public class InventoryServiceImpl implements InventoryService {
@@ -59,7 +60,7 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public long getAvailableCount(Long bookId) {
-    return inventoryRepository.countByIdBookIdAndAvailable(bookId,true);
+    return inventoryRepository.countByIdBookIdAndAvailable(bookId, true);
   }
 
   @Override
@@ -67,6 +68,11 @@ public class InventoryServiceImpl implements InventoryService {
     try {
       inventoryRepository.saveAndFlush(mapToEntity(inventoryDTO));
     } catch (DataIntegrityViolationException e) {
+      log.error(
+          "Error while saving inventory:{} {} ",
+          inventoryDTO.getBookId(),
+          inventoryDTO.getBookReferenceId(),
+          e);
       throw new GenericException(
           String.format(
               "Book with id %s already has reference id %s",
@@ -87,7 +93,7 @@ public class InventoryServiceImpl implements InventoryService {
   @Override
   public void delete(Long bookId, String bookReferenceId) throws InventoryNotFoundException {
     try {
-      inventoryRepository.deleteById(new InventoryId(bookId, bookReferenceId));
+      inventoryRepository.deleteByIdBookIdAndIdBookReferenceId(bookId, bookReferenceId);
     } catch (EmptyResultDataAccessException e) {
       throw new InventoryNotFoundException(
           String.format("No Book found with id %s and reference id %s", bookId, bookReferenceId));

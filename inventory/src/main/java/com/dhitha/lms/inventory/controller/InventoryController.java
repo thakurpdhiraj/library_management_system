@@ -5,6 +5,7 @@ import com.dhitha.lms.inventory.error.GenericException;
 import com.dhitha.lms.inventory.error.InventoryNotFoundException;
 import com.dhitha.lms.inventory.service.InventoryService;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -56,7 +57,8 @@ public class InventoryController {
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> save(@RequestBody InventoryDTO inventoryDTO) throws GenericException {
+  public ResponseEntity<Void> save(@Valid @RequestBody InventoryDTO inventoryDTO)
+      throws GenericException {
     inventoryService.add(inventoryDTO);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
