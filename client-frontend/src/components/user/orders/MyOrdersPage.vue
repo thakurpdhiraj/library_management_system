@@ -88,6 +88,11 @@ export default {
           class: "indigo--text darken-4"
         },
         {
+          text: "ISBN",
+          value: "bookIsbn",
+          class: "indigo--text darken-4"
+        },
+        {
           text: "Ordered At",
           value: "orderedAt",
           class: "indigo--text darken-4"

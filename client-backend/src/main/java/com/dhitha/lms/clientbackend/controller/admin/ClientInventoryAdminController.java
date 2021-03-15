@@ -44,8 +44,8 @@ public class ClientInventoryAdminController {
 
   @DeleteMapping(value = "/{bookId}")
   public ResponseEntity<Void> delete(
-      @PathVariable Long bookId, @RequestParam(required = false) String bookReferenceId) {
-    client.delete(bookId, bookReferenceId);
+      @PathVariable Long bookId, @RequestParam(required = false) List<String> bookReferenceList) {
+    client.delete(bookId, bookReferenceList);
     return ResponseEntity.noContent().build();
   }
 }

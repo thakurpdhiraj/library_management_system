@@ -142,7 +142,8 @@ class BookOrderControllerTest {
     InventoryDTO mockInventory =
         InventoryDTO.builder().bookId(5L).bookReferenceId("5b-1c-1").categoryId(1).build();
     when(inventoryService.orderIfAvailable(5L)).thenReturn(mockInventory);
-    BookOrderDTO mockOrder = BookOrderDTO.builder().userId(1L).bookId(5L).build();
+    BookOrderDTO mockOrder =
+        BookOrderDTO.builder().userId(1L).bookId(5L).bookIsbn("isbn").bookName("name").build();
     mockMvc
         .perform(
             post("/v1")
@@ -161,7 +162,8 @@ class BookOrderControllerTest {
   @Order(9)
   @DisplayName("post, orderBook: User already has book ordered, expected 403")
   void testOrderBookUserNotAllowedBook() throws Exception {
-    BookOrderDTO mockOrder = BookOrderDTO.builder().userId(1L).bookId(2L).build();
+    BookOrderDTO mockOrder =
+        BookOrderDTO.builder().userId(1L).bookIsbn("isbn").bookName("name").bookId(2L).build();
     mockMvc
         .perform(
             post("/v1")
@@ -178,7 +180,8 @@ class BookOrderControllerTest {
       "post, orderBook: Exception in Inventory Service, Inventory Not Available, expected 404")
   void testOrderBookInventoryNotAvailable() throws Exception {
     when(inventoryService.orderIfAvailable(6L)).thenThrow(new GenericException("", 404));
-    BookOrderDTO mockOrder = BookOrderDTO.builder().userId(1L).bookId(6L).build();
+    BookOrderDTO mockOrder =
+        BookOrderDTO.builder().userId(1L).bookIsbn("isbn").bookName("name").bookId(6L).build();
     mockMvc
         .perform(
             post("/v1")

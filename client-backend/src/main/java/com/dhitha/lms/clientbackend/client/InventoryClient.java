@@ -33,5 +33,5 @@ public interface InventoryClient {
       @RequestHeader(value = "count", required = false) Integer count);
 
   @DeleteMapping(value = "/{bookId}")
-  void delete(@PathVariable Long bookId, @RequestParam(required = false) String bookReferenceId);
+  void delete(@PathVariable Long bookId, @RequestParam(required = false) List<String> bookReferenceId);
 }

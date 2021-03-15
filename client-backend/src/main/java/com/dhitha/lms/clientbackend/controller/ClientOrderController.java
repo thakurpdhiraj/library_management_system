@@ -36,43 +36,38 @@ public class ClientOrderController {
   private final OrderUtil orderUtil;
 
 
-  @GetMapping(value = "/users/me", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllByUser(Authentication authentication) {
     UserDTO userDTO = (UserDTO)authentication.getPrincipal();
     List<BookOrderDTO> userOrders = client.findAllByUser(userDTO.getId());
-    orderUtil.setBookNameForOrderList(userOrders);
     return ResponseEntity.ok(userOrders);
   }
 
-  @GetMapping(value = "/users/me/history", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/me/history", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderHistoryDTO>> findAllHistoryOfUser(Authentication authentication) {
     UserDTO userDTO = (UserDTO)authentication.getPrincipal();
-    Map<Long, String> bookNames = orderUtil.getAllBookNames();
     List<BookOrderHistoryDTO> userOrders = client.findAllHistoryOfUser(userDTO.getId());
-    userOrders.forEach(bookOrderDTO -> bookOrderDTO.setBookName(bookNames.get(bookOrderDTO.getBookId())));
     return ResponseEntity.ok(userOrders);
   }
 
-  @GetMapping(value = "/users/me/overdue/return", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/me/overdue/return", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllReturnOverdueOfUser(Authentication authentication) {
     UserDTO userDTO = (UserDTO)authentication.getPrincipal();
     List<BookOrderDTO> allReturnOverdue = client.findAllReturnOverdue(userDTO.getId());
-    orderUtil.setBookNameForOrderList(allReturnOverdue);
     return ResponseEntity.ok(allReturnOverdue);
   }
 
   @GetMapping(
-      value = "/users/me/overdue/collect",
+      value = "/me/overdue/collect",
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllCollectionOverdueOfUser(
       Authentication authentication) {
     UserDTO userDTO = (UserDTO)authentication.getPrincipal();
     List<BookOrderDTO> allCollectionOverdue = client.findAllCollectionOverdue(userDTO.getId());
-    orderUtil.setBookNameForOrderList(allCollectionOverdue);
     return ResponseEntity.ok(allCollectionOverdue);
   }
 
-  @PostMapping(
+  @PostMapping( value = "/me",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookOrderDTO> orderBook(@RequestBody BookOrderDTO orderDTO, Authentication authentication) {
@@ -84,8 +79,6 @@ public class ClientOrderController {
             .path("/{id}")
             .buildAndExpand(savedOrder.getId())
             .toUri();
-    Map<Long, String> bookNames = orderUtil.getAllBookNames();
-    savedOrder.setBookName(bookNames.get(savedOrder.getBookId()));
     return ResponseEntity.created(uri).body(savedOrder);
   }
 

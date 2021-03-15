@@ -90,7 +90,7 @@ public class InventoryServiceImpl implements InventoryService {
   public void delete(Long bookId) throws InventoryNotFoundException {
     List<Inventory> bookInventory = inventoryRepository.findByIdBookId(bookId);
     if (bookInventory.isEmpty()) {
-      throw new InventoryNotFoundException("No inventory found for book id: " + bookId);
+      return;
     }
     long count = bookInventory.stream().filter(inventory -> !inventory.getAvailable()).count();
     if (count > 0) {

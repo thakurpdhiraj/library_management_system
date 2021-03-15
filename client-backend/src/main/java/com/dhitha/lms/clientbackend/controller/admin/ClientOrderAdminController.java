@@ -33,35 +33,30 @@ public class ClientOrderAdminController {
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookOrderDTO> findById(@PathVariable Long id) {
     BookOrderDTO order = client.findById(id);
-    order.setBookName(orderUtil.getAllBookNames().get(order.getBookId()));
     return ResponseEntity.ok(order);
   }
 
   @GetMapping(value = "/books/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllByBook(@PathVariable Long bookId) {
     List<BookOrderDTO> orders = client.findAllByBook(bookId);
-    orderUtil.setBookNameForOrderList(orders);
     return ResponseEntity.ok(orders);
   }
 
   @GetMapping(value = "/overdue/return", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllReturnOverdue() {
     List<BookOrderDTO> orders = client.findAllReturnOverdue(null);
-    orderUtil.setBookNameForOrderList(orders);
     return ResponseEntity.ok(orders);
   }
 
   @GetMapping(value = "/overdue/collect", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllCollectionOverdue() {
     List<BookOrderDTO> orders = client.findAllCollectionOverdue(null);
-    orderUtil.setBookNameForOrderList(orders);
     return ResponseEntity.ok(orders);
   }
 
   @PutMapping(value = "/{id}/collect")
   public ResponseEntity<BookOrderDTO> markBookAsCollected(@PathVariable Long id) {
     BookOrderDTO order = client.collectBook(id);
-    order.setBookName(orderUtil.getAllBookNames().get(order.getBookId()));
     return ResponseEntity.ok(order);
   }
 
@@ -74,23 +69,18 @@ public class ClientOrderAdminController {
   @GetMapping(value = "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllByUser(@PathVariable Long userId) {
     List<BookOrderDTO> orders = client.findAllByUser(userId);
-    orderUtil.setBookNameForOrderList(orders);
     return ResponseEntity.ok(orders);
   }
 
   @GetMapping(value = "/users/{userId}/history", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderHistoryDTO>> findAllHistoryOfUser(@PathVariable Long userId) {
     List<BookOrderHistoryDTO> orderHistory = client.findAllHistoryOfUser(userId);
-    orderHistory.forEach(
-        bookOrderDTO ->
-            bookOrderDTO.setBookName(orderUtil.getAllBookNames().get(bookOrderDTO.getBookId())));
     return ResponseEntity.ok(orderHistory);
   }
 
   @GetMapping(value = "/users/{userId}/overdue/return", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<BookOrderDTO>> findAllReturnOverdueOfUser(@PathVariable Long userId) {
     List<BookOrderDTO> orders = client.findAllReturnOverdue(userId);
-    orderUtil.setBookNameForOrderList(orders);
     return ResponseEntity.ok(orders);
   }
 
@@ -100,7 +90,6 @@ public class ClientOrderAdminController {
   public ResponseEntity<List<BookOrderDTO>> findAllCollectionOverdueOfUser(
       @PathVariable Long userId) {
     List<BookOrderDTO> orders = client.findAllCollectionOverdue(userId);
-    orderUtil.setBookNameForOrderList(orders);
     return ResponseEntity.ok(orders);
   }
 }

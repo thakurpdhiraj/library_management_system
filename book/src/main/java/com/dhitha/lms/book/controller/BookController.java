@@ -35,7 +35,7 @@ public class BookController {
   private final BookService bookService;
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<BookDTO>> getAllBooks(@RequestParam BookDTO bookDTO,
+  public ResponseEntity<List<BookDTO>> getAllBooks(BookDTO bookDTO,
       @RequestParam(value = "categoryId", required = false) Integer categoryId) {
     bookDTO.setCategory(new CategoryDTO(categoryId, null));
     List<BookDTO> bookList = bookService.findAll(bookDTO);
