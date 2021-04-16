@@ -5,6 +5,7 @@ import com.dhitha.lms.inventory.error.GenericException;
 import com.dhitha.lms.inventory.error.InventoryNotFoundException;
 import com.dhitha.lms.inventory.service.InventoryService;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,16 +58,19 @@ public class InventoryController {
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> save(@RequestBody InventoryDTO inventoryDTO) throws GenericException {
-    inventoryService.add(inventoryDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+  public ResponseEntity<List<InventoryDTO>> save(
+      @Valid @RequestBody InventoryDTO inventoryDTO,
+      @RequestHeader(value = "count", required = false) Integer count)
+      throws GenericException {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(inventoryService.add(inventoryDTO, count));
   }
 
   @DeleteMapping(value = "/{bookId}")
   public ResponseEntity<Void> delete(
-      @PathVariable Long bookId, @RequestParam(required = false) String bookReferenceId)
+      @PathVariable Long bookId, @RequestParam(required = false) List<String> bookReferenceId)
       throws InventoryNotFoundException {
-    if (StringUtils.isEmpty(bookReferenceId)) {
+    if (bookReferenceId == null || bookReferenceId.isEmpty()) {
       inventoryService.delete(bookId);
     } else {
       inventoryService.delete(bookId, bookReferenceId);

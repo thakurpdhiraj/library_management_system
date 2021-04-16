@@ -39,6 +39,12 @@ public class BookOrderHistory implements Serializable {
   @Column(name = "book_id", nullable = false, updatable = false)
   private Long bookId;
 
+  @Column(name = "book_isbn", nullable = false, updatable = false)
+  private String bookIsbn;
+
+  @Column(name = "book_name", nullable = false, updatable = false)
+  private String bookName;
+
   @Column(name = "book_reference_id", nullable = false, updatable = false)
   private String bookReferenceId;
 

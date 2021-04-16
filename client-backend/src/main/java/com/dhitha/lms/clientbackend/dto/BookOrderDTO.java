@@ -2,6 +2,7 @@ package com.dhitha.lms.clientbackend.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,9 @@ public class BookOrderDTO implements Serializable {
 
   @NotNull private Long bookId;
 
-  private String bookName;
+  @NotEmpty private String bookIsbn;
+
+  @NotEmpty private String bookName;
 
   private String bookReferenceId;
 

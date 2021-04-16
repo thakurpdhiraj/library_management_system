@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
     uniqueConstraints =
         @UniqueConstraint(
             name = "unique_id_reference",
-            columnNames = {"book_id", "book_reference_id"}))
+            columnNames = {"book_id", "isbn", "book_reference_id"}))
 public class Inventory implements Serializable {
   private static final long serialVersionUID = 1L;
 

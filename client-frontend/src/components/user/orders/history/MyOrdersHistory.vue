@@ -38,7 +38,7 @@
                 cols="12"
                 sm="6"
                 md="4"
-                lg="3"
+                lg="4"
               >
                 <v-card elevation="10">
                   <v-card-title class="subheading font-weight-bold green--text">
@@ -52,6 +52,14 @@
                       </v-list-item-content>
                       <v-list-item-content class="align-end green--text">
                         {{ order.bookReferenceId }}
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        ISBN:
+                      </v-list-item-content>
+                      <v-list-item-content class="align-end green--text">
+                        {{ order.bookIsbn }}
                       </v-list-item-content>
                     </v-list-item>
                     <v-list-item>

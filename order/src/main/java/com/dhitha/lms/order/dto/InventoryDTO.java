@@ -20,6 +20,8 @@ public class InventoryDTO implements Serializable {
 
   private Long bookId;
 
+  private String isbn;
+
   private String bookReferenceId;
 
   private Integer categoryId;

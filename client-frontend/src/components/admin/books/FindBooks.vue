@@ -116,28 +116,13 @@
             </v-card>
           </v-form>
         </v-dialog>
-        <v-dialog
-          v-model="deleteDialog"
-          :max-width="$vuetify.breakpoint.mobile ? '100vw' : '50vw'"
-          overlay-opacity="0.97"
-          persistent
-        >
-          <v-card v-if="selectedBook">
-            <v-card-title>
-              Are you sure you want to delete
-              <p class="red--text my-0 mx-3 pa-0">{{ selectedBook.name }}</p>
-              ?
-            </v-card-title>
-            <v-card-actions>
-              <v-btn color="green darken-1" text @click="deleteBook">
-                OK
-              </v-btn>
-              <v-btn color="grey darken-1" text @click="closeDelete">
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <DeleteBooks
+          @closeDelete="closeDelete"
+          @deleteSuccess="deleteSuccess"
+          @deleteFail="deleteFail"
+          :deleteDialog="deleteDialog"
+          :selectedBook="selectedBook"
+        />
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="showEdit(item)">
@@ -154,7 +139,9 @@
 <script>
 import * as bookService from "@/service/book";
 import * as ruleUtil from "@/util/ruleUtil";
+import DeleteBooks from "./DeleteBooks.vue";
 export default {
+  components: { DeleteBooks },
   name: "FindBooks",
   data() {
     return {
@@ -224,6 +211,7 @@ export default {
   methods: {
     getBook() {
       this.loading = true;
+      this.message = null;
       bookService
         .findAllBooks(this.book)
         .then(data => {
@@ -238,6 +226,7 @@ export default {
     },
     showEdit(item) {
       this.selectedBook = item;
+      this.message = null;
       this.editDialog = true;
     },
     closeEdit() {
@@ -262,27 +251,23 @@ export default {
     },
     showDelete(item) {
       this.selectedBook = item;
+      this.message = null;
       this.deleteDialog = true;
     },
     closeDelete() {
       this.selectedBook = null;
       this.deleteDialog = false;
     },
-    deleteBook() {
-      this.message = null;
-      bookService
-        .deleteBook(this.selectedBook.id)
-        .then(() => {
-          this.deleteDialog = false;
-          this.selectedBook = null;
-          this.getBook();
-          this.message = "Book deleted successfully";
-        })
-        .catch(err => {
-          this.deleteDialog = false;
-          this.isError = true;
-          this.message = err.error_description;
-        });
+    deleteSuccess() {
+      this.deleteDialog = false;
+      this.selectedBook = null;
+      this.getBook();
+      this.message = "Book / Inventory deleted successfully";
+    },
+    deleteFail(err) {
+      this.deleteDialog = false;
+      this.isError = true;
+      this.message = err.error_description;
     },
     clearForm() {
       this.$refs.editForm.reset();

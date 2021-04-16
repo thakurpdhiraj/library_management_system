@@ -18,9 +18,12 @@ import lombok.NoArgsConstructor;
 public class InventoryId implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "book_id", updatable = false)
+    @Column(name = "book_id", updatable = false, nullable = false)
     private Long bookId;
 
-    @Column(name = "book_reference_id", updatable = false)
+    @Column(name = "isbn", updatable = false, nullable = false)
+    private String isbn;
+
+    @Column(name = "book_reference_id", updatable = false, nullable = false)
     private String bookReferenceId;
 }

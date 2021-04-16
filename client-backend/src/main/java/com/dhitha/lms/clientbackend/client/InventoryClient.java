@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -27,8 +28,10 @@ public interface InventoryClient {
   Long getAvailableCountOfBook(@PathVariable Long bookId);
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  void save(@RequestBody InventoryDTO inventoryDTO);
+  List<InventoryDTO> save(
+      @RequestBody InventoryDTO inventoryDTO,
+      @RequestHeader(value = "count", required = false) Integer count);
 
   @DeleteMapping(value = "/{bookId}")
-  void delete(@PathVariable Long bookId, @RequestParam(required = false) String bookReferenceId);
+  void delete(@PathVariable Long bookId, @RequestParam(required = false) List<String> bookReferenceId);
 }

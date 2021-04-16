@@ -28,7 +28,10 @@ export const updateBook = async book => {
   return sendResponse(response, 200);
 };
 
-export const deleteBook = async id => {
-  let response = await resource.delete(`/admin/books/${id}`);
+export const deleteBook = async (id, references) => {
+  const params = new URLSearchParams(references.map(s => ["bookReference", s]));
+  let response = await resource.delete(`/admin/books/${id}`, {
+    params: params
+  });
   return sendResponse(response, 204);
 };
