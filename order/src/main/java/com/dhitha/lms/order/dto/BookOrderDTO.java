@@ -52,4 +52,7 @@ public class BookOrderDTO implements Serializable {
 
   @JsonProperty(access = Access.READ_ONLY)
   private LocalDateTime returnBy;
+
+  @JsonProperty(access = Access.READ_ONLY)
+  private Long lateFees;
 }

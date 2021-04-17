@@ -41,7 +41,7 @@ class BookOrderServiceTest {
   @Mock private BookOrderRepository repositoryMock;
   @Mock private BookOrderHistoryService historyMock;
   @Mock private InventoryService inventoryServiceMock;
-  private ModelMapper modelMapper = new ModelMapper();
+  private final ModelMapper modelMapper = new ModelMapper();
 
   private BookOrderService subject;
 
@@ -197,12 +197,32 @@ class BookOrderServiceTest {
   @Test
   @DisplayName("returnBook: order return criteria satisfied, expected success")
   void testReturnBookSuccess() throws Exception {
-    BookOrder orderMock = BookOrder.builder().id(1L).bookId(1L).bookReferenceId("abc").build();
+    LocalDateTime returnBy = LocalDateTime.now().plusDays(2);
+    BookOrder orderMock = BookOrder.builder().id(1L).bookId(1L).returnBy(returnBy)
+        .bookReferenceId("abc").build();
     when(repositoryMock.findById(1L)).thenReturn(Optional.of(orderMock));
     doNothing().when(inventoryServiceMock).returnBook(1L, "abc");
     doNothing().when(historyMock).save(any(BookOrder.class));
     doNothing().when(repositoryMock).deleteById(1L);
     subject.returnBook(1L);
+    verify(repositoryMock).findById(1L);
+    verify(inventoryServiceMock).returnBook(1L, "abc");
+    verify(historyMock).save(any(BookOrder.class));
+    verify(repositoryMock).deleteById(1L);
+  }
+
+  @Test
+  @DisplayName("returnBook: order return overdue, late fees expected, expected success")
+  void testReturnBookSuccessWithLateFees() throws Exception {
+    LocalDateTime returnBy = LocalDateTime.now().minusDays(2);
+    BookOrder orderMock = BookOrder.builder().id(1L).bookId(1L).returnBy(returnBy)
+        .bookReferenceId("abc").build();
+    when(repositoryMock.findById(1L)).thenReturn(Optional.of(orderMock));
+    doNothing().when(inventoryServiceMock).returnBook(1L, "abc");
+    doNothing().when(historyMock).save(any(BookOrder.class));
+    doNothing().when(repositoryMock).deleteById(1L);
+    BookOrderDTO result = subject.returnBook(1L);
+    assertEquals(200, result.getLateFees());
     verify(repositoryMock).findById(1L);
     verify(inventoryServiceMock).returnBook(1L, "abc");
     verify(historyMock).save(any(BookOrder.class));

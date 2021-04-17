@@ -1,5 +1,7 @@
 package com.dhitha.lms.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -59,4 +61,7 @@ public class BookOrderHistory implements Serializable {
 
   @Column(name = "returned_at", columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
   private LocalDateTime returnedAt;
+
+  @Column(name = "late_fees", updatable = false)
+  private Long lateFees;
 }

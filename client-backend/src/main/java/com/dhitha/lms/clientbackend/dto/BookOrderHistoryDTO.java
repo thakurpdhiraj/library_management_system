@@ -34,4 +34,6 @@ public class BookOrderHistoryDTO implements Serializable {
   private LocalDateTime collectedAt;
 
   private LocalDateTime returnedAt;
+
+  private Long lateFees;
 }

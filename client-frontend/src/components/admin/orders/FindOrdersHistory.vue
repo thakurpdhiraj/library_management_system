@@ -120,14 +120,13 @@ export default {
           value: "returnedAt",
           sortable: false,
           class: "indigo--text darken-4"
+        },
+        {
+          text: "Late Fees",
+          value: "lateFees",
+          sortable: false,
+          class: "indigo--text darken-4"
         }
-        // ,
-        // {
-        //   text: "Late Fees",
-        //   value: "lateFees",
-        //   sortable: false,
-        //   class: "indigo--text darken-4"
-        // }
       ],
       orders: [],
       loading: false,

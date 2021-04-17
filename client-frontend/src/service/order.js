@@ -53,7 +53,7 @@ export const collectOrder = async id => {
 
 export const returnOrder = async id => {
   let response = await resource.put(`/admin/orders/${id}/return`);
-  return sendResponse(response, 204);
+  return sendResponse(response, 200);
 };
 
 export const findOrdersHistoryOfUser = async userId => {

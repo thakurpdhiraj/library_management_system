@@ -59,20 +59,20 @@
     >
       <template v-slot:top>
         <v-dialog v-model="showReturnRecepit" overlay-opacity="0.8" persistent>
-          <v-card flat v-if="returnedOrder">
+          <v-card flat v-if="returnedOrder" ref="downloadContent">
             <v-card-title class="subheading font-weight-bold green--text">
               Order {{ returnedOrder.id }} returned successfully!
             </v-card-title>
             <v-card-text>
               <v-list dense>
-                <!-- <v-list-item>
+                <v-list-item>
                   <v-list-item-content>
                     Late Fees:
                   </v-list-item-content>
-                  <v-list-item-content class="align-end">
+                  <v-list-item-content class="align-end red--text">
                     {{ returnedOrder.lateFees }}
                   </v-list-item-content>
-                </v-list-item> -->
+                </v-list-item>
                 <v-list-item>
                   <v-list-item-content>
                     Book Id:
@@ -148,6 +148,13 @@
               >
                 Close
               </v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="download(returnedOrder)"
+                dark
+                >Download</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -190,6 +197,7 @@
 <script>
 import * as ruleUtil from "@/util/ruleUtil";
 import * as orderService from "@/service/order";
+import jsPDF from "jspdf";
 export default {
   name: "FindOrders",
   data() {
@@ -308,14 +316,14 @@ export default {
       this.setMarkerParams(true, null, false);
       orderService
         .returnOrder(item.id)
-        .then(() => {
+        .then(data => {
           if (this.orderType === "order") {
             this.orders = [];
           } else {
             this.findOrder();
           }
           this.setMarkerParams(false, "Order marked as returned.", false);
-          this.displayReturnReceipt(item);
+          this.displayReturnReceipt(data);
         })
         .catch(err => {
           this.setMarkerParams(false, err.error_description, true);
@@ -360,6 +368,18 @@ export default {
     closeReturnRecepit() {
       this.showReturnRecepit = false;
       this.returnedOrder = null;
+    },
+    download(order) {
+      const doc = new jsPDF();
+      doc.text("Order Id : " + order.id, 10, 10);
+      doc.text("Late Fees : " + order.lateFees, 10, 20);
+      doc.text("Book Name : " + order.bookName, 10, 30);
+      doc.text("Book Reference : " + order.bookReferenceId, 10, 40);
+      doc.text("ISBN : " + order.bookIsbn, 10, 50);
+      doc.text("Ordered : " + order.orderedAt, 10, 60);
+      doc.text("Collected : " + order.collectedAt, 10, 70);
+      doc.text("Returned : " + order.returnedAt, 10, 80);
+      doc.save(order.id + "_recepit.pdf");
     }
   },
   watch: {
