@@ -28,8 +28,6 @@ public class ClientOrderAdminController {
 
   private final OrderClient client;
 
-  private final OrderUtil orderUtil;
-
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookOrderDTO> findById(@PathVariable Long id) {
     BookOrderDTO order = client.findById(id);
