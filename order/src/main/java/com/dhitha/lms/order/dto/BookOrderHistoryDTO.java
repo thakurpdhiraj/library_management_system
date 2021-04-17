@@ -1,5 +1,7 @@
 package com.dhitha.lms.order.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -35,4 +37,6 @@ public class BookOrderHistoryDTO implements Serializable {
   private LocalDateTime collectedAt;
 
   private LocalDateTime returnedAt;
+
+  private Long lateFees;
 }

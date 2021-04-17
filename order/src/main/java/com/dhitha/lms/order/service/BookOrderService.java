@@ -94,7 +94,7 @@ public interface BookOrderService {
    * @throws OrderNotFoundException if no order present with id
    * @throws GenericException if order cannot be returned due to book/service unavailability
    */
-  void returnBook(Long id) throws OrderNotFoundException, GenericException;
+  BookOrderDTO returnBook(Long id) throws OrderNotFoundException, GenericException;
 
   /**
    * Delete an order

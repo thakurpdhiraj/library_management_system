@@ -6,6 +6,7 @@ import com.dhitha.lms.order.entity.BookOrder;
 import com.dhitha.lms.order.error.GenericException;
 import com.dhitha.lms.order.error.OrderNotFoundException;
 import com.dhitha.lms.order.repository.BookOrderRepository;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,8 @@ public class BookOrderServiceImpl implements BookOrderService {
   private final BookOrderHistoryService bookOrderHistoryService;
   private final ModelMapper modelMapper;
   private final InventoryService inventoryService;
+
+  private static final int LATE_FEES_PER_DAY = 100;
 
   @Override
   public BookOrderDTO findById(Long id) throws OrderNotFoundException {
@@ -120,16 +123,23 @@ public class BookOrderServiceImpl implements BookOrderService {
   }
 
   @Override
-  public void returnBook(Long id) throws OrderNotFoundException, GenericException {
-    // TODO: check for return overdue
+  public BookOrderDTO returnBook(Long id) throws OrderNotFoundException, GenericException {
     BookOrder order =
         orderRepository
             .findById(id)
             .orElseThrow(() -> new OrderNotFoundException("Order Not found with id " + id));
+    LocalDateTime now = LocalDateTime.now();
+    long difference = Duration.between(order.getReturnBy(),now).toDays();
+    long lateFees = 0;
+    if(difference > 0) {
+      lateFees = LATE_FEES_PER_DAY * difference;
+    }
     inventoryService.returnBook(order.getBookId(), order.getBookReferenceId());
+    order.setLateFees(lateFees);
     order.setReturnedAt(LocalDateTime.now());
-    bookOrderHistoryService.save(order);
     this.delete(id);
+    bookOrderHistoryService.save(order);
+    return mapToDTO(order);
   }
 
   @Override

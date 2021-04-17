@@ -50,5 +50,5 @@ public interface OrderClient {
   BookOrderDTO collectBook(@PathVariable Long id);
 
   @PutMapping(value = "/{id}/return")
-  void returnBook(@PathVariable Long id);
+  BookOrderDTO returnBook(@PathVariable Long id);
 }

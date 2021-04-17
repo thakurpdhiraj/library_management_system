@@ -59,9 +59,10 @@ public class ClientOrderAdminController {
   }
 
   @PutMapping(value = "/{id}/return")
-  public ResponseEntity<Void> markBookAsReturned(@PathVariable Long id) {
-    client.returnBook(id);
-    return ResponseEntity.noContent().build();
+  public ResponseEntity<BookOrderDTO> markBookAsReturned(@PathVariable Long id) {
+    BookOrderDTO order = client.returnBook(id);
+    System.out.println("Order:::::"+order);
+    return ResponseEntity.ok(order);
   }
 
   @GetMapping(value = "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)

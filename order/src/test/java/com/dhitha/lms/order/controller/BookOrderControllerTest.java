@@ -220,7 +220,7 @@ class BookOrderControllerTest {
     doNothing().when(inventoryService).returnBook(3L, "3b-1c-abc");
     mockMvc
         .perform(put("/v1/{id}/return", 3).header("lms-key", apiKey))
-        .andExpect(status().isNoContent());
+        .andExpect(status().isOk());
     mockMvc.perform(get("/v1/{id}", 3).header("lms-key", apiKey)).andExpect(status().isNotFound());
 
     mockMvc

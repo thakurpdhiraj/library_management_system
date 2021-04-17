@@ -96,10 +96,8 @@ public class BookOrderController {
   }
 
   @PutMapping(value = "/{id}/return")
-  public ResponseEntity<Void> returnBook(@PathVariable Long id)
+  public ResponseEntity<BookOrderDTO> returnBook(@PathVariable Long id)
       throws OrderNotFoundException, GenericException {
-    bookOrderService.returnBook(id);
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.ok(bookOrderService.returnBook(id));
   }
-
 }

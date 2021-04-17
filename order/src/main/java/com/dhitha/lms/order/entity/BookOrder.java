@@ -69,4 +69,7 @@ public class BookOrder implements Serializable {
 
   @Column(name = "return_by", columnDefinition = "TIMESTAMP", updatable = false)
   private LocalDateTime returnBy;
+
+  @Column(name = "late_fees", updatable = false)
+  private Long lateFees;
 }

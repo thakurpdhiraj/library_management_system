@@ -1,5 +1,7 @@
 package com.dhitha.lms.clientbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotEmpty;
@@ -42,4 +44,6 @@ public class BookOrderDTO implements Serializable {
   private LocalDateTime returnedAt;
 
   private LocalDateTime returnBy;
+
+  private Long lateFees;
 }
