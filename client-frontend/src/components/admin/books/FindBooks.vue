@@ -16,6 +16,73 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="12" sm="3" v-if="!showForm">
+          <v-btn
+            block
+            color="primary"
+            dark
+            class="w-50"
+            @click="showForm = true"
+          >
+            Refine Search
+          </v-btn>
+        </v-col>
+        <v-col cols="12" v-else>
+          <v-form
+            @submit.prevent="getBooks"
+            :loading="loading"
+            v-model="valid"
+            ref="searchForm"
+          >
+            <v-row>
+              <v-col cols="12" sm="3">
+                <v-text-field
+                  label="Book Id"
+                  clearable
+                  v-model="book.id"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="3">
+                <v-text-field
+                  label="Book Name"
+                  clearable
+                  v-model="book.name"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="3">
+                <v-text-field
+                  label="Author Name"
+                  clearable
+                  v-model="book.author"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="3">
+                <v-text-field
+                  label="Publication Name"
+                  clearable
+                  v-model="book.publication"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="3">
+                <v-text-field
+                  label="ISBN"
+                  clearable
+                  v-model="book.isbn"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="3">
+                <v-btn color="green" text dark :disabled="!valid" type="submit">
+                  Search
+                </v-btn>
+                <v-btn color="blue darken-1" text dark @click="clearForm">
+                  Clear
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-col>
+      </v-row>
     </v-container>
     <v-data-table
       :headers="headers"
@@ -30,92 +97,13 @@
       }"
     >
       <template v-slot:top>
-        <v-dialog v-model="editDialog" overlay-opacity="0.8" persistent>
-          <v-form
-            @submit.prevent="editBook"
-            :loading="loading"
-            v-model="valid"
-            ref="editForm"
-          >
-            <v-card flat v-if="selectedBook">
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="4">
-                      <v-text-field
-                        label="Name *"
-                        clearable
-                        v-model="selectedBook.name"
-                        :rules="[rules.required]"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                      <v-text-field
-                        label="Author *"
-                        clearable
-                        v-model="selectedBook.author"
-                        :rules="[rules.required]"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                      <v-text-field
-                        label="Pages *"
-                        clearable
-                        v-model="selectedBook.pages"
-                        :rules="[rules.required, rules.number]"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                      <v-select
-                        v-model="selectedBook.category"
-                        item-text="name"
-                        return-object
-                        :items="categories"
-                        :rules="[rules.required]"
-                        label="Category *"
-                      ></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                      <v-text-field
-                        label="Publication *"
-                        clearable
-                        v-model="selectedBook.publication"
-                        :rules="[rules.required]"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                      <v-text-field
-                        label="Published Year *"
-                        clearable
-                        v-model="selectedBook.publicationYear"
-                        :rules="[rules.year]"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-textarea
-                        label="Summary"
-                        rows="4"
-                        counter="500"
-                        maxlength="500"
-                        clearable
-                        no-resize
-                        v-model="selectedBook.summary"
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="green" text dark :disabled="!valid" type="submit">
-                  Update
-                </v-btn>
-                <v-btn color="blue darken-1" text dark @click="closeEdit">
-                  Close
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-form>
-        </v-dialog>
+        <EditBooks
+          :editDialog="editDialog"
+          :selectedBook="selectedBook"
+          :categories="categories"
+          @closeEdit="closeEdit"
+          @editSuccess="editSuccess"
+        />
         <DeleteBooks
           @closeDelete="closeDelete"
           @deleteSuccess="deleteSuccess"
@@ -140,8 +128,9 @@
 import * as bookService from "@/service/book";
 import * as ruleUtil from "@/util/ruleUtil";
 import DeleteBooks from "./DeleteBooks.vue";
+import EditBooks from "./EditBooks.vue";
 export default {
-  components: { DeleteBooks },
+  components: { DeleteBooks, EditBooks },
   name: "FindBooks",
   data() {
     return {
@@ -205,13 +194,15 @@ export default {
         }
       ],
       deleteDialog: false,
-      editDialog: false
+      editDialog: false,
+      showForm: true
     };
   },
   methods: {
-    getBook() {
+    getBooks() {
       this.loading = true;
       this.message = null;
+      this.showForm = false;
       bookService
         .findAllBooks(this.book)
         .then(data => {
@@ -233,21 +224,10 @@ export default {
       this.selectedBook = null;
       this.editDialog = false;
     },
-    editBook() {
-      this.message = null;
-      bookService
-        .updateBook(this.selectedBook)
-        .then(() => {
-          this.editDialog = false;
-          this.selectedBook = null;
-          this.getBook();
-          this.message = "Book updated successfully";
-        })
-        .catch(err => {
-          this.editDialog = false;
-          this.isError = true;
-          this.message = err.error_description;
-        });
+    editSuccess() {
+      this.editDialog = false;
+      this.selectedBook = null;
+      this.message = "Book updated successfully";
     },
     showDelete(item) {
       this.selectedBook = item;
@@ -260,8 +240,12 @@ export default {
     },
     deleteSuccess() {
       this.deleteDialog = false;
+      //this.getBook();
+      const findIndex = this.bookList.findIndex(
+        a => a.id === this.selectedBook.id
+      );
+      findIndex !== -1 && this.bookList.splice(findIndex, 1);
       this.selectedBook = null;
-      this.getBook();
       this.message = "Book / Inventory deleted successfully";
     },
     deleteFail(err) {
@@ -270,11 +254,10 @@ export default {
       this.message = err.error_description;
     },
     clearForm() {
-      this.$refs.editForm.reset();
+      this.$refs.searchForm.reset();
     }
   },
   mounted() {
-    this.getBook();
     bookService
       .findAllCategories()
       .then(data => {

@@ -28,7 +28,7 @@ public class BookDTO implements Serializable {
 
   @NotEmpty private String name;
 
-  @NotEmpty @ISBN
+  @NotEmpty @ISBN(message = "Invalid ISBN")
   private String isbn;
 
   @NotNull private CategoryDTO category;

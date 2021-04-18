@@ -33,7 +33,7 @@ public class ClientBackendApplication {
   public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
     return builder ->
         builder.serializers(
-            new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
   }
 
   @Bean

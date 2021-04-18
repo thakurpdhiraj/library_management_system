@@ -24,7 +24,6 @@ import org.hibernate.validator.constraints.ISBN;
 public class BookDTO implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  @JsonProperty(access = Access.READ_ONLY)
   private Long id;
 
   @NotEmpty @ISBN

@@ -15,6 +15,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
 /**
@@ -29,8 +30,13 @@ public class BookSpecification implements Specification<Book> {
 
   @Override
   public Predicate toPredicate(
-      Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+      @NonNull Root<Book> root,
+      @NonNull CriteriaQuery<?> query,
+      @NonNull CriteriaBuilder criteriaBuilder) {
     List<Predicate> predicates = new ArrayList<>();
+    if (!Objects.isNull(bookDTO.getId())) {
+      predicates.add(criteriaBuilder.equal(root.get(Book_.ID), bookDTO.getId()));
+    }
     if (StringUtils.hasLength(bookDTO.getAuthor())) {
       predicates.add(
           criteriaBuilder.like(
