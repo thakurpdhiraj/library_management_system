@@ -5,6 +5,7 @@ import com.dhitha.lms.inventory.entity.Inventory;
 import com.dhitha.lms.inventory.error.GenericException;
 import com.dhitha.lms.inventory.error.InventoryNotFoundException;
 import com.dhitha.lms.inventory.repository.InventoryRepository;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -72,9 +73,11 @@ public class InventoryServiceImpl implements InventoryService {
     Assert.notNull(inventoryDTO, "Inventory cannot be null");
     count = count != null && count > 0 ? count : 1;
     Set<Inventory> set = new HashSet<>(count);
+    SecureRandom secureRandom = new SecureRandom();
     while (count-- > 0) {
       Inventory inventory = this.mapToEntity(inventoryDTO);
-      inventory.getId().setBookReferenceId(UUID.randomUUID().toString());
+      inventory.getId().setBookReferenceId(String.valueOf(secureRandom.nextInt(Integer.MAX_VALUE)));
+      inventory.setAvailable(true);
       set.add(inventory);
     }
     try {

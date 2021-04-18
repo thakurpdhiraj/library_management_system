@@ -147,11 +147,9 @@ class InventoryServiceTest {
   @Test
   @DisplayName(
       "delete: deleting a book with id which is not present, expected InventoryNotFoundException")
-  void testDeleteWithNoInventoryPresent() {
+  void testDeleteWithNoInventoryPresent() throws Exception{
     when(repositoryMock.findByIdBookId(1L)).thenReturn(Collections.emptyList());
-    assertThrows(
-        InventoryNotFoundException.class,
-        () -> subject.delete(1L));
+    subject.delete(1L);
     verify(repositoryMock).findByIdBookId(anyLong());
     verify(repositoryMock, never()).deleteByIdBookId(anyLong());
   }

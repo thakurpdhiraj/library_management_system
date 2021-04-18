@@ -103,7 +103,17 @@ services:
     networks:
       - lms-backend-n
 
+  lms-frontend-service:
+    image: lms-frontend-service
+    container_name: lms-frontend-service
+    build: ./client-frontend
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    networks:
+      - lms-frontend-n
 
 
 networks:
   lms-backend-n: {}
+  lms-frontend-n: {}

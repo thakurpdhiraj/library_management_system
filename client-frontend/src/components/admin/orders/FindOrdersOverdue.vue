@@ -101,7 +101,7 @@ export default {
         {
           text: "Order Id",
           align: "start",
-          value: "orderId",
+          value: "id",
           sortable: false,
           class: "indigo--text darken-4"
         },

@@ -371,14 +371,16 @@ export default {
     },
     download(order) {
       const doc = new jsPDF();
-      doc.text("Order Id : " + order.id, 10, 10);
-      doc.text("Late Fees : " + order.lateFees, 10, 20);
-      doc.text("Book Name : " + order.bookName, 10, 30);
-      doc.text("Book Reference : " + order.bookReferenceId, 10, 40);
-      doc.text("ISBN : " + order.bookIsbn, 10, 50);
-      doc.text("Ordered : " + order.orderedAt, 10, 60);
-      doc.text("Collected : " + order.collectedAt, 10, 70);
-      doc.text("Returned : " + order.returnedAt, 10, 80);
+      doc.text("LMS - Library Management System", 10, 10);
+      doc.text("User Id: " + order.userId, 10, 20);
+      doc.text("Order Id : " + order.id, 10, 30);
+      doc.text("Late Fees : " + order.lateFees, 10, 40);
+      doc.text("Book Name : " + order.bookName, 10, 50);
+      doc.text("Book Reference : " + order.bookReferenceId, 10, 60);
+      doc.text("ISBN : " + order.bookIsbn, 10, 70);
+      doc.text("Ordered : " + order.orderedAt, 10, 80);
+      doc.text("Collected : " + order.collectedAt, 10, 90);
+      doc.text("Returned : " + order.returnedAt, 10, 100);
       doc.save(order.id + "_recepit.pdf");
     }
   },
