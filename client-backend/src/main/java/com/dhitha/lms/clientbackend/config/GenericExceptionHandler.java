@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -52,6 +55,31 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
               .build();
     }
     return ResponseEntity.status(e.status()).body(errorDTO);
+  }
+
+  @NonNull
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatus status,
+      @NonNull WebRequest request) {
+    log.error("handleMethodArgumentNotValid():{} -> {}", ex.getCause(), ex.getBindingResult());
+    BindingResult bindingResult = ex.getBindingResult();
+    String description =
+        bindingResult.getFieldErrors().stream()
+            .map(
+                objectError ->
+                    String.join(" : ", objectError.getField(), objectError.getDefaultMessage()))
+            .collect(Collectors.joining(", "));
+    ErrorDTO err =
+        ErrorDTO.builder()
+            .error("invalid_input")
+            .error_description(description)
+            .status(HttpStatus.BAD_REQUEST.value())
+            .timestamp(LocalDateTime.now())
+            .build();
+    return ResponseEntity.badRequest().body(err);
   }
 
   @NonNull
