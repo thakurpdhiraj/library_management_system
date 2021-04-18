@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "canvg": "^3.0.7",
     "core-js": "^3.6.5",
+    "jsbarcode": "^3.11.3",
     "jspdf": "^2.3.1",
     "lodash": "^4.17.20",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuetify": "^2.4.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "@mdi/font": "^5.9.55",

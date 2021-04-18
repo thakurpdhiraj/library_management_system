@@ -79,6 +79,14 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
+                      <v-text-field
+                        label="ISBN *"
+                        clearable
+                        v-model="book.isbn"
+                        :rules="[rules.required]"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
                       <v-textarea
                         label="Summary"
                         rows="4"
@@ -88,6 +96,20 @@
                         no-resize
                         v-model="book.summary"
                       ></v-textarea>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-switch
+                        v-model="count.enable"
+                        color="green"
+                        label="Add Inventory & Generate Barcode"
+                      ></v-switch>
+                      <v-text-field
+                        label="Number of books"
+                        clearable
+                        v-model="count.number"
+                        :rules="[rules.number]"
+                        v-if="count.enable"
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -105,12 +127,43 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-dialog v-model="barcodeDialog" overlay-opacity="0.95" persistent>
+      <v-card>
+        <v-toolbar dark>
+          <v-toolbar-title class="green--text">Print Barcode</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn
+            dark
+            text
+            color="green"
+            @click="print()"
+            :loading="downloading"
+          >
+            Print
+          </v-btn>
+          <v-btn icon dark @click="barcodeDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text>
+          <div ref="barcodeDiv" class="mt-3">
+            <span v-for="x in barcodeList" :key="x" v-html="x" class="pa-2">
+            </span>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
 import * as bookService from "@/service/book";
+import * as inventoryService from "@/service/inventory";
 import * as ruleUtil from "@/util/ruleUtil";
+import { DOMImplementation, XMLSerializer } from "xmldom";
+import JsBarcode from "jsbarcode";
+import { jsPDF } from "jspdf";
+import Canvg from "canvg";
 export default {
   name: "NewBook",
   data() {
@@ -122,14 +175,22 @@ export default {
         pages: null,
         publicationYear: null,
         summary: null,
-        category: null
+        category: null,
+        isbn: null
+      },
+      count: {
+        enable: false,
+        number: null
       },
       valid: false,
       loading: false,
+      downloading: false,
       rules: ruleUtil.rules,
       message: null,
       isError: false,
-      categories: []
+      categories: [],
+      barcodeDialog: false,
+      barcodeList: []
     };
   },
   methods: {
@@ -139,6 +200,7 @@ export default {
       bookService
         .saveBook(this.book)
         .then(data => {
+          this.addInventory(data);
           this.isError = false;
           this.loading = false;
           this.message = "Book " + data.name + " added successfully";
@@ -149,6 +211,77 @@ export default {
           this.isError = true;
           this.message = err.error_description;
         });
+    },
+    addInventory(book) {
+      if (this.count.enable) {
+        let inventory = {
+          bookId: book.id,
+          isbn: book.isbn,
+          categoryId: book.category.id
+        };
+        inventoryService
+          .save(inventory, this.count.number)
+          .then(data => {
+            const xmlSerializer = new XMLSerializer();
+            data.forEach(element => {
+              const document = new DOMImplementation().createDocument(
+                "http://www.w3.org/1999/xhtml",
+                "html",
+                null
+              );
+              const svgNode = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "svg"
+              );
+              JsBarcode(svgNode, element.bookReferenceId, {
+                xmlDocument: document
+              });
+              const svgText = xmlSerializer.serializeToString(svgNode);
+              this.barcodeList.push(svgText);
+            });
+
+            this.barcodeDialog = true;
+          })
+          .catch(err => {
+            this.loading = false;
+            this.isError = true;
+            this.message = err.error_description;
+          });
+      }
+    },
+    print() {
+      this.downloading = true;
+      const doc = new jsPDF("p", "pt", "a4");
+      var width = doc.internal.pageSize.width;
+      var height = doc.internal.pageSize.height;
+      var padding = 20;
+      var x = padding;
+      var y = padding;
+      var h = 100;
+      var w = 150;
+      this.barcodeList.forEach(svg => {
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        var v = Canvg.fromString(context, svg);
+        v.start();
+        var imgData = canvas.toDataURL("image/jpeg");
+        // Generate PDF
+        doc.addImage(imgData, "JPEG", x, y, w, h);
+        if (x + 2 * w > width - padding) {
+          x = padding;
+          y += h + padding;
+          if (y + h > height - padding) {
+            doc.addPage();
+            x = padding;
+            y = padding;
+          }
+        } else {
+          x += w + padding;
+        }
+      });
+      doc.save("barcode.pdf");
+      this.downloading = false;
     },
     clear() {
       this.$refs.form.reset();
