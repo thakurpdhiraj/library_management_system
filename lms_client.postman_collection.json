@@ -1,0 +1,2308 @@
+{
+	"info": {
+		"_postman_id": "e5b5f12d-aaf2-4d55-a27b-d834bd8d16b2",
+		"name": "library_management_system_client",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "In-Sequence",
+			"item": [
+				{
+					"name": "Admin: Login - 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sig')).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get LoggedIn User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Username should be admin\", function () {\r",
+									"   pm.expect(pm.response.json().username).to.be.eql(\"admin\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"type": "text",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/lms/users/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/users/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Save User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"newUserId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"mock-lms\",\r\n    \"email\": \"mock@lms.com\",\r\n    \"username\": \"{{newUserName}}\",\r\n    \"userRoles\": [\r\n        \"USER\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"user-updated-lms\",\r\n    \"password\": \"{{newUserPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/users/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Created User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check new user username is equal to \" + pm.environment.get(\"newUserName\"), function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.username).to.be.eql(pm.environment.get(\"newUserName\"));\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/users/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get All Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/categories/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Save Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"newCategoryId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"CARS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/categories/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Update Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if new category's name is CARS\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.be.eql(\"CARS-UP\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{newCategoryUpdatedName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/categories/{{newCategoryId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"categories",
+								"{{newCategoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Created Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if new category's name is \"+ pm.environment.get(\"newCategoryUpdatedName\"), function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.be.eql(pm.environment.get(\"newCategoryUpdatedName\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/categories/{{newCategoryId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"categories",
+								"{{newCategoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Save Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"newBookId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{newBookName}}\",\r\n    \"isbn\": \"{{newBookISBN}}\",\r\n    \"category\": {\r\n        \"id\": \"{{newCategoryId}}\"\r\n    },\r\n    \"author\": \"DT\",\r\n    \"publication\": \"DTP\",\r\n    \"pages\": 100,\r\n    \"publicationYear\": 2021,\r\n    \"summary\": \"Summary for Java\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/books/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Update Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.json().summary).to.be.eql(\"Summary for Java - Updated\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n       \"summary\": \"Summary for Java - Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Created Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if new book's isbn is \"+ pm.environment.get(\"newBookISBN\"), function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.isbn).to.be.eql(pm.environment.get(\"newBookISBN\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get All Books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/books",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get All Books With ISBN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one book is present with new isbn\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/books?isbn={{newBookISBN}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"books"
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "{{newBookISBN}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get All Books With Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one book is present with new category id\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/books?categoryId={{newCategoryId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"books"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "{{newCategoryId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Save New Book To Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "count",
+								"value": "{{newInventoryCount}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bookId\": \"{{newBookId}}\",\r\n    \"categoryId\": {{newCategoryId}},\r\n    \"isbn\": \"{{newBookISBN}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/inventory/books/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"inventory",
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Inventory Count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/inventory/books/{{newBookId}}/count",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"inventory",
+								"books",
+								"{{newBookId}}",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Inventory of Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if inventory for new book is equal to \"+ pm.environment.get(\"newInventoryCount\"), function(){\r",
+									"    pm.expect(pm.response.json().length).to.eql(parseInt(pm.environment.get(\"newInventoryCount\")));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/inventory/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"inventory",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Logout - 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Login - 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sig')).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{newUserName}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{newUserPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get LoggedIn User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Username should be \" + pm.environment.get(\"newUserName\"), function () {\r",
+									"   pm.expect(pm.response.json().username).to.be.eql(pm.environment.get(\"newUserName\"));\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"type": "text",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/lms/users/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get All Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/categories/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get Created Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if new category's name is \"+ pm.environment.get(\"newCategoryUpdatedName\"), function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.be.eql(pm.environment.get(\"newCategoryUpdatedName\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/categories/{{newCategoryId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"categories",
+								"{{newCategoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get Created Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if new book's isbn is \"+ pm.environment.get(\"newBookISBN\"), function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.isbn).to.be.eql(pm.environment.get(\"newBookISBN\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get All Books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/books",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get All Books With ISBN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one book is present with new isbn\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/books?isbn={{newBookISBN}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"books"
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "{{newBookISBN}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get Inventory Count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/inventory/books/{{newBookId}}/count",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"inventory",
+								"books",
+								"{{newBookId}}",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Order Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"newOrderId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"bookId\": \"{{newBookId}}\",\r\n        \"bookIsbn\": \"{{newBookISBN}}\",\r\n        \"bookName\": \"{{newBookName}}\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/orders/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"orders",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get My Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one order is present for new user\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/orders/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"orders",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get My Return Overdue Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one order is present as return overdue for new user\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/orders/me/overdue/return",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"orders",
+								"me",
+								"overdue",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get My Collection Overdue Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only no order is present as collection overdue for new user\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/orders/me/overdue/collect",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"orders",
+								"me",
+								"overdue",
+								"collect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Logout - 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Login - 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sig')).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Single Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only new order is tagged to new user\", function(){\r",
+									"    pm.expect(pm.response.json().userId).to.be.eql(pm.environment.get(\"newUserId\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/{{newOrderId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"{{newOrderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Orders For Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one order is present for new book\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.be.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Orders Overdue For Return Of ALL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/overdue/return",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"overdue",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Orders Overdue For Collection for ALL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/overdue/collect",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"overdue",
+								"collect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Orders For User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/users/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Collect Book Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/{{newOrderId}}/collect",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"{{newOrderId}}",
+								"collect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Return Book Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/{{newOrderId}}/return",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"{{newOrderId}}",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Order History For User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one order is present history for new user\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.be.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/users/{{newUserId}}/history",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"users",
+								"{{newUserId}}",
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Collection Overdue Orders For User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/users/{{newUserId}}/overdue/collect",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"users",
+								"{{newUserId}}",
+								"overdue",
+								"collect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Get Return Orders For User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/orders/users/{{newUserId}}/overdue/return",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"orders",
+								"users",
+								"{{newUserId}}",
+								"overdue",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Logout - 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Login - 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sig')).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{newUserName}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{newUserPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get My Order History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if only one order is present history for new user\", function(){\r",
+									"    pm.expect(pm.response.json().length).to.be.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/orders/me/history",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"orders",
+								"me",
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Logout - 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Login - 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sig')).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pass",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Delete Book Reference Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let queryParams = \"\";\r",
+									"// {{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}\r",
+									"pm.sendRequest({\r",
+									"      url:  pm.environment.get(\"baseURL\") + \"/lms/admin/inventory/books/\" + pm.environment.get(\"newBookId\"), \r",
+									"      method: 'GET'\r",
+									"  }, function (err, res) {\r",
+									"        let response = res.json();\r",
+									"        for(var i = 0; i < pm.environment.get(\"newInventoryCount\") - 1; i++) {\r",
+									"            var obj = response[i];\r",
+									"            queryParams = queryParams + \"&bookReferenceId=\"+obj.bookReferenceId;\r",
+									"            console.log(queryParams);\r",
+									"        }\r",
+									"        pm.environment.set(\"newInventoryDeletionQueryParams\", queryParams);\r",
+									"  });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/inventory/books/{{newBookId}}?{{newInventoryDeletionQueryParams}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"inventory",
+								"books",
+								"{{newBookId}}"
+							],
+							"query": [
+								{
+									"key": "{{newInventoryDeletionQueryParams}}",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Delete All Book Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/inventory/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"inventory",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Delete Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8086/lms/admin/books/{{newBookId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"lms",
+								"admin",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Delete Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/categories/{{newCategoryId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"categories",
+								"{{newCategoryId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/lms/admin/users/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"admin",
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Logout - 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sid cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response does not contain a sig cookie\", function() {\r",
+									"    pm.expect(pm.cookies.has('sid')).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

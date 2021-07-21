@@ -1,0 +1,1891 @@
+{
+	"info": {
+		"_postman_id": "6e04bc62-c135-48ce-8f32-cf683d4bded8",
+		"name": "library_management_system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Get Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}:{{userPort}}/api/users/v1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{userPort}}",
+							"path": [
+								"api",
+								"users",
+								"v1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"console.log(responseData.id);\r",
+									"pm.environment.set(\"newUserId\", responseData.id);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"mock-lms\",\r\n    \"email\": \"mock@lms.com\",\r\n    \"username\": \"{{newUserName}}\",\r\n    \"password\": \"{{newUserPassword}}\",\r\n    \"accountNonExpired\": true,\r\n    \"accountNonLocked\": true,\r\n    \"credentialsNonExpired\": true,\r\n    \"enabled\": true,\r\n    \"userRoles\": [\r\n        \"USER\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{userPort}}/api/users/v1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{userPort}}",
+							"path": [
+								"api",
+								"users",
+								"v1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{newUserName}}\",\r\n    \"password\": \"{{newUserPassword}}\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/users/v1/validate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"users",
+								"v1",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}:{{userPort}}/api/users/v1/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{userPort}}",
+							"path": [
+								"api",
+								"users",
+								"v1",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"user-updated-lms\",\r\n    \"userRoles\": [\r\n        \"USER\",\r\n        \"ADMIN\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{userPort}}/api/users/v1/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{userPort}}",
+							"path": [
+								"api",
+								"users",
+								"v1",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}:{{userPort}}/api/users/v1/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{userPort}}",
+							"path": [
+								"api",
+								"users",
+								"v1",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Authenticate User - Create Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var response = pm.response.json();\r",
+									"var token = response.header + \".\" + response.payload + \".\" + response.signature;\r",
+									"pm.environment.set(\"token\", token);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"pass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{authPort}}/api/auth/v1/token/authenticate",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{authPort}}",
+							"path": [
+								"api",
+								"auth",
+								"v1",
+								"token",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate User - Verify Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{authPort}}/api/auth/v1/token/verify",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{authPort}}",
+							"path": [
+								"api",
+								"auth",
+								"v1",
+								"token",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "book",
+			"item": [
+				{
+					"name": "category",
+					"item": [
+						{
+							"name": "Get All Categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}:{{bookPort}}/api/categories/v1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"port": "{{bookPort}}",
+									"path": [
+										"api",
+										"categories",
+										"v1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Save Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"let responseData = pm.response.json();\r",
+											"console.log(responseData.id);\r",
+											"pm.environment.set(\"newCategoryId\", responseData.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"CARS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}:{{bookPort}}/api/categories/v1/",
+									"host": [
+										"{{baseURL}}"
+									],
+									"port": "{{bookPort}}",
+									"path": [
+										"api",
+										"categories",
+										"v1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}:{{bookPort}}/api/categories/v1/{{newCategoryId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"port": "{{bookPort}}",
+									"path": [
+										"api",
+										"categories",
+										"v1",
+										"{{newCategoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"CARS-M\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}:{{bookPort}}/api/categories/v1/{{newCategoryId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"port": "{{bookPort}}",
+									"path": [
+										"api",
+										"categories",
+										"v1",
+										"{{newCategoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}:{{bookPort}}/api/categories/v1/{{newCategoryId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"port": "{{bookPort}}",
+									"path": [
+										"api",
+										"categories",
+										"v1",
+										"{{newCategoryId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get All Books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1?categoryId=1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "DT",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "Spri",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"console.log(responseData.id);\r",
+									"pm.environment.set(\"newBookId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{newBookName}}\",\r\n    \"isbn\": \"{{newBookISBN}}\",\r\n    \"category\": {\r\n        \"id\": 1,\r\n        \"name\": \"TECHNOLOGY\"\r\n    },\r\n    \"author\": \"DT\",\r\n    \"publication\": \"DTP\",\r\n    \"pages\": 100,\r\n    \"publicationYear\": 2021,\r\n    \"summary\": \"Summary for Java\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n       \"summary\": \"Summary for Java - Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "inventory",
+			"item": [
+				{
+					"name": "Save Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"console.log(responseData.id);\r",
+									"pm.environment.set(\"newBookId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{newBookName}}\",\r\n    \"isbn\": \"{{newBookISBN}}\",\r\n    \"category\": {\r\n        \"id\": 1,\r\n        \"name\": \"TECHNOLOGY\"\r\n    },\r\n    \"author\": \"DT\",\r\n    \"publication\": \"DTP\",\r\n    \"pages\": 100,\r\n    \"publicationYear\": 2021,\r\n    \"summary\": \"Summary for Java\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save New Book To Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "count",
+								"value": "{{newInventoryCount}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bookId\": \"{{newBookId}}\",\r\n    \"categoryId\": 1,\r\n    \"isbn\": \"{{newBookISBN}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inventory of Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inventory Count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}/count",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books",
+								"{{newBookId}}",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"let response = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"newInventoryBookReference\", response.bookReferenceId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}/order",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books",
+								"{{newBookId}}",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Return Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}/return?bookReferenceId={{newInventoryBookReference}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books",
+								"{{newBookId}}",
+								"return"
+							],
+							"query": [
+								{
+									"key": "bookReferenceId",
+									"value": "{{newInventoryBookReference}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book Reference Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let queryParams = \"\";\r",
+									"// {{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}\r",
+									"pm.sendRequest({\r",
+									"      url:  pm.environment.get(\"baseURL\") + \":\" + pm.environment.get(\"inventoryPort\") + \"/api/inventory/v1/books/\" + pm.environment.get(\"newBookId\"), \r",
+									"      method: 'GET',\r",
+									"      header: {\r",
+									"        'lms-key': '352019a6-1c73-11eb-adc1-0242ac120002'\r",
+									"      }\r",
+									"  }, function (err, res) {\r",
+									"        let response = res.json();\r",
+									"        for(var i = 0; i < pm.environment.get(\"newInventoryCount\") - 1; i++) {\r",
+									"            var obj = response[i];\r",
+									"            queryParams = queryParams + \"&bookReferenceId=\"+obj.bookReferenceId;\r",
+									"            console.log(queryParams);\r",
+									"        }\r",
+									"        pm.environment.set(\"newInventoryDeletionQueryParams\", queryParams);\r",
+									"  });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}?{{newInventoryDeletionQueryParams}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books",
+								"{{newBookId}}"
+							],
+							"query": [
+								{
+									"key": "{{newInventoryDeletionQueryParams}}",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All Book Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "Save User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"console.log(responseData.id);\r",
+									"pm.environment.set(\"newUserId\", responseData.id);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"mock-lms\",\r\n    \"email\": \"mock@lms.com\",\r\n    \"username\": \"{{newUserName}}\",\r\n    \"password\": \"{{newUserPassword}}\",\r\n    \"accountNonExpired\": true,\r\n    \"accountNonLocked\": true,\r\n    \"credentialsNonExpired\": true,\r\n    \"enabled\": true,\r\n    \"userRoles\": [\r\n        \"USER\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{userPort}}/api/users/v1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{userPort}}",
+							"path": [
+								"api",
+								"users",
+								"v1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"console.log(responseData.id);\r",
+									"pm.environment.set(\"newBookId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{newBookName}}\",\r\n    \"isbn\": \"{{newBookISBN}}\",\r\n    \"category\": {\r\n        \"id\": 1,\r\n        \"name\": \"TECHNOLOGY\"\r\n    },\r\n    \"author\": \"DT\",\r\n    \"publication\": \"DTP\",\r\n    \"pages\": 100,\r\n    \"publicationYear\": 2021,\r\n    \"summary\": \"Summary for Java\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save New Book To Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "count",
+								"value": "{{newInventoryCount}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bookId\": \"{{newBookId}}\",\r\n    \"categoryId\": 1,\r\n    \"isbn\": \"{{newBookISBN}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let responseData = pm.response.json();\r",
+									"console.log(responseData.id);\r",
+									"pm.environment.set(\"newOrderId\", responseData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"userId\": {{newUserId}},\r\n        \"bookId\": \"{{newBookId}}\",\r\n        \"bookIsbn\": \"{{newBookISBN}}\",\r\n        \"bookName\": \"{{newBookName}}\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}:{{orderPort}}/api/orders/v1/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{orderPort}}",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{orderPort}}/api/orders/v1/{{newOrderId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{orderPort}}",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"{{newOrderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders For User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.expect(pm.response.json().length).to.eql(1);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/orders/v1/users/{{newUserId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"users",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order History For User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/orders/v1/users/{{newUserId}}/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"users",
+								"{{newUserId}}",
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders For Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.expect(pm.response.json().length).to.eql(1);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/orders/v1/books/{{newBookId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders Overdue For Return",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/orders/v1/overdue/return",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"overdue",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders Overdue For Collection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/orders/v1/overdue/collect",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"overdue",
+								"collect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Collect Book Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/orders/v1/{{newOrderId}}/collect",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"{{newOrderId}}",
+								"collect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Return Book Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/orders/v1/{{newOrderId}}/return",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"orders",
+								"v1",
+								"{{newOrderId}}",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All Book Inventory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{inventoryPort}}/api/inventory/v1/books/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{inventoryPort}}",
+							"path": [
+								"api",
+								"inventory",
+								"v1",
+								"books",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}:{{bookPort}}/api/books/v1/{{newBookId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{bookPort}}",
+							"path": [
+								"api",
+								"books",
+								"v1",
+								"{{newBookId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "lms-key",
+								"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}:{{userPort}}/api/users/v1/{{newUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"port": "{{userPort}}",
+							"path": [
+								"api",
+								"users",
+								"v1",
+								"{{newUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "352019a6-1c73-11eb-adc1-0242ac120002",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "lms-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
