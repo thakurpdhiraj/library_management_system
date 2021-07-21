@@ -8,6 +8,7 @@ import com.dhitha.lms.order.service.BookOrderHistoryService;
 import com.dhitha.lms.order.service.BookOrderService;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -78,7 +79,7 @@ public class BookOrderController {
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookOrderDTO> orderBook(@RequestBody BookOrderDTO orderDTO)
+  public ResponseEntity<BookOrderDTO> orderBook(@Valid @RequestBody BookOrderDTO orderDTO)
       throws GenericException {
     BookOrderDTO savedOrder = bookOrderService.orderBook(orderDTO);
     URI uri =
